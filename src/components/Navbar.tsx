@@ -20,7 +20,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ onOpenAuthModal }: NavbarProps) {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -49,7 +49,7 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="burger-menu-btn ml-0.5"
                 aria-label={mobileMenuOpen ? 'მენიუს დახურვა' : 'მენიუს გახსნა'}
-                title={language === 'ka' ? 'მენიუ' : 'Menu'}
+                title="მენიუ"
               >
                 <div className="burger-icon-container">
                   <span className={`burger-pill burger-pill-top ${mobileMenuOpen ? 'active' : ''}`} />
@@ -62,7 +62,7 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
             {/* Center Area: Plain Centered Title as requested by user */}
             <div className="flex-1 flex items-center justify-center text-center px-2">
               <h1 className="text-sm sm:text-base md:text-xl lg:text-2xl font-black text-white tracking-wide uppercase select-none leading-tight truncate">
-                {language === 'ka' ? 'საფეხბურთო აკადემია ტფილისი' : 'FOOTBALL ACADEMY TFILISI'}
+                საფეხბურთო აკადემია ტფილისი
               </h1>
             </div>
 
@@ -95,42 +95,11 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
       >
         <div className="mobile-menu-drawer-inner">
           <div className="border-t border-slate-200 bg-white/98 backdrop-blur-lg px-4 pt-4 pb-6 space-y-2 shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
-            
-            {/* Language Switcher - Appears ONLY after burger line is opened */}
-            <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-100">
-              <span className="text-xs font-black text-slate-700 uppercase tracking-wider">
-                {language === 'ka' ? 'ენის არჩევა / LANGUAGE' : 'SELECT LANGUAGE'}
-              </span>
-              <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
-                <button
-                  type="button"
-                  onClick={() => setLanguage('ka')}
-                  className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${
-                    language === 'ka'
-                      ? 'bg-[#0052ff] text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  ქართული
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLanguage('en')}
-                  className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${
-                    language === 'en'
-                      ? 'bg-[#0052ff] text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  English
-                </button>
-              </div>
-            </div>
 
             {/* The 6 Core Modules in Mobile Drawer */}
             <div className="space-y-1">
               <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-700 px-3 py-1">
-                {language === 'ka' ? 'მთავარი განყოფილებები' : 'MAIN MODULES'}
+                მთავარი განყოფილებები
               </div>
               
               <Link

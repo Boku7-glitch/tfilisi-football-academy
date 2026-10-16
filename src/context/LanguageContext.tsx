@@ -500,27 +500,25 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>('ka');
 
   useEffect(() => {
-    const saved = localStorage.getItem('tfa_lang') as Language;
-    if (saved === 'ka' || saved === 'en') {
-      setLanguage(saved);
-      document.documentElement.lang = saved;
-    } else {
-      document.documentElement.lang = 'ka';
+    document.documentElement.lang = 'ka';
+    try {
+      localStorage.removeItem('tfa_lang');
+    } catch {
+      // ignore
     }
   }, []);
 
-  const handleSetLanguage = (lang: Language) => {
-    setLanguage(lang);
-    localStorage.setItem('tfa_lang', lang);
-    document.documentElement.lang = lang;
+  const handleSetLanguage = (_lang: Language) => {
+    setLanguage('ka');
+    document.documentElement.lang = 'ka';
   };
 
   return (
     <LanguageContext.Provider
       value={{
-        language,
+        language: 'ka',
         setLanguage: handleSetLanguage,
-        t: translations[language],
+        t: translations['ka'],
       }}
     >
       {children}
