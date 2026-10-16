@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Noto_Sans_Georgian, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "../context/LanguageContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const notoSansGeorgian = Noto_Sans_Georgian({
+  variable: "--font-georgian",
+  subsets: ["georgian", "latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-latin",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -17,13 +22,11 @@ export const metadata: Metadata = {
   description: "საფეხბურთო აკადემია ბავშვებისა და მოზარდებისთვის. ასაკობრივი ჯგუფები (2012-2019 წწ), განრიგი, ლოკაციები, ინდივიდუალური მომზადება და მშობლის პირადი კაბინეტი.",
 };
 
-import { LanguageProvider } from "../context/LanguageContext";
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="ka"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${notoSansGeorgian.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <LanguageProvider>
