@@ -13,7 +13,7 @@ export default function Hero({ onRegisterClick }: HeroProps) {
   const { language, t } = useLanguage();
 
   return (
-    <section className="relative overflow-hidden pattern-diagonal-stripes pt-6 sm:pt-14 pb-8 sm:pb-16 border-b border-slate-200">
+    <section className="relative overflow-hidden pattern-marble-light pt-6 sm:pt-14 pb-8 sm:pb-16 border-b border-slate-200">
       
       {/* Subtle Athletic Pitch Touchlines (Chalk Grid) */}
       <div className="absolute inset-0 pointer-events-none opacity-40">
@@ -114,7 +114,7 @@ export default function Hero({ onRegisterClick }: HeroProps) {
               <div className="rounded-xl bg-white border-2 border-slate-900 shadow-xl overflow-hidden">
                 
                 {/* Official Pass Header with Pattern */}
-                <div className="pattern-navy-chevron bg-[#061325] text-white p-3 flex items-center justify-between">
+                <div className="pattern-marble-navy text-white p-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Shield className="w-4 h-4 text-blue-400" />
                     <span className="text-[11px] font-black uppercase tracking-wider text-white">

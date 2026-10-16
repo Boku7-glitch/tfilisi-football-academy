@@ -9,7 +9,7 @@ export default function Footer() {
   const { language, t } = useLanguage();
 
   return (
-    <footer className="bg-[#061325] pattern-navy-chevron text-white relative">
+    <footer className="pattern-marble-navy text-white relative">
       {/* Blue & White Club Trim Bar */}
       <div className="club-trim-bar h-1 w-full" />
 
