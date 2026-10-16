@@ -60,7 +60,7 @@ export default function AcademyDNA() {
   ];
 
   return (
-    <section className="py-12 sm:py-20 bg-white border-b border-slate-200 relative overflow-hidden">
+    <section id="academy-dna" className="py-12 sm:py-20 bg-white border-b border-slate-200 relative overflow-hidden">
       <FluidWaveBackground variant="light" intensity="medium" />
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
         

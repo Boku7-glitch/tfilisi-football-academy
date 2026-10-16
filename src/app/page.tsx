@@ -10,6 +10,7 @@ import AcademyDNA from '../components/AcademyDNA';
 import Footer from '../components/Footer';
 import AuthModal from '../components/AuthModal';
 import FluidWaveBackground from '../components/FluidWaveBackground';
+import PortalHubGrid from '../components/PortalHubGrid';
 import { 
   Users, 
   MapPin, 
@@ -46,6 +47,9 @@ function HomePageContent() {
       <MatchdayTicker />
 
       <main className="flex-1">
+        {/* Official GFF-Style Academy Portal Hub (6 Core Blocks) */}
+        <PortalHubGrid />
+
         {/* Hero Section */}
         <Hero onRegisterClick={() => window.location.href = '/contact'} />
 

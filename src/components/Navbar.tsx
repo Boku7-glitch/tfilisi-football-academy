@@ -1,16 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
-  Shield, 
   ChevronDown, 
   LogIn, 
   MapPin, 
-  Sparkles, 
-  Users 
+  Users, 
+  Search, 
+  X, 
+  ArrowRight, 
+  Award, 
+  ShieldCheck, 
+  Zap, 
+  Sparkles 
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { locationsData, teamGroupsData, coachesData, staffData } from '../data/mockData';
 
 interface NavbarProps {
   onOpenAuthModal?: () => void;
@@ -19,301 +25,260 @@ interface NavbarProps {
 export default function Navbar({ onOpenAuthModal }: NavbarProps) {
   const { language, setLanguage, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileGroupsOpen, setMobileGroupsOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
 
-  const handleMouseEnter = (menu: string) => {
-    setOpenDropdown(menu);
-  };
+  // Live quick search results across all modules
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim() || searchQuery.length < 2) return [];
+    const q = searchQuery.toLowerCase();
+    
+    const results: { title: string; category: string; href: string }[] = [];
 
-  const handleMouseLeave = () => {
-    setOpenDropdown(null);
-  };
+    // Search Locations
+    locationsData.forEach(loc => {
+      if (loc.name.toLowerCase().includes(q) || loc.address.toLowerCase().includes(q)) {
+        results.push({ title: `${loc.name} — ${loc.address}`, category: 'ლოკაცია / ცენტრი', href: '/locations' });
+      }
+    });
+
+    // Search Squad Groups
+    teamGroupsData.forEach(grp => {
+      if (grp.name.toLowerCase().includes(q) || grp.category.toLowerCase().includes(q)) {
+        results.push({ title: grp.name, category: 'ასაკობრივი ჯგუფი', href: '/groups' });
+      }
+    });
+
+    // Search Coaches
+    coachesData.forEach(c => {
+      if (c.name.toLowerCase().includes(q) || c.role.toLowerCase().includes(q) || c.specialty.toLowerCase().includes(q)) {
+        results.push({ title: `${c.name} (${c.role})`, category: 'მწვრთნელი', href: '/coaches' });
+      }
+    });
+
+    // Search Staff
+    staffData.forEach(s => {
+      if (s.name.toLowerCase().includes(q) || s.role.toLowerCase().includes(q)) {
+        results.push({ title: `${s.name} (${s.role})`, category: 'სტაფი / მენეჯმენტი', href: '/staff' });
+      }
+    });
+
+    return results.slice(0, 6);
+  }, [searchQuery]);
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 transition-all">
-      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+    <header className="sticky top-0 z-50 transition-all shadow-md">
+      
+      {/* 1. GFF-Style Top Utility Strip */}
+      <div className="bg-slate-100 border-b border-slate-200 text-slate-700 text-[11px] font-bold py-1 px-3.5 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           
-          {/* Authentic Athletic Club Logo Crest */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#061325] flex items-center justify-center p-1.5 border-2 border-blue-600 shadow-sm group-hover:border-blue-500 group-hover:scale-105 transition-all">
-              <img
-                src="/logo/tfilisi-crest-white.svg"
-                alt="ტფილისის საფეხბურთო აკადემია"
-                className="w-full h-full object-contain filter drop-shadow-sm"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-black text-sm sm:text-base tracking-tight text-[#061325] group-hover:text-blue-700 transition-colors leading-tight">
-                {language === 'ka' ? 'ტფილისი' : 'TFILISI'}
-              </span>
-              <span className="text-[9px] sm:text-[10px] uppercase tracking-widest font-extrabold text-blue-600">
-                {language === 'ka' ? 'საფეხბურთო აკადემია' : 'FOOTBALL ACADEMY'}
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation (Athletic Editorial Style) */}
-          <nav className="hidden lg:flex items-center space-x-1">
-            <Link
-              href="/"
-              className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-700 hover:bg-slate-50 rounded-md transition-colors"
-            >
-              {t.navbar.home}
+          {/* Quick links to 6 Main Federation Modules */}
+          <div className="hidden md:flex items-center gap-3.5 overflow-x-auto scrollbar-none py-0.5">
+            <Link href="/#academy-dna" className="hover:text-blue-700 transition-colors flex items-center gap-1 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+              <span>{language === 'ka' ? 'ტფილისის აკადემია' : 'Tfilisi Academy'}</span>
             </Link>
-
-            {/* Teams & Age Groups Dropdown (Toca inspired) */}
-            <div 
-              className="relative"
-              onMouseEnter={() => handleMouseEnter('teams')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Link 
-                href="/groups"
-                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-lg transition-colors ${
-                  openDropdown === 'teams' ? 'text-blue-700 bg-blue-50' : 'text-slate-700 hover:text-blue-700 hover:bg-blue-50/60'
-                }`}
-              >
-                <span>{t.navbar.teamsAges}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openDropdown === 'teams' ? 'rotate-180 text-blue-700' : 'text-slate-400'}`} />
-              </Link>
-
-              {openDropdown === 'teams' && (
-                <div className="absolute top-full left-0 w-84 bg-white rounded-2xl shadow-xl border border-blue-100 p-2.5 animate-in fade-in slide-in-from-top-1 duration-150">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-blue-800 px-3 py-1.5">
-                    {t.navbar.teamsDropdownTitle}
-                  </div>
-                  <div className="space-y-0.5">
-                    <Link
-                      href="/groups"
-                      onClick={() => setOpenDropdown(null)}
-                      className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-blue-50/80 transition-colors group"
-                    >
-                      <div className="p-1.5 rounded-lg bg-blue-100 text-blue-700 group-hover:bg-blue-700 group-hover:text-white transition-colors shrink-0">
-                        <Users className="w-3.5 h-3.5" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-900 group-hover:text-blue-700">2012 - 2013 (U-14)</div>
-                        <div className="text-[11px] text-slate-500 leading-tight">{t.navbar.u14Desc}</div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/groups"
-                      onClick={() => setOpenDropdown(null)}
-                      className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-blue-50/80 transition-colors group"
-                    >
-                      <div className="p-1.5 rounded-lg bg-blue-100 text-blue-700 group-hover:bg-blue-700 group-hover:text-white transition-colors shrink-0">
-                        <Users className="w-3.5 h-3.5" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-900 group-hover:text-blue-700">2014 - 2015 (U-12)</div>
-                        <div className="text-[11px] text-slate-500 leading-tight">{t.navbar.u12Desc}</div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/groups"
-                      onClick={() => setOpenDropdown(null)}
-                      className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-blue-50/80 transition-colors group"
-                    >
-                      <div className="p-1.5 rounded-lg bg-blue-100 text-blue-700 group-hover:bg-blue-700 group-hover:text-white transition-colors shrink-0">
-                        <Sparkles className="w-3.5 h-3.5" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-900 group-hover:text-blue-700">2016 - 2017 (U-10)</div>
-                        <div className="text-[11px] text-slate-500 leading-tight">{t.navbar.u10Desc}</div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/groups"
-                      onClick={() => setOpenDropdown(null)}
-                      className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-blue-50/80 transition-colors group"
-                    >
-                      <div className="p-1.5 rounded-lg bg-blue-100 text-blue-700 group-hover:bg-blue-700 group-hover:text-white transition-colors shrink-0">
-                        <Sparkles className="w-3.5 h-3.5" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-900 group-hover:text-blue-700">2018 - 2019 (U-8)</div>
-                        <div className="text-[11px] text-slate-500 leading-tight">{t.navbar.u8Desc}</div>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Locations Dropdown */}
-            <div 
-              className="relative"
-              onMouseEnter={() => handleMouseEnter('locations')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Link 
-                href="/locations"
-                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-lg transition-colors ${
-                  openDropdown === 'locations' ? 'text-blue-700 bg-blue-50' : 'text-slate-700 hover:text-blue-700 hover:bg-blue-50/60'
-                }`}
-              >
-                <span>{t.navbar.locations}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openDropdown === 'locations' ? 'rotate-180 text-blue-700' : 'text-slate-400'}`} />
-              </Link>
-
-              {openDropdown === 'locations' && (
-                <div className="absolute top-full left-0 w-72 bg-white rounded-2xl shadow-xl border border-blue-100 p-2.5 animate-in fade-in slide-in-from-top-1 duration-150">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-blue-800 px-3 py-1.5">
-                    {t.navbar.locationsDropdownTitle}
-                  </div>
-                  <div className="space-y-0.5">
-                    <Link
-                      href="/locations"
-                      onClick={() => setOpenDropdown(null)}
-                      className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-blue-50 text-slate-800 hover:text-blue-700 transition-colors"
-                    >
-                      <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                      <div>
-                        <div className="text-xs font-semibold">{t.navbar.saburtaloName}</div>
-                        <div className="text-[11px] text-slate-400">{t.navbar.saburtaloAddr}</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/locations"
-                      onClick={() => setOpenDropdown(null)}
-                      className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-blue-50 text-slate-800 hover:text-blue-700 transition-colors"
-                    >
-                      <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                      <div>
-                        <div className="text-xs font-semibold">{t.navbar.varketiliName}</div>
-                        <div className="text-[11px] text-slate-400">{t.navbar.varketiliAddr}</div>
-                      </div>
-                    </Link>
-                    <Link
-                      href="/locations"
-                      onClick={() => setOpenDropdown(null)}
-                      className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-blue-50 text-slate-800 hover:text-blue-700 transition-colors"
-                    >
-                      <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                      <div>
-                        <div className="text-xs font-semibold">{t.navbar.dinamoName}</div>
-                        <div className="text-[11px] text-slate-400">{t.navbar.dinamoAddr}</div>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <Link
-              href="/groups"
-              className="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-blue-700 rounded-lg hover:bg-blue-50/60 transition-colors"
-            >
-              {t.navbar.schedule}
+            <span className="text-slate-300">|</span>
+            <Link href="/locations" className="hover:text-blue-700 transition-colors shrink-0">
+              {language === 'ka' ? 'საფეხბურთო ცენტრები' : 'Football Centers'}
             </Link>
-
-            <Link
-              href="/individual"
-              className="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-blue-700 rounded-lg hover:bg-blue-50/60 transition-colors"
-            >
-              {t.navbar.individual}
+            <span className="text-slate-300">|</span>
+            <Link href="/individual" className="hover:text-blue-700 transition-colors shrink-0">
+              {language === 'ka' ? 'ინდივიდუალური მომზადება' : 'Individual Program'}
             </Link>
-
-            <Link
-              href="/news"
-              className="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-blue-700 rounded-lg hover:bg-blue-50/60 transition-colors"
-            >
-              {t.navbar.news}
+            <span className="text-slate-300">|</span>
+            <Link href="/groups" className="hover:text-blue-700 transition-colors shrink-0">
+              {language === 'ka' ? 'ჯგუფები' : 'Squads'}
             </Link>
-
-            <Link
-              href="/contact"
-              className="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-blue-700 rounded-lg hover:bg-blue-50/60 transition-colors"
-            >
-              {t.navbar.contact}
+            <span className="text-slate-300">|</span>
+            <Link href="/coaches" className="hover:text-blue-700 transition-colors shrink-0">
+              {language === 'ka' ? 'მწვრთნელები' : 'Coaches'}
             </Link>
-          </nav>
+            <span className="text-slate-300">|</span>
+            <Link href="/staff" className="hover:text-blue-700 transition-colors shrink-0">
+              {language === 'ka' ? 'სტაფი' : 'Staff'}
+            </Link>
+          </div>
 
-          {/* Right Area: Language Switcher (Desktop only) + Athletic Member Login Button + Animated Hamburger */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* Right utility items: News, Contact, Language Toggle */}
+          <div className="flex items-center gap-3 ml-auto text-xs">
+            <Link href="/news" className="hidden sm:inline-block hover:text-blue-700 transition-colors text-[11px] font-bold">
+              {language === 'ka' ? 'სიახლეები' : 'News'}
+            </Link>
+            <span className="hidden sm:inline text-slate-300">|</span>
+            <Link href="/contact" className="hover:text-blue-700 transition-colors text-[11px] font-bold">
+              {language === 'ka' ? 'კონტაქტი' : 'Contact'}
+            </Link>
+            <span className="text-slate-300">|</span>
             
-            {/* Language Switcher Pill - DESKTOP ONLY */}
-            <div className="hidden lg:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+            {/* Language Switch */}
+            <div className="flex items-center gap-1 bg-white px-2 py-0.5 rounded-full border border-slate-200">
               <button
                 type="button"
                 onClick={() => setLanguage('ka')}
-                className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all ${
-                  language === 'ka'
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                className={`px-1.5 py-0.5 rounded text-[10px] font-black transition-colors ${
+                  language === 'ka' ? 'text-blue-700 underline' : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
                 ქარ
               </button>
+              <span className="text-slate-300 text-[10px]">/</span>
               <button
                 type="button"
                 onClick={() => setLanguage('en')}
-                className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all ${
-                  language === 'en'
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                className={`px-1.5 py-0.5 rounded text-[10px] font-black transition-colors ${
+                  language === 'en' ? 'text-blue-700 underline' : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
-                EN
+                ENG
               </button>
             </div>
-
-            {/* FULL Athletic Login Button with Door Entry Icon */}
-            <button
-              onClick={onOpenAuthModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-black uppercase tracking-wider bg-[#061325] hover:bg-blue-700 text-white shadow-xs transition-all active:scale-95 shrink-0"
-              title={t.navbar.login}
-            >
-              <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 group-hover:text-white" />
-              <span>{t.navbar.login}</span>
-            </button>
-
-            {/* Smooth Animated Hamburger Icon (Transforms 3 lines smoothly into an X) */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-9 h-9 flex flex-col justify-center items-center gap-1.25 rounded-xl hover:bg-slate-100 transition-colors p-1 border border-slate-200/60"
-              aria-label="Toggle navigation"
-            >
-              <span
-                className={`block w-4.5 h-0.5 bg-slate-800 rounded-full transition-all duration-300 ease-in-out ${
-                  mobileMenuOpen ? 'rotate-45 translate-y-1.75 bg-blue-700' : ''
-                }`}
-              />
-              <span
-                className={`block w-4.5 h-0.5 bg-slate-800 rounded-full transition-all duration-200 ease-in-out ${
-                  mobileMenuOpen ? 'opacity-0 scale-x-0' : 'opacity-100'
-                }`}
-              />
-              <span
-                className={`block w-4.5 h-0.5 bg-slate-800 rounded-full transition-all duration-300 ease-in-out ${
-                  mobileMenuOpen ? '-rotate-45 -translate-y-1.75 bg-blue-700' : ''
-                }`}
-              />
-            </button>
-
           </div>
 
         </div>
       </div>
 
-      {/* Mobile Drawer with Language Switcher */}
+      {/* 2. Main Royal Blue Federation Header Bar (matching GFF screenshot architecture) */}
+      <div className="bg-gradient-to-r from-[#0052ff] via-[#0047e0] to-[#061325] text-white">
+        <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20 gap-2.5 sm:gap-6">
+            
+            {/* Left Area: Circular Official Wolf Crest + Hamburger Button */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <Link href="/" className="flex items-center gap-2.5 group">
+                {/* Circular White Badge with Official Wolf/Spartan Crest */}
+                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white p-1.5 shadow-md flex items-center justify-center border-2 border-blue-200 group-hover:scale-105 transition-transform shrink-0">
+                  <img
+                    src="/logo/tfilisi-crest-navy.svg"
+                    alt="ტფილისის საფეხბურთო აკადემია"
+                    className="w-full h-full object-contain filter drop-shadow-xs"
+                  />
+                </div>
+                <div className="hidden xl:flex flex-col text-white">
+                  <span className="font-black text-sm tracking-tight leading-tight">
+                    {language === 'ka' ? 'ტფილისი' : 'TFILISI'}
+                  </span>
+                  <span className="text-[9px] uppercase tracking-widest font-extrabold text-blue-200">
+                    {language === 'ka' ? 'საფეხბურთო აკადემია' : 'FOOTBALL ACADEMY'}
+                  </span>
+                </div>
+              </Link>
+
+              {/* GFF-Style 3-line Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="w-9 h-9 sm:w-10 sm:h-10 flex flex-col justify-center items-center gap-1.25 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/20 text-white ml-0.5"
+                aria-label="Toggle navigation"
+                title="მენიუ"
+              >
+                <span className="block w-4.5 sm:w-5 h-0.5 bg-white rounded-full" />
+                <span className="block w-4.5 sm:w-5 h-0.5 bg-white rounded-full" />
+                <span className="block w-4.5 sm:w-5 h-0.5 bg-white rounded-full" />
+              </button>
+            </div>
+
+            {/* Center Area: GFF-Style Pill Search Bar */}
+            <div className="flex-1 max-w-xl relative">
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
+                  placeholder={
+                    language === 'ka'
+                      ? 'ტფილისის საფეხბურთო აკადემია | ძიება...'
+                      : 'Tfilisi Football Academy | Search...'
+                  }
+                  className="w-full bg-white rounded-full pl-4 sm:pl-6 pr-10 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 font-bold focus:outline-hidden focus:ring-2 focus:ring-sky-300 shadow-md transition-all"
+                />
+                
+                {searchQuery ? (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">
+                    <Search className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-slate-500" />
+                  </div>
+                )}
+              </div>
+
+              {/* Live Search Quick Results Dropdown */}
+              {searchFocused && searchResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-50 text-slate-900 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-700 px-3 py-1">
+                    ძიების შედეგები ({searchResults.length})
+                  </div>
+                  <div className="divide-y divide-slate-100">
+                    {searchResults.map((res, i) => (
+                      <Link
+                        key={i}
+                        href={res.href}
+                        className="flex items-center justify-between p-2.5 rounded-xl hover:bg-blue-50 transition-colors group"
+                      >
+                        <div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-blue-700">
+                            {res.title}
+                          </div>
+                          <div className="text-[10px] font-mono text-slate-400">
+                            {res.category}
+                          </div>
+                        </div>
+                        <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right Area: Portal Login & Trial Assessment CTA */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={onOpenAuthModal}
+                className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-black uppercase tracking-wider bg-white/15 hover:bg-white/25 text-white border border-white/25 transition-all"
+                title={t.navbar.login}
+              >
+                <LogIn className="w-3.5 h-3.5 text-sky-300" />
+                <span>{t.navbar.login}</span>
+              </button>
+
+              <Link
+                href="/contact"
+                className="px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-black uppercase tracking-wider bg-white hover:bg-slate-100 text-[#0052ff] shadow-md transition-all active:scale-95 flex items-center gap-1.5"
+              >
+                <span>{language === 'ka' ? 'საცდელი ვარჯიში' : 'Trial Session'}</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Club Trim Bar Accent Strip */}
+      <div className="club-trim-bar h-1 w-full" />
+
+      {/* 4. Full Mobile Navigation Drawer (Displaying all 6 core modules) */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 bg-white/98 backdrop-blur-lg px-4 pt-3 pb-6 space-y-1.5 shadow-xl max-h-[calc(100vh-70px)] overflow-y-auto animate-in slide-in-from-top-1 duration-200">
+        <div className="border-t border-slate-200 bg-white/98 backdrop-blur-lg px-4 pt-4 pb-6 space-y-2 shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto animate-in slide-in-from-top-1 duration-200">
           
-          {/* Language Switcher inside the mobile drawer (exactly where user requested!) */}
-          <div className="flex items-center justify-between pb-2.5 mb-2 border-b border-slate-100">
-            <span className="text-xs font-semibold text-slate-500">ენა / Language:</span>
+          {/* Mobile Language Switcher */}
+          <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-100">
+            <span className="text-xs font-bold text-slate-600">ენა / Language:</span>
             <div className="flex items-center bg-slate-100 p-0.5 rounded-full border border-slate-200">
               <button
                 type="button"
                 onClick={() => setLanguage('ka')}
                 className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
-                  language === 'ka' ? 'bg-blue-700 text-white shadow-2xs' : 'text-slate-600'
+                  language === 'ka' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600'
                 }`}
               >
                 ქართული
@@ -322,7 +287,7 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
                 type="button"
                 onClick={() => setLanguage('en')}
                 className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
-                  language === 'en' ? 'bg-blue-700 text-white shadow-2xs' : 'text-slate-600'
+                  language === 'en' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600'
                 }`}
               >
                 English
@@ -330,89 +295,91 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
             </div>
           </div>
 
-          <Link
-            href="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg"
-          >
-            {t.navbar.home}
-          </Link>
-
-          <div>
-            <button
-              onClick={() => setMobileGroupsOpen(!mobileGroupsOpen)}
-              className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg"
+          {/* The 6 Core Modules in Mobile Drawer */}
+          <div className="space-y-1">
+            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-700 px-3 py-1">
+              მთავარი განყოფილებები / MODULES
+            </div>
+            
+            <Link
+              href="/#academy-dna"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
             >
-              <span>{t.navbar.teamsAges}</span>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${mobileGroupsOpen ? 'rotate-180 text-blue-700' : ''}`} />
-            </button>
-            {mobileGroupsOpen && (
-              <div className="pl-3 pr-2 py-1.5 space-y-1 bg-blue-50/50 rounded-lg my-1 border border-blue-100 animate-in fade-in">
-                <Link
-                  href="/groups"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block p-1.5 text-xs font-bold text-slate-800 hover:text-blue-700"
-                >
-                  2012 - 2013 (U-14)
-                </Link>
-                <Link
-                  href="/groups"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block p-1.5 text-xs font-bold text-slate-800 hover:text-blue-700"
-                >
-                  2014 - 2015 (U-12)
-                </Link>
-                <Link
-                  href="/groups"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block p-1.5 text-xs font-bold text-slate-800 hover:text-blue-700"
-                >
-                  2016 - 2017 (U-10)
-                </Link>
-                <Link
-                  href="/groups"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block p-1.5 text-xs font-bold text-slate-800 hover:text-blue-700"
-                >
-                  2018 - 2019 (U-8)
-                </Link>
-              </div>
-            )}
+              <span className="w-2 h-2 rounded-full bg-blue-600" />
+              <span>{language === 'ka' ? 'ტფილისის აკადემია' : 'Tfilisi Academy'}</span>
+            </Link>
+
+            <Link
+              href="/locations"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
+            >
+              <MapPin className="w-4 h-4 text-blue-600" />
+              <span>{language === 'ka' ? 'აკადემიის საფეხბურთო ცენტრები' : 'Football Centers'}</span>
+            </Link>
+
+            <Link
+              href="/individual"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
+            >
+              <Zap className="w-4 h-4 text-blue-600" />
+              <span>{language === 'ka' ? 'ინდივიდუალური მომზადების პროგრამა' : 'Individual Program'}</span>
+            </Link>
+
+            <Link
+              href="/groups"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
+            >
+              <Users className="w-4 h-4 text-blue-600" />
+              <span>{language === 'ka' ? 'ჯგუფები და განრიგი' : 'Squad Categories'}</span>
+            </Link>
+
+            <Link
+              href="/coaches"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
+            >
+              <Award className="w-4 h-4 text-blue-600" />
+              <span>{language === 'ka' ? 'მწვრთნელები' : 'Coaching Staff'}</span>
+            </Link>
+
+            <Link
+              href="/staff"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
+            >
+              <ShieldCheck className="w-4 h-4 text-blue-600" />
+              <span>{language === 'ka' ? 'სტაფი და ადმინისტრაცია' : 'Staff & Administration'}</span>
+            </Link>
           </div>
 
-          <Link
-            href="/locations"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg"
-          >
-            {t.navbar.locations}
-          </Link>
-          <Link
-            href="/individual"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg"
-          >
-            {t.navbar.individual}
-          </Link>
-          <Link
-            href="/news"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg"
-          >
-            {t.navbar.news}
-          </Link>
-          <Link
-            href="/contact"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-blue-50 hover:text-blue-700 rounded-lg"
-          >
-            {t.navbar.contact}
-          </Link>
+          <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (onOpenAuthModal) onOpenAuthModal();
+              }}
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-900 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2"
+            >
+              <LogIn className="w-4 h-4 text-sky-300" />
+              <span>{t.navbar.login}</span>
+            </button>
+            <Link
+              href="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full py-2.5 px-4 rounded-xl bg-blue-600 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 text-center"
+            >
+              <span>{language === 'ka' ? 'საცდელი ვარჯიშის რეგისტრაცია' : 'Register for Trial'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
         </div>
       )}
 
-      {/* Blue & White Club Sash Trim Strip */}
-      <div className="club-trim-bar h-0.75 w-full" />
     </header>
   );
 }

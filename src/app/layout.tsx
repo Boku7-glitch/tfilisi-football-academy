@@ -17,13 +17,19 @@ export const metadata: Metadata = {
   description: "საფეხბურთო აკადემია ბავშვებისა და მოზარდებისთვის. ასაკობრივი ჯგუფები (2012-2019 წწ), განრიგი, ლოკაციები, ინდივიდუალური მომზადება და მშობლის პირადი კაბინეტი.",
 };
 
+import { LanguageProvider } from "../context/LanguageContext";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="ka"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

@@ -194,6 +194,55 @@ export const coachesData: Coach[] = [
   }
 ];
 
+export interface StaffMember {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  phone: string;
+  email: string;
+  bio: string;
+}
+
+export const staffData: StaffMember[] = [
+  {
+    id: 's1',
+    name: 'თორნიკე მაისურაძე',
+    role: 'აკადემიის გენერალური დირექტორი',
+    department: 'მენეჯმენტი',
+    phone: '+995 599 12 34 50',
+    email: 'director@tfilisiacademy.ge',
+    bio: 'სპორტული მენეჯმენტის 15-წლიანი გამოცდილება, UEFA-ს კლუბების განვითარების პროგრამის კურსდამთავრებული.'
+  },
+  {
+    id: 's2',
+    name: 'ირაკლი ვაშაკიძე',
+    role: 'სპორტული დირექტორი & მეთოდოლოგი',
+    department: 'სპორტული დეპარტამენტი',
+    phone: '+995 599 12 34 51',
+    email: 'sport@tfilisiacademy.ge',
+    bio: 'UEFA PRO ლიცენზიის მფლობელი, ბავშვთა განვითარების ევროპული სტანდარტების კურატორი.'
+  },
+  {
+    id: 's3',
+    name: 'დოქტორ ნიკოლოზ ჯავახიშვილი',
+    role: 'მთავარი ექიმი & რეაბილიტოლოგი',
+    department: 'სამედიცინო სამსახური',
+    phone: '+995 599 12 34 52',
+    email: 'medical@tfilisiacademy.ge',
+    bio: 'სპორტული მედიცინის სპეციალისტი, მოზარდთა ტრავმატოლოგია და ფიზიკური დატვირთვების მონიტორინგი.'
+  },
+  {
+    id: 's4',
+    name: 'სალომე გელოვანი',
+    role: 'მშობლებთან ურთიერთობის & რეგისტრაციის მენეჯერი',
+    department: 'ადმინისტრაცია',
+    phone: '+995 599 12 34 53',
+    email: 'admissions@tfilisiacademy.ge',
+    bio: 'საცდელი ვარჯიშების ორგანიზება, სასწავლო პროცესის კოორდინაცია და კომუნიკაცია მშობლებთან.'
+  }
+];
+
 export const newsData: NewsItem[] = [
   {
     id: '1',
