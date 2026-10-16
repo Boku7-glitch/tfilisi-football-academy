@@ -66,37 +66,13 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
               </h1>
             </div>
 
-            {/* Right Area: Language Switcher & Login */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              {/* Language Switch */}
-              <div className="flex items-center bg-white/10 px-2 sm:px-2.5 py-1 rounded-full border border-white/20">
-                <button
-                  type="button"
-                  onClick={() => setLanguage('ka')}
-                  className={`px-1.5 py-0.5 rounded text-xs font-black transition-colors ${
-                    language === 'ka' ? 'text-white bg-white/25 shadow-xs' : 'text-blue-200 hover:text-white'
-                  }`}
-                >
-                  ქარ
-                </button>
-                <span className="text-white/40 text-xs px-0.5">/</span>
-                <button
-                  type="button"
-                  onClick={() => setLanguage('en')}
-                  className={`px-1.5 py-0.5 rounded text-xs font-black transition-colors ${
-                    language === 'en' ? 'text-white bg-white/25 shadow-xs' : 'text-blue-200 hover:text-white'
-                  }`}
-                >
-                  ENG
-                </button>
-              </div>
-
-              {/* Portal Login Button */}
+            {/* Right Area: Equal width spacer or Portal Login */}
+            <div className="flex items-center justify-end shrink-0 min-w-[70px] sm:min-w-[90px]">
               {onOpenAuthModal && (
                 <button
                   type="button"
                   onClick={onOpenAuthModal}
-                  className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                  className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all ml-auto"
                   title={t.navbar.login}
                   aria-label={t.navbar.login}
                 >
@@ -120,6 +96,37 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
         <div className="mobile-menu-drawer-inner">
           <div className="border-t border-slate-200 bg-white/98 backdrop-blur-lg px-4 pt-4 pb-6 space-y-2 shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
             
+            {/* Language Switcher - Appears ONLY after burger line is opened */}
+            <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-100">
+              <span className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                {language === 'ka' ? 'ენის არჩევა / LANGUAGE' : 'SELECT LANGUAGE'}
+              </span>
+              <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setLanguage('ka')}
+                  className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${
+                    language === 'ka'
+                      ? 'bg-[#0052ff] text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  ქართული
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage('en')}
+                  className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${
+                    language === 'en'
+                      ? 'bg-[#0052ff] text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  English
+                </button>
+              </div>
+            </div>
+
             {/* The 6 Core Modules in Mobile Drawer */}
             <div className="space-y-1">
               <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-700 px-3 py-1">
