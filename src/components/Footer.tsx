@@ -4,16 +4,19 @@ import React from 'react';
 import Link from 'next/link';
 import { Shield, Phone, Mail, MapPin } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import FluidWaveBackground from './FluidWaveBackground';
 
 export default function Footer() {
   const { language, t } = useLanguage();
 
   return (
-    <footer className="pattern-marble-navy text-white relative">
-      {/* Blue & White Club Trim Bar */}
-      <div className="club-trim-bar h-1 w-full" />
+    <footer className="bg-[#061325] text-white relative overflow-hidden">
+      <FluidWaveBackground variant="navy" intensity="subtle" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8 sm:pb-12">
+      {/* Blue & White Club Trim Bar */}
+      <div className="club-trim-bar h-1 w-full relative z-10" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8 sm:pb-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 pb-8 sm:pb-10 border-b border-slate-800">
           
           {/* Col 1: Club Brand & Crest */}

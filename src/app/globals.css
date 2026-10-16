@@ -44,74 +44,7 @@ body {
   box-shadow: 0 4px 20px -2px rgba(0, 82, 255, 0.08);
 }
 
-/* ========================================================
-   AUTHENTIC FLUID MARBLE & TOPOGRAPHIC ATHLETIC PATTERNS
-   (Derived from club jersey liquid swirl & topographic waves)
-   ======================================================== */
-
-/* 1. Fluid Marble Waves (White Base + Royal Blue Liquid Swirl) */
-.pattern-marble-light {
-  background-color: #ffffff;
-  background-image: 
-    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%),
-    url('/patterns/marble-waves-light.png') !important;
-  background-size: cover, 740px 740px;
-  background-repeat: no-repeat, repeat;
-}
-
-/* 2. Fluid Marble Waves - Subtle Overlay (For reading-heavy sections) */
-.pattern-marble-subtle {
-  background-color: #ffffff;
-  background-image: 
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.72) 50%, rgba(255, 255, 255, 0.90) 100%),
-    url('/patterns/marble-waves-light.png') !important;
-  background-size: cover, 740px 740px;
-  background-repeat: no-repeat, repeat;
-}
-
-/* 3. Fluid Marble Waves (Deep Navy #061325 + Electric Royal Blue Swirl) */
-.pattern-marble-navy {
-  background-color: #061325;
-  background-image: 
-    radial-gradient(circle at 85% 15%, rgba(0, 82, 255, 0.4) 0%, transparent 60%),
-    radial-gradient(circle at 15% 85%, rgba(0, 110, 255, 0.25) 0%, transparent 55%),
-    url('/patterns/marble-waves-navy.png') !important;
-  background-size: cover, cover, 740px 740px;
-  background-repeat: no-repeat, no-repeat, repeat;
-}
-
-/* Legacy & Hybrid aliases mapped to authentic marble patterns */
-.pattern-diagonal-stripes {
-  background-color: #ffffff;
-  background-image: url('/patterns/marble-waves-light.png') !important;
-  background-size: 740px 740px;
-  background-repeat: repeat;
-}
-
-.pattern-navy-chevron {
-  background-color: #061325;
-  background-image: url('/patterns/marble-waves-navy.png') !important;
-  background-size: 740px 740px;
-  background-repeat: repeat;
-}
-
-.pattern-club-diamonds {
-  background-color: #ffffff;
-  background-image: url('/patterns/marble-waves-light.png') !important;
-  background-size: 740px 740px;
-  background-repeat: repeat;
-}
-
-.pattern-club-stripes {
-  background-color: #ffffff;
-  background-image: 
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0.90) 100%),
-    url('/patterns/marble-waves-light.png') !important;
-  background-size: cover, 740px 740px;
-  background-repeat: no-repeat, repeat;
-}
-
-/* 5. Smooth Blue & White Club Horizon Accent Strip */
+/* Club Horizon Accent Strip */
 .club-trim-bar {
   background: linear-gradient(
     90deg,
