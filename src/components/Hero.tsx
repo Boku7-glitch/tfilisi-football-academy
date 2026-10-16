@@ -37,9 +37,8 @@ export default function Hero({ onRegisterClick }: HeroProps) {
             {/* Main Headline - Solid High-Impact Club Typography */}
             <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#061325] tracking-tight leading-[1.2]">
               {t.hero.titleStart}{' '}
-              <span className="relative inline-block text-blue-600">
-                <span>{t.hero.titleHighlight}</span>
-                <span className="absolute left-0 -bottom-1 sm:-bottom-1.5 w-full h-1 sm:h-1.5 bg-blue-600 rounded-sm" />
+              <span className="text-blue-600">
+                {t.hero.titleHighlight}
               </span>{' '}
               {t.hero.titleEnd}
             </h1>

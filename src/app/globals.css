@@ -45,57 +45,62 @@ body {
 }
 
 /* ========================================================
-   ULTRA-SMOOTH BLUE & WHITE ATHLETIC CLUB PATTERNS
+   VISIBLE & SMOOTH BLUE & WHITE ATHLETIC CLUB PATTERNS
    ======================================================== */
 
-/* 1. Ultra-Smooth Pitch Turf Bands (Soft Ambient Grass Waves) */
+/* 1. Smooth Pitch Turf Bands (Alternating White & Soft Ice-Blue Turf Bands) */
 .pattern-club-stripes {
-  background-color: #ffffff;
+  background-color: #f8fbff;
   background-image: repeating-linear-gradient(
     90deg,
-    #ffffff,
-    #ffffff 90px,
-    #f7fafe 90px,
-    #f7fafe 180px
-  );
+    #ffffff 0px,
+    #ffffff 80px,
+    #edf4ff 80px,
+    #edf4ff 160px
+  ) !important;
 }
 
-/* 2. Ultra-Smooth Athletic Diagonal Pinstripes (Soft Jersey Weave) */
+/* 2. Smooth Athletic Diagonal Jersey Weave (Club Sash & Stadium Ambient Light) */
 .pattern-diagonal-stripes {
   background-color: #ffffff;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    rgba(0, 82, 255, 0.018) 0px,
-    rgba(0, 82, 255, 0.018) 1.5px,
-    transparent 1.5px,
-    transparent 36px
-  );
+  background-image: 
+    radial-gradient(ellipse at 80% -10%, rgba(0, 82, 255, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 15% 100%, rgba(0, 82, 255, 0.08) 0%, transparent 55%),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 82, 255, 0.055) 0px,
+      rgba(0, 82, 255, 0.055) 14px,
+      transparent 14px,
+      transparent 32px
+    ) !important;
 }
 
-/* 3. Smooth Deep Navy & Royal Blue Stadium Atmosphere */
+/* 3. Deep Navy & Royal Blue Stadium Floodlight Atmosphere */
 .pattern-navy-chevron {
   background-color: #061325;
   background-image: 
-    radial-gradient(circle at 85% 20%, rgba(0, 82, 255, 0.22) 0%, transparent 60%),
+    radial-gradient(circle at 85% 15%, rgba(0, 82, 255, 0.35) 0%, transparent 55%),
+    radial-gradient(circle at 15% 85%, rgba(0, 110, 255, 0.22) 0%, transparent 50%),
     repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.02) 0px,
-      rgba(255, 255, 255, 0.02) 1px,
-      transparent 1px,
-      transparent 28px
-    );
+      135deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 10px,
+      transparent 10px,
+      transparent 26px
+    ) !important;
 }
 
-/* 4. Ultra-Smooth Geometric Club Watermark */
+/* 4. Smooth Geometric Club Crest Diamond Watermark */
 .pattern-club-diamonds {
-  background-color: #ffffff;
+  background-color: #f8fbff;
   background-image: 
-    linear-gradient(135deg, rgba(0, 82, 255, 0.015) 25%, transparent 25%),
-    linear-gradient(225deg, rgba(0, 82, 255, 0.015) 25%, transparent 25%),
-    linear-gradient(315deg, rgba(0, 82, 255, 0.015) 25%, transparent 25%),
-    linear-gradient(45deg, rgba(0, 82, 255, 0.015) 25%, transparent 25%);
-  background-position: 32px 0, 32px 0, 0 0, 0 0;
-  background-size: 64px 64px;
+    radial-gradient(circle at 50% 50%, rgba(0, 82, 255, 0.08) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(0, 82, 255, 0.055) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(0, 82, 255, 0.055) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(0, 82, 255, 0.055) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(0, 82, 255, 0.055) 25%, transparent 25%) !important;
+  background-position: 28px 0, 28px 0, 0 0, 0 0;
+  background-size: 56px 56px;
   background-repeat: repeat;
 }
 
