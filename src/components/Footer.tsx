@@ -36,17 +36,27 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Technical Partner - Kelme with generous visual space */}
-            <div className="pt-2">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold mb-2">
+            {/* Technical Partner - Kelme with blue header matching other columns and aligned logo size */}
+            <div>
+              <h4 className="text-[11px] font-black uppercase tracking-widest text-blue-400 mb-3.5">
                 ტექნიკური პარტნიორი
-              </div>
-              <div className="inline-flex items-center justify-center px-4 py-3 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group">
-                <img
-                  src="/logo/kelme-seeklogo-white.png"
-                  alt="KELME"
-                  className="h-10 sm:h-12 w-auto object-contain opacity-95 group-hover:opacity-100 group-hover:scale-105 transition-all"
-                />
+              </h4>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center p-2 border-2 border-slate-700 shadow-sm shrink-0">
+                  <img
+                    src="/logo/kelme-seeklogo-white.png"
+                    alt="KELME"
+                    className="w-full h-full object-contain filter drop-shadow-sm"
+                  />
+                </div>
+                <div>
+                  <div className="font-black text-base tracking-tight text-white leading-tight">
+                    KELME
+                  </div>
+                  <div className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400">
+                    OFFICIAL SPONSOR
+                  </div>
+                </div>
               </div>
             </div>
           </div>
