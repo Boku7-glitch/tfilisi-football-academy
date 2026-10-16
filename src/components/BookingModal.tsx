@@ -48,24 +48,24 @@ export default function BookingModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Header */}
-        <div className="bg-linear-to-r from-blue-700 to-blue-900 px-4 sm:px-6 py-3.5 sm:py-4 text-white flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-white/10">
-              <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+        <div className="bg-[#061325] px-4 sm:px-6 py-4 text-white flex items-center justify-between shrink-0 border-b border-slate-800">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-slate-800 text-blue-400">
+              <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-xs sm:text-base">{t.bookingModal.headerTitle}</h3>
-              <p className="text-[10px] sm:text-xs text-blue-200">{t.bookingModal.subTitle}</p>
+              <h3 className="font-black text-sm sm:text-base tracking-tight">{t.bookingModal.headerTitle}</h3>
+              <p className="text-[10px] sm:text-xs text-blue-400 font-mono">{t.bookingModal.subTitle}</p>
             </div>
           </div>
           <button
             onClick={handleClose}
-            className="p-1 rounded-full hover:bg-white/20 text-white/80 hover:text-white"
+            className="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white"
           >
-            <X className="w-4 h-4 sm:w-5 sm:h-5" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -171,7 +171,7 @@ export default function BookingModal({
               <button
                 onClick={handlePay}
                 disabled={loading}
-                className="w-full py-3 rounded-xl font-bold text-white bg-blue-700 hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm"
+                className="w-full py-3.5 rounded-lg font-black uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition-all flex items-center justify-center gap-2 text-xs sm:text-sm"
               >
                 {loading ? (
                   <span>{t.bookingModal.processing}</span>

@@ -31,30 +31,33 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all">
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 transition-all">
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-linear-to-br from-blue-700 to-blue-900 flex items-center justify-center text-white shadow-md shadow-blue-500/15 group-hover:scale-105 transition-transform border border-blue-400/30">
-              <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-white/10" />
+          {/* Authentic Athletic Club Logo Crest */}
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg bg-[#061325] flex items-center justify-center text-white border-2 border-blue-600 shadow-sm group-hover:border-blue-500 transition-all">
+              <div className="relative flex items-center justify-center">
+                <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 fill-blue-500/20" />
+                <span className="absolute text-[8px] sm:text-[9px] font-black tracking-tighter text-white">TF</span>
+              </div>
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 group-hover:text-blue-700 transition-colors leading-tight">
-                {language === 'ka' ? 'ტფილისის' : 'TFILISI'}
+              <span className="font-black text-sm sm:text-base tracking-tight text-[#061325] group-hover:text-blue-700 transition-colors leading-tight">
+                {language === 'ka' ? 'ტფილისი' : 'TFILISI'}
               </span>
-              <span className="text-[9px] sm:text-[11px] uppercase tracking-wider font-bold text-blue-700">
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-widest font-extrabold text-blue-600">
                 {language === 'ka' ? 'საფეხბურთო აკადემია' : 'FOOTBALL ACADEMY'}
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation (Toca Football Dropdown Style) */}
+          {/* Desktop Navigation (Athletic Editorial Style) */}
           <nav className="hidden lg:flex items-center space-x-1">
             <Link
               href="/"
-              className="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-blue-700 rounded-lg hover:bg-blue-50/60 transition-colors"
+              className="px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-700 hover:bg-slate-50 rounded-md transition-colors"
             >
               {t.navbar.home}
             </Link>
@@ -230,18 +233,18 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
             </Link>
           </nav>
 
-          {/* Right Area: Language Switcher (Desktop only) + Full Login Button + Animated Hamburger */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Right Area: Language Switcher (Desktop only) + Athletic Member Login Button + Animated Hamburger */}
+          <div className="flex items-center gap-2 sm:gap-3">
             
-            {/* Language Switcher Pill - DESKTOP ONLY as requested (removed from mobile header) */}
-            <div className="hidden lg:flex items-center bg-slate-100 p-0.5 rounded-full border border-slate-200">
+            {/* Language Switcher Pill - DESKTOP ONLY */}
+            <div className="hidden lg:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
               <button
                 type="button"
                 onClick={() => setLanguage('ka')}
-                className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
+                className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all ${
                   language === 'ka'
-                    ? 'bg-blue-700 text-white shadow-2xs'
-                    : 'text-slate-600 hover:text-blue-700'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 ქარ
@@ -249,23 +252,23 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
               <button
                 type="button"
                 onClick={() => setLanguage('en')}
-                className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
+                className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all ${
                   language === 'en'
-                    ? 'bg-blue-700 text-white shadow-2xs'
-                    : 'text-slate-600 hover:text-blue-700'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 EN
               </button>
             </div>
 
-            {/* FULL Login Button with Door Entry Icon - Always visible with full text! */}
+            {/* FULL Athletic Login Button with Door Entry Icon */}
             <button
               onClick={onOpenAuthModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold bg-white text-blue-700 border-1.5 border-blue-600 hover:bg-blue-600 hover:text-white shadow-2xs hover:shadow-xs transition-all active:scale-95 shrink-0"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-black uppercase tracking-wider bg-[#061325] hover:bg-blue-700 text-white shadow-xs transition-all active:scale-95 shrink-0"
               title={t.navbar.login}
             >
-              <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 group-hover:text-white" />
+              <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 group-hover:text-white" />
               <span>{t.navbar.login}</span>
             </button>
 

@@ -63,13 +63,12 @@ export default function NewsSection({ onReadArticle }: NewsSectionProps) {
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 pb-4 border-b border-slate-200">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-2">
-              <Newspaper className="w-3 h-3" />
-              <span>{t.news.badge}</span>
+            <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
+              // CLUB DISPATCHES & PRESS
             </div>
-            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
               {t.news.title}
             </h2>
           </div>
@@ -79,54 +78,54 @@ export default function NewsSection({ onReadArticle }: NewsSectionProps) {
         </div>
 
         {/* News Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {newsData.map((item) => {
             const article = getArticleDetails(item);
             return (
               <article
                 key={item.id}
-                className="bg-white rounded-xl border border-slate-200 hover:border-blue-500 overflow-hidden shadow-2xs hover:shadow-xs transition-all flex flex-col group cursor-pointer"
+                className="bg-white rounded-xl border border-slate-200 hover:border-blue-600 overflow-hidden shadow-xs transition-all flex flex-col group cursor-pointer"
                 onClick={() => onReadArticle?.(item)}
               >
                 {/* Image */}
-                <div className="relative aspect-16/10 overflow-hidden bg-slate-100">
+                <div className="relative aspect-16/10 overflow-hidden bg-slate-900">
                   <img
                     src={item.image}
                     alt={article.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[9px] font-bold bg-white/95 text-blue-700 backdrop-blur-xs border border-blue-200">
+                  <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-[#061325] text-white border border-slate-700">
                     {article.category}
                   </span>
                 </div>
 
                 {/* Content */}
-                <div className="p-3 sm:p-3.5 flex-1 flex flex-col justify-between">
+                <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center gap-1.5 text-[10px] text-slate-400 mb-1.5">
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 mb-1.5">
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-2.5 h-2.5 text-blue-600" />
+                        <Calendar className="w-3 h-3 text-blue-600" />
                         {article.date}
                       </span>
                       <span>•</span>
                       <span className="flex items-center gap-1">
-                        <Clock className="w-2.5 h-2.5" />
+                        <Clock className="w-3 h-3" />
                         {article.readTime}
                       </span>
                     </div>
 
-                    <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 group-hover:text-blue-700 transition-colors line-clamp-2 leading-snug mb-1">
+                    <h3 className="text-xs sm:text-sm font-black text-[#061325] group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug mb-1">
                       {article.title}
                     </h3>
 
-                    <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
                       {article.excerpt}
                     </p>
                   </div>
 
-                  <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-700 group-hover:text-blue-800">
+                  <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-black uppercase tracking-wider text-blue-600 group-hover:text-blue-700">
                     <span>{t.news.readMore}</span>
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
               </article>

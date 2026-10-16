@@ -32,23 +32,23 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Modal Header */}
-        <div className="bg-linear-to-r from-blue-700 to-blue-900 px-4 sm:px-6 py-3.5 sm:py-4 text-white flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-white/10">
+        <div className="bg-[#061325] px-4 sm:px-6 py-4 text-white flex items-center justify-between shrink-0 border-b border-slate-800">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-slate-800 text-blue-400">
               {activeTab === 'login' ? (
-                <LogIn className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                <LogIn className="w-4 h-4 sm:w-5 sm:h-5" />
               ) : (
-                <User className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                <User className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
             </div>
             <div>
-              <h3 className="font-extrabold text-xs sm:text-base">
+              <h3 className="font-black text-sm sm:text-base tracking-tight">
                 {activeTab === 'login' ? t.authModal.titleLogin : t.authModal.titlePortal}
               </h3>
-              <p className="text-[10px] sm:text-xs text-blue-200">
+              <p className="text-[10px] sm:text-xs text-blue-400 font-mono">
                 {t.authModal.subTitle}
               </p>
             </div>
@@ -56,28 +56,28 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
           <button
             onClick={onClose}
-            className="p-1 rounded-full hover:bg-white/20 text-white/80 hover:text-white transition-colors"
+            className="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
           >
-            <X className="w-4 h-4 sm:w-5 sm:h-5" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab Toggle */}
-        <div className="bg-blue-50/60 px-4 sm:px-6 py-2 border-b border-blue-100 flex items-center justify-between text-xs shrink-0">
-          <span className="text-slate-500 font-semibold hidden sm:inline">{t.authModal.modeLabel}</span>
+        <div className="bg-slate-50 px-4 sm:px-6 py-2.5 border-b border-slate-200 flex items-center justify-between text-xs shrink-0">
+          <span className="text-slate-500 font-bold uppercase text-[10px] tracking-wider hidden sm:inline">{t.authModal.modeLabel}</span>
           <div className="flex gap-2 w-full sm:w-auto justify-between sm:justify-start">
             <button
               onClick={() => setActiveTab('login')}
-              className={`px-3 py-1 rounded-lg font-bold transition-colors text-xs ${
-                activeTab === 'login' ? 'bg-blue-700 text-white' : 'text-slate-600 hover:text-blue-700'
+              className={`px-3.5 py-1.5 rounded-md font-black uppercase text-xs tracking-wider transition-colors ${
+                activeTab === 'login' ? 'bg-[#061325] text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               {t.authModal.tabLogin}
             </button>
             <button
               onClick={() => setActiveTab('portal_preview')}
-              className={`px-3 py-1 rounded-lg font-bold transition-colors text-xs ${
-                activeTab === 'portal_preview' ? 'bg-blue-700 text-white' : 'text-slate-600 hover:text-blue-700'
+              className={`px-3.5 py-1.5 rounded-md font-black uppercase text-xs tracking-wider transition-colors ${
+                activeTab === 'portal_preview' ? 'bg-[#061325] text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               {t.authModal.tabPortal}

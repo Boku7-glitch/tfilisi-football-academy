@@ -40,11 +40,10 @@ export default function ContactSection() {
           {/* Left: Contact Info */}
           <div className="lg:col-span-5 space-y-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-2">
-                <Shield className="w-3 h-3" />
-                <span>{t.contact.badge}</span>
+              <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
+                // ADMISSIONS & REGISTRATION
               </div>
-              <h2 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
                 {t.contact.title}
               </h2>
               <p className="mt-1.5 text-xs sm:text-sm text-slate-500 leading-relaxed">
@@ -53,34 +52,34 @@ export default function ContactSection() {
             </div>
 
             {/* Quick Contacts */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-3 p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/70">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-700 text-white flex items-center justify-center shrink-0">
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <div className="w-9 h-9 rounded-md bg-[#061325] text-blue-400 flex items-center justify-center shrink-0">
                   <Phone className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-semibold text-slate-400">{t.contact.hotline}</div>
-                  <div className="text-xs sm:text-sm font-extrabold text-slate-900">+995 599 00 00 00</div>
+                  <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">{t.contact.hotline}</div>
+                  <div className="text-xs sm:text-sm font-black text-[#061325]">+995 599 00 00 00</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/70">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-700 text-white flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <div className="w-9 h-9 rounded-md bg-[#061325] text-blue-400 flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-semibold text-slate-400">{t.contact.email}</div>
-                  <div className="text-xs sm:text-sm font-extrabold text-slate-900">info@tfilisifa.ge</div>
+                  <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">{t.contact.email}</div>
+                  <div className="text-xs sm:text-sm font-black text-[#061325]">info@tfilisifa.ge</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/70">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-700 text-white flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <div className="w-9 h-9 rounded-md bg-[#061325] text-blue-400 flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-semibold text-slate-400">{t.contact.office}</div>
-                  <div className="text-xs sm:text-sm font-extrabold text-slate-900">
+                  <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">{t.contact.office}</div>
+                  <div className="text-xs sm:text-sm font-black text-[#061325]">
                     {language === 'ka' ? 'თბილისი, უნივერსიტეტის ქ. #6' : '6 University St, Tbilisi'}
                   </div>
                 </div>
@@ -209,12 +208,12 @@ export default function ContactSection() {
                     </div>
                   </div>
 
-                  <div className="pt-1">
+                  <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full py-2.5 sm:py-3 rounded-xl text-white font-extrabold bg-blue-700 hover:bg-blue-800 shadow-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 text-xs sm:text-sm"
+                      className="w-full py-3 rounded-lg text-white font-black uppercase tracking-wider bg-blue-600 hover:bg-blue-700 shadow-sm flex items-center justify-center gap-2 transition-all active:scale-95 text-xs sm:text-sm"
                     >
-                      <Send className="w-3.5 h-3.5" />
+                      <Send className="w-4 h-4" />
                       <span>{t.contact.submitBtn}</span>
                     </button>
                   </div>
