@@ -62,23 +62,8 @@ export default function PortalHubGrid() {
   const { language } = useLanguage();
 
   return (
-    <section className="py-8 sm:py-14 bg-white relative">
+    <section className="py-6 sm:py-10 bg-white relative">
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-3 pb-3 border-b border-slate-200">
-          <div>
-            <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
-              // TFILISI FOOTBALL ACADEMY • OFFICIAL PORTAL
-            </div>
-            <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
-              {language === 'ka' ? 'აკადემიის მთავარი განყოფილებები' : 'Academy Portal Matrix'}
-            </h2>
-          </div>
-          <span className="text-xs font-bold text-slate-500 font-mono">
-            6 OFFICIAL MODULES
-          </span>
-        </div>
 
         {/* 6 GFF-Style Athletic Portal Cards Grid (3 columns x 2 rows on desktop) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">

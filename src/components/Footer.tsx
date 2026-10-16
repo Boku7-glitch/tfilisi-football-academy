@@ -39,8 +39,24 @@ export default function Footer() {
             <p className="text-xs text-slate-400 leading-relaxed">
               {t.footer.desc}
             </p>
-            <div className="inline-block px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700 text-[10px] font-mono font-bold text-slate-300">
-              GFF & UEFA STANDARDS
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="inline-block px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700 text-[10px] font-mono font-bold text-slate-300">
+                GFF & UEFA STANDARDS
+              </div>
+            </div>
+
+            {/* Official Technical Sponsor: Kelme */}
+            <div className="pt-1">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold mb-1.5">
+                ტექნიკური პარტნიორი
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors">
+                <img
+                  src="/logo/kelme-white.png"
+                  alt="KELME"
+                  className="h-5 w-auto object-contain opacity-95"
+                />
+              </div>
             </div>
           </div>
 
@@ -80,28 +96,73 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 4: Contacts */}
-          <div>
-            <h4 className="text-[11px] font-black uppercase tracking-widest text-blue-400 mb-3.5">
-              {t.footer.contactTitle}
-            </h4>
-            <ul className="space-y-2 text-xs text-slate-300 font-medium">
-              <li className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                <span>+995 599 00 00 00</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                <span>info@tbilisifa.ge</span>
-              </li>
-            </ul>
+          {/* Col 4: Contacts & Social Media */}
+          <div className="space-y-4">
+            <div>
+              <h4 className="text-[11px] font-black uppercase tracking-widest text-blue-400 mb-3.5">
+                {t.footer.contactTitle}
+              </h4>
+              <ul className="space-y-2 text-xs text-slate-300 font-medium">
+                <li className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                  <span>+995 599 00 00 00</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Mail className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                  <span>info@tbilisifa.ge</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Social Media Links */}
+            <div>
+              <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold mb-2">
+                სოციალური მედია
+              </div>
+              <div className="flex items-center gap-2.5">
+                <a
+                  href="https://www.instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-gradient-to-tr hover:from-amber-500 hover:via-rose-500 hover:to-purple-600 border border-slate-800 hover:border-transparent flex items-center justify-center text-slate-300 hover:text-white transition-all shadow-xs group"
+                  title="Instagram"
+                  aria-label="Instagram"
+                >
+                  <svg className="w-4 h-4 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-xl bg-slate-900 hover:bg-[#1877F2] border border-slate-800 hover:border-transparent flex items-center justify-center text-slate-300 hover:text-white transition-all shadow-xs group"
+                  title="Facebook"
+                  aria-label="Facebook"
+                >
+                  <svg className="w-4 h-4 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
 
         </div>
 
         <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
           <p>{t.footer.rights}</p>
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">ტექნიკური სპონსორი:</span>
+              <img
+                src="/logo/kelme-white.png"
+                alt="KELME"
+                className="h-4.5 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
+              />
+            </div>
             <span className="text-slate-400 font-mono text-[11px]">EST. 2024 • TBILISI, GEORGIA</span>
           </div>
         </div>
