@@ -409,6 +409,9 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
           </Link>
         </div>
       )}
+
+      {/* Blue & White Club Sash Trim Strip */}
+      <div className="club-trim-bar h-0.75 w-full" />
     </header>
   );
 }

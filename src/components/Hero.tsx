@@ -13,11 +13,11 @@ export default function Hero({ onRegisterClick }: HeroProps) {
   const { language, t } = useLanguage();
 
   return (
-    <section className="relative overflow-hidden bg-white pt-6 sm:pt-14 pb-8 sm:pb-16 border-b border-slate-200">
+    <section className="relative overflow-hidden pattern-diagonal-stripes pt-6 sm:pt-14 pb-8 sm:pb-16 border-b border-slate-200">
       
       {/* Subtle Athletic Pitch Touchlines (Chalk Grid) */}
       <div className="absolute inset-0 pointer-events-none opacity-40">
-        <div className="h-full w-full border-x border-slate-100 max-w-7xl mx-auto" />
+        <div className="h-full w-full border-x border-slate-200/60 max-w-7xl mx-auto" />
       </div>
 
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative">
@@ -27,17 +27,17 @@ export default function Hero({ onRegisterClick }: HeroProps) {
           <div className="lg:col-span-7 space-y-4 sm:space-y-5 text-center lg:text-left">
             
             {/* Athletic Category Tag */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-100 border border-slate-300 text-slate-800 text-[11px] sm:text-xs font-black tracking-wider uppercase">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white border border-blue-200 text-slate-800 text-[11px] sm:text-xs font-black tracking-wider uppercase shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-blue-600" />
               <span>{t.hero.badge}</span>
-              <span className="text-slate-400">|</span>
+              <span className="text-slate-300">|</span>
               <span className="text-blue-700 font-bold">{language === 'ka' ? '2012 — 2019 წლები' : 'U8 — U14 TALENT'}</span>
             </div>
 
-            {/* Main Headline - Solid High-Impact Club Typography (NO AI gradients) */}
+            {/* Main Headline - Solid High-Impact Club Typography */}
             <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#061325] tracking-tight leading-[1.15]">
               {t.hero.titleStart}{' '}
-              <span className="text-blue-600">
+              <span className="text-blue-600 underline decoration-blue-600/30 decoration-wavy underline-offset-6">
                 {t.hero.titleHighlight}
               </span>{' '}
               {t.hero.titleEnd}
@@ -66,9 +66,9 @@ export default function Hero({ onRegisterClick }: HeroProps) {
               </Link>
             </div>
 
-            {/* Athletic Scoreboard / Stats Matrix */}
+            {/* Athletic Scoreboard / Stats Matrix with Blue Accent Tops */}
             <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-4 border-t border-slate-200">
-              <div className="p-2.5 sm:p-3 rounded-lg bg-slate-50 border border-slate-200 text-left">
+              <div className="p-2.5 sm:p-3 rounded-lg bg-white border border-slate-200 border-t-3 border-t-[#061325] text-left shadow-2xs">
                 <div className="text-base sm:text-xl font-black text-[#061325] leading-none mb-1">
                   03
                 </div>
@@ -80,7 +80,7 @@ export default function Hero({ onRegisterClick }: HeroProps) {
                 </div>
               </div>
 
-              <div className="p-2.5 sm:p-3 rounded-lg bg-slate-50 border border-slate-200 text-left">
+              <div className="p-2.5 sm:p-3 rounded-lg bg-white border border-slate-200 border-t-3 border-t-blue-600 text-left shadow-2xs">
                 <div className="text-base sm:text-xl font-black text-blue-600 leading-none mb-1">
                   100%
                 </div>
@@ -92,7 +92,7 @@ export default function Hero({ onRegisterClick }: HeroProps) {
                 </div>
               </div>
 
-              <div className="p-2.5 sm:p-3 rounded-lg bg-slate-50 border border-slate-200 text-left">
+              <div className="p-2.5 sm:p-3 rounded-lg bg-white border border-slate-200 border-t-3 border-t-[#061325] text-left shadow-2xs">
                 <div className="text-base sm:text-xl font-black text-[#061325] leading-none mb-1">
                   12+
                 </div>
@@ -107,24 +107,29 @@ export default function Hero({ onRegisterClick }: HeroProps) {
 
           </div>
 
-          {/* Right Column: Official Academy Roster & Training Pass */}
+          {/* Right Column: Official Academy Roster & Training Pass with Chevron Header */}
           <div className="lg:col-span-5">
             <div className="relative mx-auto max-w-sm sm:max-w-md lg:max-w-none">
               
-              <div className="rounded-xl bg-white border-2 border-slate-900 p-2 sm:p-3 shadow-md">
+              <div className="rounded-xl bg-white border-2 border-slate-900 shadow-xl overflow-hidden">
                 
-                {/* Official Pass Header */}
-                <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 px-1">
-                  <div className="flex items-center gap-1.5">
-                    <Shield className="w-4 h-4 text-blue-600" />
-                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-900">
+                {/* Official Pass Header with Pattern */}
+                <div className="pattern-navy-chevron bg-[#061325] text-white p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-blue-400" />
+                    <span className="text-[11px] font-black uppercase tracking-wider text-white">
                       TFA MATCH & TRAINING PASS
                     </span>
                   </div>
-                  <span className="text-[9px] font-mono font-bold text-slate-400">
+                  <span className="text-[9px] font-mono font-bold text-blue-300">
                     ACADEMY • 2024-25
                   </span>
                 </div>
+
+                {/* Club Trim Bar Divider */}
+                <div className="club-trim-bar h-1 w-full" />
+
+                <div className="p-2.5 sm:p-3 bg-white">
 
                 {/* High Contrast Youth Action Visual */}
                 <div className="relative rounded-lg overflow-hidden aspect-16/10 sm:aspect-4/3 bg-slate-900">
@@ -166,6 +171,7 @@ export default function Hero({ onRegisterClick }: HeroProps) {
               </div>
             </div>
           </div>
+        </div>
 
         </div>
       </div>

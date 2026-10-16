@@ -51,8 +51,8 @@ function HomePageContent() {
         {/* Unique Feature 1: Interactive Tactical Pitch & Development Pathway */}
         <TacticalPitchPathway />
 
-        {/* 1. Uncluttered Groups & Locations Teaser (Athletic Club Matrix) */}
-        <section className="py-10 sm:py-16 bg-white border-b border-slate-200">
+        {/* 1. Uncluttered Groups & Locations Teaser (Athletic Club Matrix with Turf Stripes) */}
+        <section className="py-10 sm:py-16 pattern-club-stripes border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
             
             <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-3">
@@ -259,11 +259,15 @@ function HomePageContent() {
           </div>
         </section>
 
-        {/* 3. Official Academy Assessment Banner (Athletic Deep Navy Pitch Edition) */}
+        {/* 3. Official Academy Assessment Banner (Athletic Deep Navy Pattern Edition) */}
         <section className="py-8 sm:py-14 bg-white">
           <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
-            <div className="bg-[#061325] rounded-2xl p-6 sm:p-10 text-white flex flex-col md:flex-row items-center justify-between gap-6 border-2 border-slate-800 shadow-md">
-              <div className="space-y-2 text-center md:text-left">
+            <div className="bg-[#061325] pattern-navy-chevron rounded-2xl p-6 sm:p-10 text-white flex flex-col md:flex-row items-center justify-between gap-6 border-2 border-blue-600/40 shadow-xl relative overflow-hidden">
+              
+              {/* Blue & White Club Trim Bar Accent */}
+              <div className="club-trim-bar h-1.5 w-full absolute top-0 left-0 right-0" />
+
+              <div className="space-y-2 text-center md:text-left relative z-10">
                 <span className="inline-block px-2.5 py-0.5 rounded bg-blue-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest">
                   {language === 'ka' ? 'უფასო საცდელი ვარჯიში' : 'Official Trial Assessment'}
                 </span>

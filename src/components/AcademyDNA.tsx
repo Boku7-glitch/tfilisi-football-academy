@@ -59,7 +59,7 @@ export default function AcademyDNA() {
   ];
 
   return (
-    <section className="py-12 sm:py-20 bg-slate-50 border-b border-slate-200">
+    <section className="py-12 sm:py-20 pattern-club-diamonds border-b border-slate-200 relative">
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
         
         {/* Header */}

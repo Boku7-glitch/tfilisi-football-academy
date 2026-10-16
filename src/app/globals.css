@@ -43,3 +43,68 @@ body {
   border-color: #0052ff;
   box-shadow: 0 4px 20px -2px rgba(0, 82, 255, 0.08);
 }
+
+/* ========================================================
+   AUTHENTIC BLUE & WHITE ATHLETIC CLUB PATTERNS
+   ======================================================== */
+
+/* 1. Alternating Pitch Vertical Stripes (Mowed Stadium Turf) */
+.pattern-club-stripes {
+  background-color: #ffffff;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #ffffff,
+    #ffffff 48px,
+    #f4f8fe 48px,
+    #f4f8fe 96px
+  );
+}
+
+/* 2. Athletic Diagonal Pinstripes (Jersey Fabric Texture) */
+.pattern-diagonal-stripes {
+  background-color: #ffffff;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 18px,
+    rgba(0, 82, 255, 0.045) 18px,
+    rgba(0, 82, 255, 0.045) 20px
+  );
+}
+
+/* 3. Deep Navy & Royal Blue Chevron Stripe (Kit Pattern) */
+.pattern-navy-chevron {
+  background-color: #061325;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 82, 255, 0.08) 0px,
+    rgba(0, 82, 255, 0.08) 2px,
+    transparent 2px,
+    transparent 16px
+  );
+}
+
+/* 4. Geometric Football Rhombus / Argyle Watermark */
+.pattern-club-diamonds {
+  background-color: #ffffff;
+  background-image: 
+    linear-gradient(135deg, rgba(0, 82, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(0, 82, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(0, 82, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(0, 82, 255, 0.03) 25%, transparent 25%);
+  background-position: 24px 0, 24px 0, 0 0, 0 0;
+  background-size: 48px 48px;
+  background-repeat: repeat;
+}
+
+/* 5. Blue & White Club Jersey Trim Strip */
+.club-trim-bar {
+  background: repeating-linear-gradient(
+    -45deg,
+    #0052ff,
+    #0052ff 12px,
+    #ffffff 12px,
+    #ffffff 24px
+  );
+}
+
