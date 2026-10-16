@@ -36,26 +36,21 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Technical Partner - Kelme with blue header matching other columns and aligned logo size */}
-            <div>
-              <h4 className="text-[11px] font-black uppercase tracking-widest text-blue-400 mb-3.5">
-                ტექნიკური პარტნიორი
-              </h4>
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center p-1.5 border-2 border-blue-600 shadow-sm shrink-0">
-                  <img
-                    src="/logo/kelme-seeklogo-white.png"
-                    alt="KELME"
-                    className="w-full h-full object-contain filter drop-shadow-sm"
-                  />
+            {/* Technical Partner (Kelme) */}
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center p-1.5 border-2 border-blue-600 shadow-sm shrink-0">
+                <img
+                  src="/logo/kelme-seeklogo-white.png"
+                  alt="KELME"
+                  className="w-full h-full object-contain filter drop-shadow-sm"
+                />
+              </div>
+              <div>
+                <div className="font-black text-base tracking-tight text-white leading-tight">
+                  KELME
                 </div>
-                <div>
-                  <div className="font-black text-base tracking-tight text-white leading-tight">
-                    KELME
-                  </div>
-                  <div className="text-[10px] uppercase tracking-widest font-extrabold text-slate-400">
-                    OFFICIAL SPONSOR
-                  </div>
+                <div className="text-[10px] uppercase tracking-widest font-extrabold text-blue-400">
+                  ტექნიკური სპონსორი
                 </div>
               </div>
             </div>
