@@ -45,66 +45,69 @@ body {
 }
 
 /* ========================================================
-   AUTHENTIC BLUE & WHITE ATHLETIC CLUB PATTERNS
+   ULTRA-SMOOTH BLUE & WHITE ATHLETIC CLUB PATTERNS
    ======================================================== */
 
-/* 1. Alternating Pitch Vertical Stripes (Mowed Stadium Turf) */
+/* 1. Ultra-Smooth Pitch Turf Bands (Soft Ambient Grass Waves) */
 .pattern-club-stripes {
   background-color: #ffffff;
   background-image: repeating-linear-gradient(
     90deg,
     #ffffff,
-    #ffffff 48px,
-    #f4f8fe 48px,
-    #f4f8fe 96px
+    #ffffff 90px,
+    #f7fafe 90px,
+    #f7fafe 180px
   );
 }
 
-/* 2. Athletic Diagonal Pinstripes (Jersey Fabric Texture) */
+/* 2. Ultra-Smooth Athletic Diagonal Pinstripes (Soft Jersey Weave) */
 .pattern-diagonal-stripes {
   background-color: #ffffff;
   background-image: repeating-linear-gradient(
     -45deg,
-    transparent,
-    transparent 18px,
-    rgba(0, 82, 255, 0.045) 18px,
-    rgba(0, 82, 255, 0.045) 20px
+    rgba(0, 82, 255, 0.018) 0px,
+    rgba(0, 82, 255, 0.018) 1.5px,
+    transparent 1.5px,
+    transparent 36px
   );
 }
 
-/* 3. Deep Navy & Royal Blue Chevron Stripe (Kit Pattern) */
+/* 3. Smooth Deep Navy & Royal Blue Stadium Atmosphere */
 .pattern-navy-chevron {
   background-color: #061325;
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(0, 82, 255, 0.08) 0px,
-    rgba(0, 82, 255, 0.08) 2px,
-    transparent 2px,
-    transparent 16px
-  );
+  background-image: 
+    radial-gradient(circle at 85% 20%, rgba(0, 82, 255, 0.22) 0%, transparent 60%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.02) 0px,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 28px
+    );
 }
 
-/* 4. Geometric Football Rhombus / Argyle Watermark */
+/* 4. Ultra-Smooth Geometric Club Watermark */
 .pattern-club-diamonds {
   background-color: #ffffff;
   background-image: 
-    linear-gradient(135deg, rgba(0, 82, 255, 0.03) 25%, transparent 25%),
-    linear-gradient(225deg, rgba(0, 82, 255, 0.03) 25%, transparent 25%),
-    linear-gradient(315deg, rgba(0, 82, 255, 0.03) 25%, transparent 25%),
-    linear-gradient(45deg, rgba(0, 82, 255, 0.03) 25%, transparent 25%);
-  background-position: 24px 0, 24px 0, 0 0, 0 0;
-  background-size: 48px 48px;
+    linear-gradient(135deg, rgba(0, 82, 255, 0.015) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(0, 82, 255, 0.015) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(0, 82, 255, 0.015) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(0, 82, 255, 0.015) 25%, transparent 25%);
+  background-position: 32px 0, 32px 0, 0 0, 0 0;
+  background-size: 64px 64px;
   background-repeat: repeat;
 }
 
-/* 5. Blue & White Club Jersey Trim Strip */
+/* 5. Smooth Blue & White Club Horizon Accent Strip */
 .club-trim-bar {
-  background: repeating-linear-gradient(
-    -45deg,
-    #0052ff,
-    #0052ff 12px,
-    #ffffff 12px,
-    #ffffff 24px
+  background: linear-gradient(
+    90deg,
+    #0052ff 0%,
+    #38bdf8 35%,
+    #ffffff 50%,
+    #38bdf8 65%,
+    #0052ff 100%
   );
 }
 
