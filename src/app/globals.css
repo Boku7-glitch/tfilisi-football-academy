@@ -54,5 +54,132 @@ body {
     #38bdf8 65%,
     #0052ff 100%
   );
+  background-size: 200% 100%;
+  animation: smoothShimmer 8s ease-in-out infinite alternate;
+}
+
+@keyframes smoothShimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* ========================================================
+   ULTRA-SMOOTH ATHLETIC BURGER MENU ANIMATION
+   ======================================================== */
+.burger-menu-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.15s ease-out;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.burger-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+.burger-menu-btn:active {
+  transform: scale(0.93);
+}
+
+.burger-icon-container {
+  position: relative;
+  width: 22px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.burger-pill {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2.5px;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transform-origin: 50% 50%;
+  will-change: transform, top, opacity, width;
+  transition: 
+    transform 0.42s cubic-bezier(0.34, 1.3, 0.64, 1),
+    top 0.42s cubic-bezier(0.34, 1.3, 0.64, 1),
+    opacity 0.28s ease,
+    width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Default (Closed) State Positions */
+.burger-pill-top {
+  top: 1px;
+  transform: rotate(0deg);
+}
+
+.burger-pill-middle {
+  top: 7.75px;
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.burger-pill-bottom {
+  top: 14.5px;
+  transform: rotate(0deg);
+}
+
+/* Subtle organic hover dynamic when closed */
+.burger-menu-btn:hover .burger-pill-top:not(.active) {
+  width: 22px;
+}
+.burger-menu-btn:hover .burger-pill-middle:not(.active) {
+  width: 16px;
+}
+.burger-menu-btn:hover .burger-pill-bottom:not(.active) {
+  width: 19px;
+}
+
+/* Active (Open - 'X') State: Smooth Spring Morph */
+.burger-pill-top.active {
+  top: 7.75px;
+  transform: rotate(45deg);
+  width: 22px;
+}
+
+.burger-pill-middle.active {
+  top: 7.75px;
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.burger-pill-bottom.active {
+  top: 7.75px;
+  transform: rotate(-45deg);
+  width: 22px;
+}
+
+/* Smooth Mobile Drawer Entrance */
+.mobile-drawer-enter {
+  animation: smoothDrawerIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes smoothDrawerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
