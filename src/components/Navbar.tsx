@@ -75,7 +75,7 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
           
           {/* Quick links to 6 Main Federation Modules */}
           <div className="hidden md:flex items-center gap-3.5 overflow-x-auto scrollbar-none py-0.5">
-            <Link href="/#academy-dna" className="hover:text-blue-700 transition-colors flex items-center gap-1 shrink-0">
+            <Link href="/academy" className="hover:text-blue-700 transition-colors flex items-center gap-1 shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
               <span>{language === 'ka' ? 'ტფილისის აკადემია' : 'Tfilisi Academy'}</span>
             </Link>
@@ -309,7 +309,7 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
               </div>
               
               <Link
-                href="/#academy-dna"
+                href="/academy"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm transition-colors"
               >

@@ -3,7 +3,6 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Shield, Target, Compass, Zap, HeartHandshake } from 'lucide-react';
-import FluidWaveBackground from './FluidWaveBackground';
 
 export default function AcademyDNA() {
   const { language } = useLanguage();
@@ -60,8 +59,7 @@ export default function AcademyDNA() {
   ];
 
   return (
-    <section id="academy-dna" className="py-12 sm:py-20 bg-white border-b border-slate-200 relative overflow-hidden">
-      <FluidWaveBackground variant="light" intensity="medium" />
+    <section id="academy-dna" className="py-12 sm:py-20 bg-white border-b border-slate-200 relative">
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}

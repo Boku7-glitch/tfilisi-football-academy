@@ -3,8 +3,6 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import MatchdayTicker from '../../components/MatchdayTicker';
-import FluidWaveBackground from '../../components/FluidWaveBackground';
 import { LanguageProvider, useLanguage } from '../../context/LanguageContext';
 import { staffData } from '../../data/mockData';
 import { ShieldCheck, Phone, Mail, Award, CheckCircle2, ArrowRight } from 'lucide-react';
@@ -16,13 +14,11 @@ function StaffPageContent() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900">
       <Navbar onOpenAuthModal={() => {}} />
-      <MatchdayTicker />
 
-      <main className="flex-1">
+      <main className="flex-1 bg-white">
         {/* Header Hero */}
-        <section className="relative py-12 sm:py-16 bg-[#061325] text-white overflow-hidden border-b border-slate-800">
-          <FluidWaveBackground variant="navy" />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <section className="py-12 sm:py-16 bg-[#061325] text-white border-b border-slate-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
               <span className="inline-block px-3 py-1 rounded bg-blue-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest mb-3">
                 {language === 'ka' ? 'აკადემიის ადმინისტრაცია' : 'MANAGEMENT & STAFF'}
@@ -40,9 +36,8 @@ function StaffPageContent() {
         </section>
 
         {/* Staff Grid */}
-        <section className="py-12 sm:py-16 bg-white relative overflow-hidden">
-          <FluidWaveBackground variant="light" intensity="medium" />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <section className="py-12 sm:py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               {staffData.map((member) => (
                 <div

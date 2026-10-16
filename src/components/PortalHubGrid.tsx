@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { ChevronRight } from 'lucide-react';
-import FluidWaveBackground from './FluidWaveBackground';
 
 export interface PortalHubItem {
   id: string;
@@ -19,7 +18,7 @@ export const portalHubItems: PortalHubItem[] = [
     id: 'academy',
     titleKa: 'ტფილისის აკადემია',
     titleEn: 'TFILISI ACADEMY',
-    href: '/#academy-dna',
+    href: '/academy',
     iconType: 'academy'
   },
   {
@@ -63,10 +62,7 @@ export default function PortalHubGrid() {
   const { language } = useLanguage();
 
   return (
-    <section className="py-8 sm:py-14 bg-white relative overflow-hidden">
-      {/* Background Subtle Fluid Wave Texture */}
-      <FluidWaveBackground variant="light" intensity="medium" />
-
+    <section className="py-8 sm:py-14 bg-white relative">
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
@@ -95,10 +91,6 @@ export default function PortalHubGrid() {
                 href={item.href}
                 className="group relative rounded-2xl bg-gradient-to-b from-[#0052ff] via-[#0047e0] to-[#0038b8] hover:from-[#005aff] hover:to-[#041a38] shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col justify-between aspect-16/11 sm:aspect-16/10 border border-blue-400/30"
               >
-                {/* Subtle Fluid Wave Watermark inside card */}
-                <div className="absolute inset-0 opacity-20 pointer-events-none">
-                  <FluidWaveBackground variant="navy" />
-                </div>
 
                 {/* HUD Corner Brackets ┌ ┐ └ ┘ (Exact GFF Screenshot Architecture) */}
                 <div className="absolute top-3.5 left-3.5 w-3.5 h-3.5 border-t-2 border-l-2 border-white/60 group-hover:border-white transition-colors pointer-events-none" />
