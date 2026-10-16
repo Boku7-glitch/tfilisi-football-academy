@@ -503,12 +503,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem('tfa_lang') as Language;
     if (saved === 'ka' || saved === 'en') {
       setLanguage(saved);
+      document.documentElement.lang = saved;
+    } else {
+      document.documentElement.lang = 'ka';
     }
   }, []);
 
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
     localStorage.setItem('tfa_lang', lang);
+    document.documentElement.lang = lang;
   };
 
   return (

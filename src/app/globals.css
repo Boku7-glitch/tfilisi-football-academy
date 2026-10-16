@@ -1,5 +1,58 @@
 @import "tailwindcss";
 
+/* ========================================================
+   BPG Nino Mtavruli - Official Georgian Academy Typography
+   (Source: fonts.ge/ka/font/143/BPG-Nino-Mtavruli)
+   ======================================================== */
+@font-face {
+  font-family: 'BPG Nino Mtavruli';
+  src: url('/fonts/bpg_nino_mtavruli_normal.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BPG Nino Mtavruli';
+  src: url('/fonts/bpg_nino_mtavruli_normal.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BPG Nino Mtavruli';
+  src: url('/fonts/bpg_nino_mtavruli_bold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BPG Nino Mtavruli';
+  src: url('/fonts/bpg_nino_mtavruli_bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BPG Nino Mtavruli';
+  src: url('/fonts/bpg_nino_mtavruli_bold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BPG Nino Mtavruli';
+  src: url('/fonts/bpg_nino_mtavruli_bold.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Secondary & Fallback Typography: FiraGO */
 @font-face {
   font-family: 'FiraGO';
   src: url('/fonts/FiraGO-Regular.woff2') format('woff2');
@@ -60,12 +113,18 @@ html {
 body {
   background: #ffffff;
   color: #091322;
-  font-family: 'FiraGO', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'BPG Nino Mtavruli', 'FiraGO', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Ensure Georgian text retains proper glyph mapping with BPG Nino Mtavruli */
+[lang="ka"] .uppercase,
+:lang(ka) .uppercase {
+  text-transform: none;
 }
 
 /* Hide scrollbars for slick mobile horizontal swipe */
