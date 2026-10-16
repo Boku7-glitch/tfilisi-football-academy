@@ -15,7 +15,7 @@ interface FluidWaveBackgroundProps {
  * Uses bespoke Bézier curves and layered athletic gradients strictly in White, Royal Blue (#0052ff),
  * Sky Blue (#38bdf8), and Deep Navy (#061325).
  * 
- * 100% vector SVG: zero raster artifacts, zero heavy image requests, razor-sharp on all screens.
+ * 100% vector SVG: razor-sharp on all screens, zero raster artifacts, cleanly balanced for visibility & legibility.
  */
 export default function FluidWaveBackground({
   variant = 'light',
@@ -24,13 +24,13 @@ export default function FluidWaveBackground({
 }: FluidWaveBackgroundProps) {
   const isNavy = variant === 'navy';
 
-  // Opacities calibrated for high-end legibility and silky aesthetics
-  const strokeOpacity1 = isNavy ? 0.35 : (intensity === 'subtle' ? 0.06 : 0.12);
-  const strokeOpacity2 = isNavy ? 0.25 : (intensity === 'subtle' ? 0.04 : 0.08);
-  const strokeOpacity3 = isNavy ? 0.18 : (intensity === 'subtle' ? 0.03 : 0.05);
+  // Opacities precisely calibrated: clearly noticeable and premium, without fighting foreground text
+  const strokeOpacity1 = isNavy ? 0.65 : (intensity === 'subtle' ? 0.22 : 0.32);
+  const strokeOpacity2 = isNavy ? 0.45 : (intensity === 'subtle' ? 0.15 : 0.22);
+  const strokeOpacity3 = isNavy ? 0.28 : (intensity === 'subtle' ? 0.09 : 0.14);
 
-  const fillOpacity1 = isNavy ? 0.18 : (intensity === 'subtle' ? 0.025 : 0.045);
-  const fillOpacity2 = isNavy ? 0.12 : (intensity === 'subtle' ? 0.015 : 0.03);
+  const fillOpacity1 = isNavy ? 0.28 : (intensity === 'subtle' ? 0.06 : 0.095);
+  const fillOpacity2 = isNavy ? 0.16 : (intensity === 'subtle' ? 0.03 : 0.055);
 
   return (
     <div
@@ -42,8 +42,10 @@ export default function FluidWaveBackground({
         className="absolute inset-0"
         style={{
           background: isNavy
-            ? 'radial-gradient(ellipse 70% 60% at 85% 20%, rgba(0, 82, 255, 0.28) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 15% 85%, rgba(56, 189, 248, 0.14) 0%, transparent 65%)'
-            : 'radial-gradient(ellipse 65% 55% at 85% 15%, rgba(0, 82, 255, 0.06) 0%, transparent 65%), radial-gradient(ellipse 60% 50% at 10% 85%, rgba(56, 189, 248, 0.04) 0%, transparent 65%)'
+            ? 'radial-gradient(ellipse 75% 65% at 85% 20%, rgba(0, 82, 255, 0.40) 0%, transparent 70%), radial-gradient(ellipse 65% 55% at 15% 85%, rgba(56, 189, 248, 0.22) 0%, transparent 65%)'
+            : (intensity === 'subtle'
+                ? 'radial-gradient(ellipse 70% 60% at 85% 15%, rgba(0, 82, 255, 0.10) 0%, transparent 65%), radial-gradient(ellipse 65% 55% at 10% 85%, rgba(56, 189, 248, 0.06) 0%, transparent 65%)'
+                : 'radial-gradient(ellipse 75% 65% at 85% 15%, rgba(0, 82, 255, 0.15) 0%, transparent 65%), radial-gradient(ellipse 65% 55% at 10% 85%, rgba(56, 189, 248, 0.10) 0%, transparent 65%)')
         }}
       />
 
@@ -56,35 +58,41 @@ export default function FluidWaveBackground({
         preserveAspectRatio="none"
       >
         <defs>
-          {/* Light Gradients */}
-          <linearGradient id="fluidBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          {/* Light Gradients - Rich Royal Blue to Electric Sky Blue */}
+          <linearGradient id="fluidBlueGradMain" x1="0%" y1="0%" x2="100%" y2="80%">
             <stop offset="0%" stopColor="#0052ff" stopOpacity={strokeOpacity1} />
-            <stop offset="50%" stopColor="#38bdf8" stopOpacity={strokeOpacity2} />
-            <stop offset="100%" stopColor="#0052ff" stopOpacity={strokeOpacity1} />
+            <stop offset="45%" stopColor="#1d4ed8" stopOpacity={strokeOpacity1} />
+            <stop offset="100%" stopColor="#38bdf8" stopOpacity={strokeOpacity2} />
+          </linearGradient>
+
+          <linearGradient id="fluidBlueGradSecondary" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity={strokeOpacity2} />
+            <stop offset="60%" stopColor="#0052ff" stopOpacity={strokeOpacity2} />
+            <stop offset="100%" stopColor="#1e40af" stopOpacity={strokeOpacity3} />
           </linearGradient>
 
           <linearGradient id="fluidRibbonGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#0052ff" stopOpacity={fillOpacity1} />
-            <stop offset="60%" stopColor="#38bdf8" stopOpacity={fillOpacity2} />
+            <stop offset="45%" stopColor="#38bdf8" stopOpacity={fillOpacity2} />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
 
           <linearGradient id="fluidRibbonGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#38bdf8" stopOpacity={fillOpacity1} />
-            <stop offset="70%" stopColor="#0052ff" stopOpacity={fillOpacity2} />
+            <stop offset="50%" stopColor="#0052ff" stopOpacity={fillOpacity2} />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
 
           {/* Navy Gradients */}
           <linearGradient id="navyGlowStroke" x1="0%" y1="0%" x2="100%" y2="80%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.45" />
-            <stop offset="45%" stopColor="#0052ff" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#1e40af" stopOpacity="0.1" />
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.70" />
+            <stop offset="45%" stopColor="#0052ff" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#1e40af" stopOpacity="0.25" />
           </linearGradient>
 
           <linearGradient id="navyRibbonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#0052ff" stopOpacity="0.22" />
-            <stop offset="50%" stopColor="#38bdf8" stopOpacity="0.10" />
+            <stop offset="0%" stopColor="#0052ff" stopOpacity="0.30" />
+            <stop offset="50%" stopColor="#38bdf8" stopOpacity="0.16" />
             <stop offset="100%" stopColor="#061325" stopOpacity="0" />
           </linearGradient>
         </defs>
@@ -114,8 +122,8 @@ export default function FluidWaveBackground({
           d="M -100 600 
              C 160 670, 320 440, 580 520 
              C 840 600, 1100 360, 1550 460"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="2"
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradMain)'}
+          strokeWidth="2.5"
           strokeLinecap="round"
         />
 
@@ -123,30 +131,27 @@ export default function FluidWaveBackground({
           d="M -100 520 
              C 180 580, 340 380, 620 460 
              C 900 540, 1140 300, 1550 400"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="1.75"
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradMain)'}
+          strokeWidth="2.25"
           strokeLinecap="round"
-          strokeOpacity={strokeOpacity1}
         />
 
         <path
           d="M -100 440 
              C 200 490, 360 320, 660 400 
              C 960 480, 1180 240, 1550 340"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="1.5"
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradMain)'}
+          strokeWidth="1.75"
           strokeLinecap="round"
-          strokeOpacity={strokeOpacity2}
         />
 
         <path
           d="M -100 360 
              C 220 410, 390 260, 700 340 
              C 1010 420, 1220 180, 1550 280"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="1.25"
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradSecondary)'}
+          strokeWidth="1.5"
           strokeLinecap="round"
-          strokeOpacity={strokeOpacity3}
         />
 
         {/* 3. Secondary Counter-Flow Waves (Fluid Swirl & Dynamic Energy) */}
@@ -154,40 +159,36 @@ export default function FluidWaveBackground({
           d="M -50 180 
              C 250 240, 420 50, 740 140 
              C 1060 230, 1260 20, 1500 110"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="1.5"
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradSecondary)'}
+          strokeWidth="2"
           strokeLinecap="round"
-          strokeOpacity={strokeOpacity2}
         />
 
         <path
           d="M -50 120 
              C 270 170, 440 -10, 760 80 
              C 1080 170, 1280 -40, 1500 50"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="1"
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradSecondary)'}
+          strokeWidth="1.5"
           strokeLinecap="round"
-          strokeOpacity={strokeOpacity3}
         />
 
         <path
           d="M 50 780 
              C 320 680, 520 740, 840 640 
              C 1160 540, 1340 680, 1550 580"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="1.5"
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradMain)'}
+          strokeWidth="1.75"
           strokeLinecap="round"
-          strokeOpacity={strokeOpacity2}
         />
 
         <path
           d="M 120 840 
              C 360 740, 560 800, 880 700 
              C 1200 600, 1380 740, 1550 640"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="1"
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradSecondary)'}
+          strokeWidth="1.5"
           strokeLinecap="round"
-          strokeOpacity={strokeOpacity3}
         />
 
         {/* 4. Delicate Topographic Micro-Echo Lines (Depth & Elegance) */}
@@ -195,20 +196,18 @@ export default function FluidWaveBackground({
           d="M -80 480 
              C 190 535, 350 350, 640 430 
              C 930 510, 1160 270, 1550 370"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="0.75"
-          strokeDasharray="4 6"
-          strokeOpacity={strokeOpacity3 * 0.7}
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradSecondary)'}
+          strokeWidth="1.2"
+          strokeDasharray="6 8"
         />
 
         <path
           d="M -60 230 
              C 245 285, 410 85, 730 180 
              C 1040 275, 1240 50, 1500 145"
-          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGrad)'}
-          strokeWidth="0.75"
-          strokeDasharray="6 8"
-          strokeOpacity={strokeOpacity3 * 0.7}
+          stroke={isNavy ? 'url(#navyGlowStroke)' : 'url(#fluidBlueGradSecondary)'}
+          strokeWidth="1.2"
+          strokeDasharray="8 10"
         />
       </svg>
     </div>
