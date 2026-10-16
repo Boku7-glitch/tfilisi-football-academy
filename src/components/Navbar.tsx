@@ -165,16 +165,40 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
                 </div>
               </Link>
 
-              {/* GFF-Style 3-line Menu Button */}
+              {/* GFF-Style Smooth Animated Hamburger Menu Button */}
               <button
+                type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="w-9 h-9 sm:w-10 sm:h-10 flex flex-col justify-center items-center gap-1.25 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/20 text-white ml-0.5"
-                aria-label="Toggle navigation"
-                title="მენიუ"
+                className="w-10 h-10 sm:w-11 sm:h-11 flex flex-col justify-center items-center rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 transition-all duration-300 border border-white/20 text-white ml-0.5 group focus:outline-hidden"
+                aria-label={mobileMenuOpen ? 'მენიუს დახურვა' : 'მენიუს გახსნა'}
+                title={language === 'ka' ? 'მენიუ' : 'Menu'}
               >
-                <span className="block w-4.5 sm:w-5 h-0.5 bg-white rounded-full" />
-                <span className="block w-4.5 sm:w-5 h-0.5 bg-white rounded-full" />
-                <span className="block w-4.5 sm:w-5 h-0.5 bg-white rounded-full" />
+                <div className="w-5 sm:w-6 h-4.5 sm:h-5 relative flex flex-col justify-between items-center pointer-events-none">
+                  {/* Top Line */}
+                  <span
+                    className={`block w-full h-[2.5px] sm:h-[3px] bg-white rounded-full shadow-xs transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      mobileMenuOpen
+                        ? 'translate-y-[7px] sm:translate-y-[8.5px] rotate-45'
+                        : 'translate-y-0 rotate-0 group-hover:shadow-[0_0_8px_rgba(255,255,255,0.7)]'
+                    }`}
+                  />
+                  {/* Middle Line */}
+                  <span
+                    className={`block w-full h-[2.5px] sm:h-[3px] bg-white rounded-full shadow-xs transition-all duration-200 ease-in-out ${
+                      mobileMenuOpen
+                        ? 'opacity-0 scale-x-0'
+                        : 'opacity-100 scale-x-100 group-hover:shadow-[0_0_8px_rgba(255,255,255,0.7)]'
+                    }`}
+                  />
+                  {/* Bottom Line */}
+                  <span
+                    className={`block w-full h-[2.5px] sm:h-[3px] bg-white rounded-full shadow-xs transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      mobileMenuOpen
+                        ? '-translate-y-[7px] sm:-translate-y-[8.5px] -rotate-45'
+                        : '-translate-y-0 rotate-0 group-hover:shadow-[0_0_8px_rgba(255,255,255,0.7)]'
+                    }`}
+                  />
+                </div>
               </button>
             </div>
 
