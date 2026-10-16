@@ -167,19 +167,39 @@ body {
   width: 22px;
 }
 
-/* Smooth Mobile Drawer Entrance */
-.mobile-drawer-enter {
-  animation: smoothDrawerIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* ========================================================
+   SMOOTH SLIDE-DOWN & SLIDE-UP ACCORDION DRAWER
+   (Opens by rolling down smoothly, Closes by rolling up smoothly)
+   ======================================================== */
+.mobile-menu-drawer-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s ease,
+              visibility 0.42s;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: white;
 }
 
-@keyframes smoothDrawerIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.mobile-menu-drawer-wrapper.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.mobile-menu-drawer-inner {
+  min-height: 0;
+  overflow: hidden;
+  transform: translateY(-20px);
+  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.mobile-menu-drawer-wrapper.is-open .mobile-menu-drawer-inner {
+  transform: translateY(0);
 }
 

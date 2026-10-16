@@ -269,119 +269,125 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
       {/* 3. Club Trim Bar Accent Strip */}
       <div className="club-trim-bar h-1 w-full" />
 
-      {/* 4. Full Mobile Navigation Drawer (Displaying all 6 core modules) */}
-      {mobileMenuOpen && (
-        <div className="mobile-drawer-enter border-t border-slate-200 bg-white/98 backdrop-blur-lg px-4 pt-4 pb-6 space-y-2 shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
-          
-          {/* Mobile Language Switcher */}
-          <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-100">
-            <span className="text-xs font-bold text-slate-600">ენა / Language:</span>
-            <div className="flex items-center bg-slate-100 p-0.5 rounded-full border border-slate-200">
-              <button
-                type="button"
-                onClick={() => setLanguage('ka')}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
-                  language === 'ka' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600'
-                }`}
-              >
-                ქართული
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage('en')}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
-                  language === 'en' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600'
-                }`}
-              >
-                English
-              </button>
-            </div>
-          </div>
-
-          {/* The 6 Core Modules in Mobile Drawer */}
-          <div className="space-y-1">
-            <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-700 px-3 py-1">
-              მთავარი განყოფილებები / MODULES
-            </div>
+      {/* 4. Full Mobile Navigation Drawer with Smooth Slide-Down & Slide-Up Accordion */}
+      <div
+        className={`mobile-menu-drawer-wrapper ${mobileMenuOpen ? 'is-open' : ''}`}
+        aria-hidden={!mobileMenuOpen}
+      >
+        <div className="mobile-menu-drawer-inner">
+          <div className="border-t border-slate-200 bg-white/98 backdrop-blur-lg px-4 pt-4 pb-6 space-y-2 shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
             
-            <Link
-              href="/#academy-dna"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
-            >
-              <span className="w-2 h-2 rounded-full bg-blue-600" />
-              <span>{language === 'ka' ? 'ტფილისის აკადემია' : 'Tfilisi Academy'}</span>
-            </Link>
+            {/* Mobile Language Switcher */}
+            <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-100">
+              <span className="text-xs font-bold text-slate-600">ენა / Language:</span>
+              <div className="flex items-center bg-slate-100 p-0.5 rounded-full border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setLanguage('ka')}
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                    language === 'ka' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600'
+                  }`}
+                >
+                  ქართული
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage('en')}
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                    language === 'en' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600'
+                  }`}
+                >
+                  English
+                </button>
+              </div>
+            </div>
 
-            <Link
-              href="/locations"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
-            >
-              <MapPin className="w-4 h-4 text-blue-600" />
-              <span>{language === 'ka' ? 'აკადემიის საფეხბურთო ცენტრები' : 'Football Centers'}</span>
-            </Link>
+            {/* The 6 Core Modules in Mobile Drawer */}
+            <div className="space-y-1">
+              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-700 px-3 py-1">
+                მთავარი განყოფილებები / MODULES
+              </div>
+              
+              <Link
+                href="/#academy-dna"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm transition-colors"
+              >
+                <span className="w-2 h-2 rounded-full bg-blue-600" />
+                <span>{language === 'ka' ? 'ტფილისის აკადემია' : 'Tfilisi Academy'}</span>
+              </Link>
 
-            <Link
-              href="/individual"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
-            >
-              <Zap className="w-4 h-4 text-blue-600" />
-              <span>{language === 'ka' ? 'ინდივიდუალური მომზადების პროგრამა' : 'Individual Program'}</span>
-            </Link>
+              <Link
+                href="/locations"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm transition-colors"
+              >
+                <MapPin className="w-4 h-4 text-blue-600" />
+                <span>{language === 'ka' ? 'აკადემიის საფეხბურთო ცენტრები' : 'Football Centers'}</span>
+              </Link>
 
-            <Link
-              href="/groups"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
-            >
-              <Users className="w-4 h-4 text-blue-600" />
-              <span>{language === 'ka' ? 'ჯგუფები და განრიგი' : 'Squad Categories'}</span>
-            </Link>
+              <Link
+                href="/individual"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm transition-colors"
+              >
+                <Zap className="w-4 h-4 text-blue-600" />
+                <span>{language === 'ka' ? 'ინდივიდუალური მომზადების პროგრამა' : 'Individual Program'}</span>
+              </Link>
 
-            <Link
-              href="/coaches"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
-            >
-              <Award className="w-4 h-4 text-blue-600" />
-              <span>{language === 'ka' ? 'მწვრთნელები' : 'Coaching Staff'}</span>
-            </Link>
+              <Link
+                href="/groups"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm transition-colors"
+              >
+                <Users className="w-4 h-4 text-blue-600" />
+                <span>{language === 'ka' ? 'ჯგუფები და განრიგი' : 'Squad Categories'}</span>
+              </Link>
 
-            <Link
-              href="/staff"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm"
-            >
-              <ShieldCheck className="w-4 h-4 text-blue-600" />
-              <span>{language === 'ka' ? 'სტაფი და ადმინისტრაცია' : 'Staff & Administration'}</span>
-            </Link>
+              <Link
+                href="/coaches"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm transition-colors"
+              >
+                <Award className="w-4 h-4 text-blue-600" />
+                <span>{language === 'ka' ? 'მწვრთნელები' : 'Coaching Staff'}</span>
+              </Link>
+
+              <Link
+                href="/staff"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-bold text-sm transition-colors"
+              >
+                <ShieldCheck className="w-4 h-4 text-blue-600" />
+                <span>{language === 'ka' ? 'სტაფი და ადმინისტრაცია' : 'Staff & Administration'}</span>
+              </Link>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onOpenAuthModal) onOpenAuthModal();
+                }}
+                className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+              >
+                <LogIn className="w-4 h-4 text-sky-300" />
+                <span>{t.navbar.login}</span>
+              </button>
+              <Link
+                href="/contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 text-center transition-colors shadow-sm"
+              >
+                <span>{language === 'ka' ? 'საცდელი ვარჯიშის რეგისტრაცია' : 'Register for Trial'}</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
           </div>
-
-          <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (onOpenAuthModal) onOpenAuthModal();
-              }}
-              className="w-full py-2.5 px-4 rounded-xl bg-slate-900 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2"
-            >
-              <LogIn className="w-4 h-4 text-sky-300" />
-              <span>{t.navbar.login}</span>
-            </button>
-            <Link
-              href="/contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-2.5 px-4 rounded-xl bg-blue-600 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 text-center"
-            >
-              <span>{language === 'ka' ? 'საცდელი ვარჯიშის რეგისტრაცია' : 'Register for Trial'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
         </div>
-      )}
+      </div>
 
     </header>
   );
