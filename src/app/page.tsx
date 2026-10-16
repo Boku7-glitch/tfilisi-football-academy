@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import MatchdayTicker from '../components/MatchdayTicker';
+import TacticalPitchPathway from '../components/TacticalPitchPathway';
+import AcademyDNA from '../components/AcademyDNA';
 import Footer from '../components/Footer';
 import AuthModal from '../components/AuthModal';
 import { 
@@ -38,9 +41,15 @@ function HomePageContent() {
       {/* Header */}
       <Navbar onOpenAuthModal={() => setAuthModalOpen(true)} />
 
+      {/* Matchday Live Ticker Bar */}
+      <MatchdayTicker />
+
       <main className="flex-1">
         {/* Hero Section */}
         <Hero onRegisterClick={() => window.location.href = '/contact'} />
+
+        {/* Unique Feature 1: Interactive Tactical Pitch & Development Pathway */}
+        <TacticalPitchPathway />
 
         {/* 1. Uncluttered Groups & Locations Teaser (Athletic Club Matrix) */}
         <section className="py-10 sm:py-16 bg-white border-b border-slate-200">
@@ -187,6 +196,9 @@ function HomePageContent() {
 
           </div>
         </section>
+
+        {/* Unique Feature 2: Club Football DNA & 4 Pillars */}
+        <AcademyDNA />
 
         {/* 2. Uncluttered News / Highlights Preview (Sports Journalism Editorial) */}
         <section className="py-10 sm:py-16 bg-slate-50 border-b border-slate-200">
