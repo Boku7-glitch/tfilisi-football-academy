@@ -121,7 +121,11 @@ export default function Hero({ onRegisterClick }: HeroProps) {
                 <div className="relative overflow-hidden bg-[#061325] text-white p-3 flex items-center justify-between">
                   <FluidWaveBackground variant="navy" />
                   <div className="relative z-10 flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-blue-400" />
+                    <img
+                      src="/logo/tfilisi-crest-white.svg"
+                      alt="TFA Crest"
+                      className="w-4 h-4 object-contain"
+                    />
                     <span className="text-[11px] font-black uppercase tracking-wider text-white">
                       TFA MATCH & TRAINING PASS
                     </span>

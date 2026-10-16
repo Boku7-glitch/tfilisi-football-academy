@@ -22,11 +22,12 @@ export default function Footer() {
           {/* Col 1: Club Brand & Crest */}
           <div className="space-y-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-slate-900 flex items-center justify-center text-white border-2 border-blue-600 shadow-sm">
-                <div className="relative flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-blue-500 fill-blue-500/20" />
-                  <span className="absolute text-[8px] font-black tracking-tighter text-white">TF</span>
-                </div>
+              <div className="w-11 h-11 rounded-xl bg-slate-900 flex items-center justify-center p-1.5 border-2 border-blue-600 shadow-sm">
+                <img
+                  src="/logo/tfilisi-crest-white.svg"
+                  alt="ტფილისი"
+                  className="w-full h-full object-contain filter drop-shadow-sm"
+                />
               </div>
               <div>
                 <div className="font-black text-base tracking-tight text-white leading-tight">

@@ -37,11 +37,12 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
           
           {/* Authentic Athletic Club Logo Crest */}
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg bg-[#061325] flex items-center justify-center text-white border-2 border-blue-600 shadow-sm group-hover:border-blue-500 transition-all">
-              <div className="relative flex items-center justify-center">
-                <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 fill-blue-500/20" />
-                <span className="absolute text-[8px] sm:text-[9px] font-black tracking-tighter text-white">TF</span>
-              </div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#061325] flex items-center justify-center p-1.5 border-2 border-blue-600 shadow-sm group-hover:border-blue-500 group-hover:scale-105 transition-all">
+              <img
+                src="/logo/tfilisi-crest-white.svg"
+                alt="ტფილისის საფეხბურთო აკადემია"
+                className="w-full h-full object-contain filter drop-shadow-sm"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-black text-sm sm:text-base tracking-tight text-[#061325] group-hover:text-blue-700 transition-colors leading-tight">
