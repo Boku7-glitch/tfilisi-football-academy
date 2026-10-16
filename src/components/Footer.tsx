@@ -17,7 +17,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 pb-8 sm:pb-10 border-b border-slate-800">
           
           {/* Col 1: Club Brand & Technical Partner (Kelme) */}
-          <div className="space-y-4">
+          <div className="space-y-6 sm:space-y-7">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center p-1.5 border-2 border-blue-600 shadow-sm shrink-0">
                 <img
@@ -41,13 +41,13 @@ export default function Footer() {
               <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center p-1.5 border-2 border-blue-600 shadow-sm shrink-0">
                 <img
                   src="/logo/kelme-seeklogo-white.png"
-                  alt="KELME"
+                  alt="კელმე"
                   className="w-full h-full object-contain filter drop-shadow-sm"
                 />
               </div>
               <div>
                 <div className="font-black text-base tracking-tight text-white leading-tight">
-                  KELME
+                  კელმე
                 </div>
                 <div className="text-[10px] uppercase tracking-widest font-extrabold text-blue-400">
                   ტექნიკური სპონსორი
