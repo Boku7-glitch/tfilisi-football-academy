@@ -42,7 +42,7 @@ export default function Footer() {
                 ტექნიკური პარტნიორი
               </h4>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center p-2 border-2 border-slate-700 shadow-sm shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center p-1.5 border-2 border-blue-600 shadow-sm shrink-0">
                   <img
                     src="/logo/kelme-seeklogo-white.png"
                     alt="KELME"
