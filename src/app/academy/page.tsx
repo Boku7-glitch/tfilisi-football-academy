@@ -4,11 +4,9 @@ import React from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import AcademyDNA from '../../components/AcademyDNA';
-import { useLanguage, LanguageProvider } from '../../context/LanguageContext';
-import { ArrowRight, Trophy, ShieldCheck, HeartHandshake } from 'lucide-react';
-import Link from 'next/link';
+import { useLanguage } from '../../context/LanguageContext';
 
-function AcademyPageContent() {
+export default function AcademyPage() {
   const { language } = useLanguage();
 
   return (
@@ -41,13 +39,5 @@ function AcademyPageContent() {
 
       <Footer />
     </div>
-  );
-}
-
-export default function AcademyPage() {
-  return (
-    <LanguageProvider>
-      <AcademyPageContent />
-    </LanguageProvider>
   );
 }

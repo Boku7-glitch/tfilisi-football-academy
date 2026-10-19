@@ -3,12 +3,12 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { LanguageProvider, useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { staffData } from '../../data/mockData';
 import { ShieldCheck, Phone, Mail, Award, CheckCircle2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-function StaffPageContent() {
+export default function StaffPage() {
   const { language } = useLanguage();
 
   return (
@@ -102,10 +102,3 @@ function StaffPageContent() {
   );
 }
 
-export default function StaffPage() {
-  return (
-    <LanguageProvider>
-      <StaffPageContent />
-    </LanguageProvider>
-  );
-}

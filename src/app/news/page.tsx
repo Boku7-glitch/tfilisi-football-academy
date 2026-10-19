@@ -5,9 +5,8 @@ import Navbar from '../../components/Navbar';
 import NewsSection from '../../components/NewsSection';
 import Footer from '../../components/Footer';
 import AuthModal from '../../components/AuthModal';
-import { LanguageProvider } from '../../context/LanguageContext';
 
-function NewsPageContent() {
+export default function NewsPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
   return (
@@ -19,13 +18,5 @@ function NewsPageContent() {
       <Footer />
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
-  );
-}
-
-export default function NewsPage() {
-  return (
-    <LanguageProvider>
-      <NewsPageContent />
-    </LanguageProvider>
   );
 }

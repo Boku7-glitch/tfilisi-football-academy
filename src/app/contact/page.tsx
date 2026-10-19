@@ -5,9 +5,8 @@ import Navbar from '../../components/Navbar';
 import ContactSection from '../../components/ContactSection';
 import Footer from '../../components/Footer';
 import AuthModal from '../../components/AuthModal';
-import { LanguageProvider } from '../../context/LanguageContext';
 
-function ContactPageContent() {
+export default function ContactPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
   return (
@@ -19,13 +18,5 @@ function ContactPageContent() {
       <Footer />
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
-  );
-}
-
-export default function ContactPage() {
-  return (
-    <LanguageProvider>
-      <ContactPageContent />
-    </LanguageProvider>
   );
 }

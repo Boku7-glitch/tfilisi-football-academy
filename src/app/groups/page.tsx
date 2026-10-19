@@ -7,9 +7,8 @@ import Footer from '../../components/Footer';
 import AuthModal from '../../components/AuthModal';
 import BookingModal from '../../components/BookingModal';
 import { TeamGroup } from '../../data/mockData';
-import { LanguageProvider } from '../../context/LanguageContext';
 
-function GroupsPageContent() {
+export default function GroupsPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<TeamGroup | null>(null);
@@ -33,13 +32,5 @@ function GroupsPageContent() {
         group={selectedGroup}
       />
     </div>
-  );
-}
-
-export default function GroupsPage() {
-  return (
-    <LanguageProvider>
-      <GroupsPageContent />
-    </LanguageProvider>
   );
 }

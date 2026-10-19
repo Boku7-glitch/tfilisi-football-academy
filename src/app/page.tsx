@@ -5,9 +5,8 @@ import Navbar from '../components/Navbar';
 import PortalHubGrid from '../components/PortalHubGrid';
 import Footer from '../components/Footer';
 import AuthModal from '../components/AuthModal';
-import { LanguageProvider } from '../context/LanguageContext';
 
-function HomePageContent() {
+export default function Home() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
   return (
@@ -29,13 +28,5 @@ function HomePageContent() {
         onClose={() => setAuthModalOpen(false)}
       />
     </div>
-  );
-}
-
-export default function Home() {
-  return (
-    <LanguageProvider>
-      <HomePageContent />
-    </LanguageProvider>
   );
 }

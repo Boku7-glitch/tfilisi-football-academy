@@ -3,12 +3,12 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { LanguageProvider, useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { coachesData } from '../../data/mockData';
 import { Award, Calendar, CheckCircle2, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 
-function CoachesPageContent() {
+export default function CoachesPage() {
   const { language } = useLanguage();
 
   return (
@@ -103,10 +103,3 @@ function CoachesPageContent() {
   );
 }
 
-export default function CoachesPage() {
-  return (
-    <LanguageProvider>
-      <CoachesPageContent />
-    </LanguageProvider>
-  );
-}

@@ -5,9 +5,8 @@ import Navbar from '../../components/Navbar';
 import LocationsSection from '../../components/LocationsSection';
 import Footer from '../../components/Footer';
 import AuthModal from '../../components/AuthModal';
-import { LanguageProvider } from '../../context/LanguageContext';
 
-function LocationsPageContent() {
+export default function LocationsPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
   return (
@@ -19,13 +18,5 @@ function LocationsPageContent() {
       <Footer />
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
-  );
-}
-
-export default function LocationsPage() {
-  return (
-    <LanguageProvider>
-      <LocationsPageContent />
-    </LanguageProvider>
   );
 }

@@ -7,9 +7,8 @@ import Footer from '../../components/Footer';
 import AuthModal from '../../components/AuthModal';
 import BookingModal from '../../components/BookingModal';
 import { Coach } from '../../data/mockData';
-import { LanguageProvider } from '../../context/LanguageContext';
 
-function IndividualPageContent() {
+export default function IndividualPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
@@ -39,13 +38,5 @@ function IndividualPageContent() {
         timeSlot={bookingTimeSlot}
       />
     </div>
-  );
-}
-
-export default function IndividualPage() {
-  return (
-    <LanguageProvider>
-      <IndividualPageContent />
-    </LanguageProvider>
   );
 }
