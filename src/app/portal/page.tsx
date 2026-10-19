@@ -43,6 +43,15 @@ export default function UserPortalPage() {
 
   // Active portal tab
   const [activeTab, setActiveTab] = useState<'schedule' | 'billing' | 'profile'>('schedule');
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+    setTimeout(() => {
+      logout();
+      setIsLoggingOut(false);
+    }, 450);
+  };
 
   // Find active player belonging specifically to the logged-in user
   const activePlayer = useMemo(() => {
@@ -221,11 +230,21 @@ export default function UserPortalPage() {
 
               <button
                 type="button"
-                onClick={logout}
-                className="w-8 h-8 rounded-xl bg-white/10 hover:bg-red-500/20 text-white/80 hover:text-red-300 transition-colors flex items-center justify-center"
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className={`w-8 h-8 rounded-xl border transition-all flex items-center justify-center ${
+                  isLoggingOut
+                    ? 'bg-red-500/30 border-red-400 text-red-200'
+                    : 'bg-white/10 hover:bg-red-500/20 text-white/80 hover:text-red-300 border-white/10'
+                }`}
                 title="გამოსვლა"
+                aria-label="გამოსვლა"
               >
-                <LogOut className="w-4 h-4" />
+                {isLoggingOut ? (
+                  <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <LogOut className="w-4 h-4" />
+                )}
               </button>
             </div>
 
@@ -289,7 +308,7 @@ export default function UserPortalPage() {
       </header>
 
       {/* Main Body */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full space-y-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full space-y-6 animate-page-enter">
         
         {/* ========================================================
             {/* ========================================================
@@ -1018,6 +1037,14 @@ export default function UserPortalPage() {
             </div>
 
           </div>
+        </div>
+      )}
+
+      {/* Floating Logout Exit Feedback Toast */}
+      {isLoggingOut && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#061325] text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 animate-toast-slide">
+          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+          <span className="text-xs font-bold">სისტემიდან გამოსვლა...</span>
         </div>
       )}
 

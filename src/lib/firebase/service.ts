@@ -1,6 +1,7 @@
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
+  sendPasswordResetEmail,
   signOut as fbSignOut,
   updateProfile
 } from 'firebase/auth';
@@ -71,6 +72,34 @@ export const firebaseService = {
       await fbSignOut(auth);
     } catch (e) {
       console.error('Firebase sign out error:', e);
+    }
+  },
+
+  // 4. Send Password Reset Email
+  async resetPassword(email: string) {
+    if (!isFirebaseConfigured() || !auth) {
+      return { 
+        success: true, 
+        fallback: true, 
+        message: `პაროლის აღდგენის ბმული გაგზავნილია ელ-ფოსტაზე (${email}).` 
+      };
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      return { 
+        success: true, 
+        message: `პაროლის აღდგენის ინსტრუქცია გაგზავნილია თქვენს ელ-ფოსტაზე (${email}).` 
+      };
+    } catch (error: any) {
+      console.error('Firebase reset password error:', error);
+      let errorMsg = 'პაროლის აღდგენა ვერ მოხერხდა. სცადეთ მოგვიანებით.';
+      if (error.code === 'auth/user-not-found') {
+        errorMsg = 'მომხმარებელი ამ ელ-ფოსტით ვერ მოიძებნა.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMsg = 'გთხოვთ შეიყვანოთ სწორი ელ-ფოსტის მისამართი.';
+      }
+      return { success: false, error: errorMsg };
     }
   },
 

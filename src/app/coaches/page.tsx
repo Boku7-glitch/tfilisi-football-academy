@@ -5,7 +5,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { useLanguage } from '../../context/LanguageContext';
 import { coachesData } from '../../data/mockData';
-import { Award, Calendar, CheckCircle2, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
+import { Award, Calendar, CheckCircle2, ArrowRight, ArrowLeft, ShieldCheck, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CoachesPage() {
@@ -15,11 +15,20 @@ export default function CoachesPage() {
     <div className="min-h-screen flex flex-col bg-white text-slate-900">
       <Navbar onOpenAuthModal={() => {}} />
 
-      <main className="flex-1 bg-white">
+      <main className="flex-1 bg-white animate-page-enter">
         {/* Header Hero */}
         <section className="py-12 sm:py-16 bg-[#061325] text-white border-b border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
+              <div className="mb-4">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition-all group hover:-translate-x-0.5 active:scale-95"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+                  <span>მთავარ გვერდზე დაბრუნება</span>
+                </Link>
+              </div>
               <span className="inline-block px-3 py-1 rounded bg-blue-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest mb-3">
                 {language === 'ka' ? 'სამწვრთნელო შტაბი' : 'COACHING STAFF'}
               </span>

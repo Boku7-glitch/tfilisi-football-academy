@@ -13,7 +13,11 @@ import {
   UserPlus,
   Phone,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Eye,
+  EyeOff,
+  KeyRound,
+  ArrowLeft
 } from 'lucide-react';
 import { useAcademy } from '../context/AcademyContext';
 import { firebaseService } from '../lib/firebase/service';
@@ -29,13 +33,14 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
   const { loginAs, addPlayer, groups } = useAcademy();
   const router = useRouter();
 
-  // Mode: Sign In vs Sign Up
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  // Mode: Sign In vs Sign Up vs Forgot Password
+  const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot'>('signin');
   const [selectedRole, setSelectedRole] = useState<'parent' | 'coach'>(defaultRole);
 
   // Clean empty inputs - NO hardcoded fake accounts!
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
 
@@ -48,6 +53,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
   const [isLoading, setIsLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [resetSentMsg, setResetSentMsg] = useState('');
 
   // Handle open / close synchronization with animation
   useEffect(() => {
@@ -91,6 +97,22 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+
+    if (authMode === 'forgot') {
+      if (!email) {
+        setErrorMsg('გთხოვთ შეიყვანოთ ელ-ფოსტა');
+        return;
+      }
+      setIsLoading(true);
+      const res = await firebaseService.resetPassword(email);
+      setIsLoading(false);
+      if (res.success) {
+        setResetSentMsg(res.message || 'პაროლის აღდგენის ბმული წარმატებით გაიგზავნა თქვენს ელ-ფოსტაზე.');
+      } else {
+        setErrorMsg(res.error || 'პაროლის აღდგენა ვერ მოხერხდა.');
+      }
+      return;
+    }
 
     if (!email) {
       setErrorMsg('გთხოვთ შეიყვანოთ ელ-ფოსტა');
@@ -221,17 +243,31 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
         <div className="bg-[#061325] px-5 sm:px-6 py-4 text-white flex items-center justify-between shrink-0 border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sky-400">
-              {authMode === 'signin' ? <LogIn className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
+              {authMode === 'signin' ? (
+                <LogIn className="w-4 h-4" />
+              ) : authMode === 'signup' ? (
+                <UserPlus className="w-4 h-4" />
+              ) : (
+                <KeyRound className="w-4 h-4 text-amber-400" />
+              )}
             </div>
             <div>
               <h3 className="font-black text-sm sm:text-base tracking-tight flex items-center gap-2">
-                {authMode === 'signin' ? 'სისტემაში შესვლა' : 'ახალი რეგისტრაცია'}
+                {authMode === 'signin'
+                  ? 'სისტემაში შესვლა'
+                  : authMode === 'signup'
+                  ? 'ახალი რეგისტრაცია'
+                  : 'პაროლის აღდგენა'}
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-600/30 text-blue-300 border border-blue-500/30">
                   Tfilisi
                 </span>
               </h3>
               <p className="text-[10px] sm:text-[11px] text-slate-400">
-                {authMode === 'signin' ? 'შეიყვანეთ თქვენი მონაცემები' : 'შეავსეთ სარეგისტრაციო ფორმა'}
+                {authMode === 'signin'
+                  ? 'შეიყვანეთ თქვენი მონაცემები'
+                  : authMode === 'signup'
+                  ? 'შეავსეთ სარეგისტრაციო ფორმა'
+                  : 'მიუთითეთ ელ-ფოსტა პაროლის აღსადგენად'}
               </p>
             </div>
           </div>
@@ -248,41 +284,46 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
         </div>
 
         {/* Auth Mode Toggle Tabs (შესვლა vs რეგისტრაცია) */}
-        <div className="flex border-b border-slate-200 bg-slate-50 text-xs font-bold shrink-0">
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode('signin');
-              setErrorMsg('');
-            }}
-            className={`flex-1 py-3 text-center transition-all border-b-2 flex items-center justify-center gap-1.5 ${
-              authMode === 'signin'
-                ? 'border-blue-600 text-blue-700 bg-white font-black'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <LogIn className="w-3.5 h-3.5" />
-            <span>ავტორიზაცია</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode('signup');
-              setErrorMsg('');
-            }}
-            className={`flex-1 py-3 text-center transition-all border-b-2 flex items-center justify-center gap-1.5 ${
-              authMode === 'signup'
-                ? 'border-blue-600 text-blue-700 bg-white font-black'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <UserPlus className="w-3.5 h-3.5" />
-            <span>რეგისტრაცია</span>
-          </button>
-        </div>
+        {authMode !== 'forgot' && (
+          <div className="flex border-b border-slate-200 bg-slate-50 text-xs font-bold shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode('signin');
+                setErrorMsg('');
+                setResetSentMsg('');
+              }}
+              className={`flex-1 py-3 text-center transition-all border-b-2 flex items-center justify-center gap-1.5 ${
+                authMode === 'signin'
+                  ? 'border-blue-600 text-blue-700 bg-white font-black'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>ავტორიზაცია</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode('signup');
+                setErrorMsg('');
+                setResetSentMsg('');
+              }}
+              className={`flex-1 py-3 text-center transition-all border-b-2 flex items-center justify-center gap-1.5 ${
+                authMode === 'signup'
+                  ? 'border-blue-600 text-blue-700 bg-white font-black'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <UserPlus className="w-3.5 h-3.5" />
+              <span>რეგისტრაცია</span>
+            </button>
+          </div>
+        )}
 
         {/* Role Toggle Tabs (აკადემიის წევრი vs მწვრთნელი / მენეჯერი) */}
-        <div className="p-3 sm:p-4 bg-slate-50/60 border-b border-slate-100 shrink-0">
+        {authMode !== 'forgot' && (
+          <div className="p-3 sm:p-4 bg-slate-50/60 border-b border-slate-100 shrink-0">
           <div className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2">
             აირჩიეთ პროფილი:
           </div>
@@ -322,13 +363,24 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
             </button>
           </div>
         </div>
+        )}
 
         {/* Clean Input Form - Scrollable */}
         <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-3.5 overflow-y-auto flex-1">
           {errorMsg && (
-            <div className="p-2.5 rounded-xl bg-red-50 text-red-700 text-xs flex items-center gap-2 border border-red-200">
+            <div className="p-2.5 rounded-xl bg-red-50 text-red-700 text-xs flex items-center gap-2 border border-red-200 animate-toast-slide">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
+            </div>
+          )}
+
+          {resetSentMsg && (
+            <div className="p-3.5 rounded-xl bg-emerald-50 text-emerald-800 text-xs flex items-start gap-2.5 border border-emerald-200 animate-toast-slide">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-emerald-900">აღდგენის ინსტრუქცია გაგზავნილია!</p>
+                <p className="text-[11px] text-emerald-700 mt-0.5">{resetSentMsg}</p>
+              </div>
             </div>
           )}
 
@@ -411,30 +463,49 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
             </div>
           </div>
 
-          {/* Password input */}
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                პაროლი
-              </label>
-              {authMode === 'signin' && (
-                <a href="#" className="text-[11px] text-blue-600 hover:underline font-bold">
-                  დაგავიწყდათ?
-                </a>
-              )}
+          {/* Password input (Hidden in Forgot Password mode) */}
+          {authMode !== 'forgot' && (
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                  პაროლი
+                </label>
+                {authMode === 'signin' && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('forgot');
+                      setErrorMsg('');
+                      setResetSentMsg('');
+                    }}
+                    className="text-[11px] text-blue-600 hover:underline font-bold"
+                  >
+                    დაგავიწყდათ?
+                  </button>
+                )}
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all font-medium"
+                  placeholder="••••••••"
+                  required
+                />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-700 p-0.5 rounded-md transition-colors"
+                  title={showPassword ? 'პაროლის დამალვა' : 'პაროლის ჩვენება'}
+                  aria-label={showPassword ? 'პაროლის დამალვა' : 'პაროლის ჩვენება'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
-            <div className="relative">
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all font-medium"
-                placeholder="••••••••"
-                required
-              />
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-            </div>
-          </div>
+          )}
 
           {/* Submit Button */}
           <button
@@ -446,12 +517,23 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : loginSuccess ? (
               <>
-                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-300 animate-bounce-in" />
                 <span>{authMode === 'signin' ? 'შესვლა წარმატებულია...' : 'რეგისტრაცია წარმატებულია...'}</span>
+              </>
+            ) : resetSentMsg ? (
+              <>
+                <CheckCircle2 className="w-4 h-4 text-emerald-300 animate-bounce-in" />
+                <span>ბმული გაგზავნილია</span>
               </>
             ) : (
               <>
-                <span>{authMode === 'signin' ? 'სისტემაში შესვლა' : 'ანგარიშის შექმნა'}</span>
+                <span>
+                  {authMode === 'forgot'
+                    ? 'აღდგენის ბმულის გაგზავნა'
+                    : authMode === 'signin'
+                    ? 'სისტემაში შესვლა'
+                    : 'ანგარიშის შექმნა'}
+                </span>
                 <ChevronRight className="w-4 h-4" />
               </>
             )}
@@ -459,7 +541,20 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
 
           {/* Switch Mode Footer Link */}
           <div className="text-center pt-2">
-            {authMode === 'signin' ? (
+            {authMode === 'forgot' ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthMode('signin');
+                  setErrorMsg('');
+                  setResetSentMsg('');
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:underline"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>ავტორიზაციაზე დაბრუნება</span>
+              </button>
+            ) : authMode === 'signin' ? (
               <p className="text-xs text-slate-500">
                 არ გაქვთ ანგარიში?{' '}
                 <button
@@ -467,6 +562,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
                   onClick={() => {
                     setAuthMode('signup');
                     setErrorMsg('');
+                    setResetSentMsg('');
                   }}
                   className="font-bold text-blue-600 hover:underline"
                 >
@@ -481,6 +577,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
                   onClick={() => {
                     setAuthMode('signin');
                     setErrorMsg('');
+                    setResetSentMsg('');
                   }}
                   className="font-bold text-blue-600 hover:underline"
                 >
