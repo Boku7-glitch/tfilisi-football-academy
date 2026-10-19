@@ -1,306 +1,343 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   X, 
   User, 
   LogIn, 
   Lock, 
-  Calendar, 
-  CreditCard, 
-  CheckCircle, 
-  Clock, 
+  Shield, 
+  Award, 
+  Users, 
   ChevronRight,
-  Receipt
+  ArrowRight,
+  CheckCircle2,
+  Sparkles,
+  AlertCircle
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAcademy, UserRole } from '../context/AcademyContext';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  defaultRole?: UserRole;
 }
 
-export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const { language, t } = useLanguage();
-  const [activeTab, setActiveTab] = useState<'login' | 'portal_preview'>('login');
-  const [email, setEmail] = useState('parent@tbilisifa.ge');
-  const [password, setPassword] = useState('••••••••');
-  const [portalView, setPortalView] = useState<'overview' | 'billing'>('overview');
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
+export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: AuthModalProps) {
+  const { language } = useLanguage();
+  const { loginAs, currentUser } = useAcademy();
+  const router = useRouter();
 
-  if (!isOpen) return null;
+  const [isClosing, setIsClosing] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<UserRole>(defaultRole);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('••••••••');
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  // Sync default emails when role changes
+  useEffect(() => {
+    if (selectedRole === 'admin') {
+      setEmail('davit.dvali@tfilisifa.ge');
+    } else if (selectedRole === 'coach') {
+      setEmail('levan.chelidze@tfilisifa.ge');
+    } else {
+      setEmail('parent@tbilisifa.ge');
+    }
+    setErrorMsg('');
+  }, [selectedRole]);
+
+  // Smooth close with exit animation
+  const handleSmoothClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, 220);
+  };
+
+  const handleRoleSelectAndLogin = async (role: UserRole) => {
+    setIsLoading(true);
+    setErrorMsg('');
+    loginAs(role);
+
+    // Smooth transition
+    await new Promise(resolve => setTimeout(resolve, 350));
+    setIsLoading(false);
+    setLoginSuccess(true);
+
+    setTimeout(() => {
+      handleSmoothClose();
+      if (role === 'admin') {
+        router.push('/admin');
+      } else if (role === 'coach') {
+        router.push('/admin?view=coach');
+      } else {
+        router.push('/portal');
+      }
+      setLoginSuccess(false);
+    }, 450);
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      setErrorMsg(language === 'ka' ? 'გთხოვთ შეიყვანოთ ელ-ფოსტა' : 'Please enter an email address');
+      return;
+    }
+
+    setIsLoading(true);
+    setErrorMsg('');
+
+    await new Promise(resolve => setTimeout(resolve, 400));
+    loginAs(selectedRole, { email });
+    setIsLoading(false);
+    setLoginSuccess(true);
+
+    setTimeout(() => {
+      handleSmoothClose();
+      if (selectedRole === 'admin') {
+        router.push('/admin');
+      } else if (selectedRole === 'coach') {
+        router.push('/admin?view=coach');
+      } else {
+        router.push('/portal');
+      }
+      setLoginSuccess(false);
+    }, 450);
+  };
+
+  if (!isOpen && !isClosing) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
-        
+    <div 
+      className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-md ${
+        isClosing ? 'modal-backdrop-out' : 'modal-backdrop-in'
+      }`}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleSmoothClose();
+      }}
+    >
+      <div 
+        className={`relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col max-h-[92vh] ${
+          isClosing ? 'modal-box-out' : 'modal-box-in'
+        }`}
+      >
         {/* Modal Header */}
-        <div className="bg-[#061325] px-4 sm:px-6 py-4 text-white flex items-center justify-between shrink-0 border-b border-slate-800">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-slate-800 text-blue-400">
-              {activeTab === 'login' ? (
-                <LogIn className="w-4 h-4 sm:w-5 sm:h-5" />
-              ) : (
-                <User className="w-4 h-4 sm:w-5 sm:h-5" />
-              )}
+        <div className="bg-[#061325] px-5 sm:px-7 py-4.5 text-white flex items-center justify-between shrink-0 border-b border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
+              <LogIn className="w-5 h-5 text-sky-400" />
             </div>
             <div>
-              <h3 className="font-black text-sm sm:text-base tracking-tight">
-                {activeTab === 'login' ? t.authModal.titleLogin : t.authModal.titlePortal}
+              <h3 className="font-black text-base sm:text-lg tracking-tight flex items-center gap-2">
+                {language === 'ka' ? 'ავტორიზაცია & პორტალი' : 'Academy Portal Login'}
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-600/30 text-blue-300 border border-blue-500/30">
+                  Tfilisi
+                </span>
               </h3>
-              <p className="text-[10px] sm:text-xs text-blue-400 font-mono">
-                {t.authModal.subTitle}
+              <p className="text-[11px] text-slate-400">
+                {language === 'ka' 
+                  ? 'სისტემაში შესვლა: აირჩიეთ სასურველი როლი' 
+                  : 'Select your academy portal profile'}
               </p>
             </div>
           </div>
 
           <button
-            onClick={onClose}
-            className="p-1 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+            onClick={handleSmoothClose}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            title="დახურვა"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Tab Toggle */}
-        <div className="bg-slate-50 px-4 sm:px-6 py-2.5 border-b border-slate-200 flex items-center justify-between text-xs shrink-0">
-          <span className="text-slate-500 font-bold uppercase text-[10px] tracking-wider hidden sm:inline">{t.authModal.modeLabel}</span>
-          <div className="flex gap-2 w-full sm:w-auto justify-between sm:justify-start">
+        {/* Role Selector Tabs (Silky smooth selection) */}
+        <div className="bg-slate-50 p-2 sm:p-3 border-b border-slate-200">
+          <div className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2 px-1">
+            {language === 'ka' ? 'აირჩიეთ როლი:' : 'Select Portal Role:'}
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            
+            {/* Parent / Player Role */}
             <button
-              onClick={() => setActiveTab('login')}
-              className={`px-3.5 py-1.5 rounded-md font-black uppercase text-xs tracking-wider transition-colors ${
-                activeTab === 'login' ? 'bg-[#061325] text-white' : 'text-slate-600 hover:text-slate-900'
+              type="button"
+              onClick={() => setSelectedRole('parent')}
+              className={`p-2.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
+                selectedRole === 'parent'
+                  ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-xs ring-1 ring-blue-600'
+                  : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
               }`}
             >
-              {t.authModal.tabLogin}
+              <div className="flex items-center justify-between mb-1">
+                <Users className={`w-4 h-4 ${selectedRole === 'parent' ? 'text-blue-600' : 'text-slate-400'}`} />
+                {selectedRole === 'parent' && <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />}
+              </div>
+              <div className="text-xs font-black truncate">მშობელი / ბავშვი</div>
+              <div className="text-[10px] text-slate-500 truncate">პირადი კაბინეტი</div>
             </button>
+
+            {/* Coach Role */}
             <button
-              onClick={() => setActiveTab('portal_preview')}
-              className={`px-3.5 py-1.5 rounded-md font-black uppercase text-xs tracking-wider transition-colors ${
-                activeTab === 'portal_preview' ? 'bg-[#061325] text-white' : 'text-slate-600 hover:text-slate-900'
+              type="button"
+              onClick={() => setSelectedRole('coach')}
+              className={`p-2.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
+                selectedRole === 'coach'
+                  ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-xs ring-1 ring-blue-600'
+                  : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
               }`}
             >
-              {t.authModal.tabPortal}
+              <div className="flex items-center justify-between mb-1">
+                <Award className={`w-4 h-4 ${selectedRole === 'coach' ? 'text-blue-600' : 'text-slate-400'}`} />
+                {selectedRole === 'coach' && <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />}
+              </div>
+              <div className="text-xs font-black truncate">მწვრთნელი</div>
+              <div className="text-[10px] text-slate-500 truncate">განრიგი & მატჩები</div>
             </button>
+
+            {/* Admin Role */}
+            <button
+              type="button"
+              onClick={() => setSelectedRole('admin')}
+              className={`p-2.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
+                selectedRole === 'admin'
+                  ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-xs ring-1 ring-blue-600'
+                  : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <Shield className={`w-4 h-4 ${selectedRole === 'admin' ? 'text-blue-600' : 'text-slate-400'}`} />
+                {selectedRole === 'admin' && <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />}
+              </div>
+              <div className="text-xs font-black truncate">ადმინისტრატორი</div>
+              <div className="text-[10px] text-slate-500 truncate">Davit Dvali (სრული)</div>
+            </button>
+
           </div>
         </div>
 
-        {/* Scrollable Content Body */}
-        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
-          {activeTab === 'login' ? (
-            /* Login Form */
-            <div className="space-y-3.5 max-w-md mx-auto py-2">
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  {t.authModal.parentEmail}
-                </label>
-                <div className="relative">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 text-slate-900"
-                    placeholder="parent@example.com"
-                  />
-                  <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+        {/* Scrollable Form Body */}
+        <div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-4">
+          
+          {/* Quick Demo One-Click Access Notice */}
+          <div className="p-3.5 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/70 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Sparkles className="w-5 h-5 text-blue-600 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-xs font-extrabold text-blue-950 truncate">
+                  {selectedRole === 'admin' && 'ადმინისტრატორის პროფილი: Davit Dvali'}
+                  {selectedRole === 'coach' && 'მწვრთნელის პროფილი: ლევან ჭელიძე'}
+                  {selectedRole === 'parent' && 'მშობლის პროფილი: ზურაბ ბერიძე (ნიკოლოზ ბერიძე)'}
+                </div>
+                <div className="text-[11px] text-blue-700 truncate">
+                  სწრაფი 1-კლიკიანი შესვლა სატესტოდ
                 </div>
               </div>
+            </div>
 
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  {t.authModal.password}
-                </label>
-                <div className="relative">
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 text-slate-900"
-                    placeholder="••••••••"
-                  />
-                  <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                </div>
+            <button
+              type="button"
+              onClick={() => handleRoleSelectAndLogin(selectedRole)}
+              disabled={isLoading || loginSuccess}
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xs shadow-xs transition-all shrink-0 flex items-center gap-1.5"
+            >
+              <span>სწრაფი შესვლა</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleFormSubmit} className="space-y-3.5 pt-1">
+            {errorMsg && (
+              <div className="p-2.5 rounded-xl bg-red-50 text-red-700 text-xs flex items-center gap-2 border border-red-200">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{errorMsg}</span>
               </div>
+            )}
 
-              <div className="flex items-center justify-between text-[11px] pt-1">
-                <label className="flex items-center gap-1.5 text-slate-600 cursor-pointer">
-                  <input type="checkbox" defaultChecked className="rounded border-slate-300 text-blue-600" />
-                  <span>{t.authModal.rememberMe}</span>
+            <div>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                ელ-ფოსტა / მომხმარებლის სახელი
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all font-medium"
+                  placeholder="name@tfilisifa.ge"
+                  required
+                />
+                <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                  პაროლი
                 </label>
-                <a href="#" className="text-blue-700 font-bold hover:underline">
-                  {t.authModal.forgotPass}
+                <a href="#" className="text-[11px] text-blue-600 hover:underline font-bold">
+                  დაგავიწყდათ?
                 </a>
               </div>
-
-              <button
-                onClick={() => setActiveTab('portal_preview')}
-                className="w-full py-3 rounded-xl font-bold text-white bg-blue-700 hover:bg-blue-800 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-1.5 mt-3 text-xs sm:text-sm"
-              >
-                <span>{t.authModal.enterBtn}</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-
-              <div className="text-center pt-2 text-[11px] text-slate-400">
-                {t.authModal.connectedWith}
+              <div className="relative">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all"
+                  placeholder="••••••••"
+                  required
+                />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
               </div>
             </div>
-          ) : (
-            /* Parent & Child Portal Preview */
-            <div className="space-y-4">
-              
-              {/* Player Top Profile Strip */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 gap-2.5">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-xl bg-blue-700 text-white flex items-center justify-center font-black text-sm shrink-0">
-                    10
-                  </div>
-                  <div>
-                    <div className="text-xs sm:text-sm font-extrabold text-slate-900">
-                      {language === 'ka' ? 'ნიკოლოზ ბერიძე (2014 წწ)' : 'Nicholas Beridze (2014)'}
-                    </div>
-                    <div className="text-[11px] text-blue-700 font-semibold">
-                      U-12 · Saburtalo · Coach: L. Chelidze
-                    </div>
-                  </div>
-                </div>
 
-                <div className="flex gap-1.5 self-start sm:self-auto">
-                  <button
-                    onClick={() => setPortalView('overview')}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition-colors ${
-                      portalView === 'overview'
-                        ? 'bg-blue-700 text-white border-blue-700'
-                        : 'bg-white text-slate-700 border-slate-200'
-                    }`}
-                  >
-                    {t.authModal.tabSchedule}
-                  </button>
-                  <button
-                    onClick={() => setPortalView('billing')}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition-colors ${
-                      portalView === 'billing'
-                        ? 'bg-blue-700 text-white border-blue-700'
-                        : 'bg-white text-slate-700 border-slate-200'
-                    }`}
-                  >
-                    {t.authModal.tabBilling}
-                  </button>
-                </div>
-              </div>
-
-              {/* Portal Subview: Overview */}
-              {portalView === 'overview' ? (
-                <div className="space-y-3">
-                  <div className="p-3.5 rounded-xl border border-blue-200 bg-blue-50/50">
-                    <div className="flex items-center justify-between text-[11px] font-bold text-blue-800 uppercase tracking-wider mb-1.5">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-blue-600" />
-                        <span>{t.authModal.nextTraining}</span>
-                      </span>
-                      <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded-xs text-[10px]">{t.authModal.today}</span>
-                    </div>
-                    <div className="text-xs sm:text-sm font-extrabold text-slate-900">
-                      {language === 'ka' ? 'ტექნიკური ოსტატობა & მოტორიკა' : 'Ball Mastery & Coordination'}
-                    </div>
-                    <div className="text-[11px] text-slate-600 mt-0.5">
-                      15:30 - 17:00 · Saburtalo Complex (Pitch B)
-                    </div>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl border border-slate-200 bg-white">
-                    <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-blue-600" />
-                        <span>{t.authModal.upcomingMatch}</span>
-                      </span>
-                      <span className="text-blue-700 font-bold">{language === 'ka' ? 'შაბათი, 24 ოქტომბერი' : 'Saturday, Oct 24'}</span>
-                    </div>
-                    <div className="text-xs sm:text-sm font-black text-slate-900">Tfilisi FA U-12 vs Dinamo Tbilisi U-12</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">
-                      {language === 'ka' ? 'ტფილისის საბავშვო თასი · 12:00 · დინამოს ბაზა' : 'Tfilisi Youth Cup · 12:00 · Dinamo Base'}
-                    </div>
-                  </div>
-                </div>
+            <button
+              type="submit"
+              disabled={isLoading || loginSuccess}
+              className="w-full py-3 rounded-xl font-black text-white bg-blue-600 hover:bg-blue-700 active:scale-98 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm"
+            >
+              {isLoading ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : loginSuccess ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                  <span>შესვლა წარმატებულია...</span>
+                </>
               ) : (
-                /* Portal Subview: Billing */
-                <div className="space-y-3">
-                  <div className="p-4 rounded-xl border border-blue-200 bg-white space-y-2.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] uppercase font-extrabold text-slate-500">
-                        {language === 'ka' ? 'მიმდინარე თვის სტატუსი' : 'Current Status'}
-                      </span>
-                      {paymentSuccess ? (
-                        <span className="px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-blue-600 text-white flex items-center gap-1">
-                          <CheckCircle className="w-3 h-3" /> {t.authModal.paidFee}
-                        </span>
-                      ) : (
-                        <span className="px-2 py-0.5 rounded-md text-[11px] font-extrabold bg-blue-100 text-blue-800 border border-blue-200">
-                          {t.authModal.dueFee}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="text-xs sm:text-sm font-bold text-slate-800">
-                      {language === 'ka' ? 'საბავშვო აკადემიის საწევრო: ოქტომბერი 2026' : 'Youth Academy Monthly Membership: Oct 2026'}
-                    </div>
-                    <div className="text-[11px] text-slate-500">
-                      {language === 'ka' ? 'ვადა: 25 ოქტომბრამდე · მოიცავს 3 ვარჯიშს/კვირაში და ტურნირებს' : 'Due date: Oct 25 · Includes 3 sessions/week and league matches'}
-                    </div>
-
-                    {!paymentSuccess ? (
-                      <button
-                        onClick={() => setPaymentSuccess(true)}
-                        className="w-full py-2.5 rounded-xl font-bold text-white bg-blue-700 hover:bg-blue-800 flex items-center justify-center gap-1.5 shadow-2xs transition-all text-xs"
-                      >
-                        <CreditCard className="w-3.5 h-3.5" />
-                        <span>{t.authModal.payMonthlyBtn}</span>
-                      </button>
-                    ) : (
-                      <div className="p-2.5 bg-blue-50 text-blue-800 rounded-xl text-xs font-semibold flex items-center gap-2 border border-blue-200">
-                        <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
-                        <span>
-                          {language === 'ka'
-                            ? 'ტრანზაქცია #TRX-94827 წარმატებულია. ქვითარი გამოგზავნილია მეილზე.'
-                            : 'Transaction #TRX-94827 completed successfully. Receipt emailed.'}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Previous Payments */}
-                  <div className="pt-1">
-                    <div className="text-[11px] font-bold text-slate-700 mb-1.5 flex items-center gap-1">
-                      <Receipt className="w-3 h-3 text-blue-600" />
-                      <span>{t.authModal.historyTitle}</span>
-                    </div>
-                    <div className="space-y-1 text-xs">
-                      <div className="flex justify-between p-2 rounded-lg bg-slate-50 border border-slate-200/70">
-                        <span>{language === 'ka' ? 'სექტემბერი 2026' : 'September 2026'} · ₾150.00</span>
-                        <span className="text-blue-700 font-bold">{t.authModal.statusPaid} (Visa)</span>
-                      </div>
-                      <div className="flex justify-between p-2 rounded-lg bg-slate-50 border border-slate-200/70">
-                        <span>{language === 'ka' ? 'აგვისტო 2026' : 'August 2026'} · ₾150.00</span>
-                        <span className="text-blue-700 font-bold">{t.authModal.statusPaid} (Apple Pay)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <>
+                  <span>პორტალში შესვლა</span>
+                  <ChevronRight className="w-4 h-4" />
+                </>
               )}
+            </button>
+          </form>
 
-            </div>
-          )}
+          {/* Privacy Note */}
+          <div className="text-center pt-2 text-[11px] text-slate-400">
+            {selectedRole === 'admin' && '🔒 ადმინისტრატორის ზონა: ბავშვთა სია და ფინანსები მკაცრად დაცულია.'}
+            {selectedRole === 'coach' && '⚽ მწვრთნელის კაბინეტი: მატჩების დანიშვნა და დასწრების აღრიცხვა.'}
+            {selectedRole === 'parent' && '📱 პირადი კაბინეტი: განრიგი, თამაშები და ონლაინ გადახდები.'}
+          </div>
         </div>
 
         {/* Modal Footer */}
-        <div className="bg-slate-50 px-4 sm:px-6 py-2.5 border-t border-slate-200 flex justify-end shrink-0">
+        <div className="bg-slate-50 px-5 sm:px-6 py-2.5 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 shrink-0">
+          <span className="font-mono text-[10px]">TFILISI SECURITY PROTOCOL</span>
           <button
-            onClick={onClose}
+            type="button"
+            onClick={handleSmoothClose}
             className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-200 transition-colors"
           >
-            {t.authModal.closeBtn}
+            დახურვა
           </button>
         </div>
-
       </div>
     </div>
   );

@@ -11,9 +11,13 @@ import {
   Zap, 
   ArrowRight,
   Newspaper,
-  Phone
+  Phone,
+  LogOut,
+  Shield,
+  User
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAcademy } from '../context/AcademyContext';
 
 interface NavbarProps {
   onOpenAuthModal?: () => void;
@@ -21,6 +25,7 @@ interface NavbarProps {
 
 export default function Navbar({ onOpenAuthModal }: NavbarProps) {
   const { language, t } = useLanguage();
+  const { currentUser, logout } = useAcademy();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -67,18 +72,43 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
             </div>
 
             {/* Right Area: Equal width spacer or Portal Login */}
-            <div className="flex items-center justify-end shrink-0 min-w-[70px] sm:min-w-[90px]">
-              {onOpenAuthModal && (
+            <div className="flex items-center justify-end shrink-0 min-w-[70px] sm:min-w-[90px] gap-2">
+              {currentUser ? (
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Link
+                    href={currentUser.role === 'admin' ? '/admin' : currentUser.role === 'coach' ? '/admin?view=coach' : '/portal'}
+                    className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-all text-xs font-bold"
+                    title={currentUser.name}
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-blue-500 text-white flex items-center justify-center text-[10px] font-black">
+                      {currentUser.avatar || 'U'}
+                    </div>
+                    <span className="hidden md:inline text-[11px] font-black tracking-wide truncate max-w-[110px]">
+                      {currentUser.role === 'admin' ? 'ადმინი' : currentUser.role === 'coach' ? 'მწვრთნელი' : 'კაბინეტი'}
+                    </span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="w-8 h-8 rounded-xl bg-white/5 hover:bg-red-500/20 text-white/70 hover:text-red-300 border border-white/10 transition-colors flex items-center justify-center"
+                    title="გამოსვლა"
+                    aria-label="გამოსვლა"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : onOpenAuthModal ? (
                 <button
                   type="button"
                   onClick={onOpenAuthModal}
-                  className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all ml-auto"
+                  className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all ml-auto hover:scale-105 active:scale-95 group shadow-xs"
                   title={t.navbar.login}
                   aria-label={t.navbar.login}
                 >
-                  <LogIn className="w-4 h-4 text-sky-300" />
+                  <LogIn className="w-4 h-4 text-sky-300 group-hover:text-white transition-colors" />
                 </button>
-              )}
+              ) : null}
             </div>
 
           </div>
@@ -95,6 +125,44 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
       >
         <div className="mobile-menu-drawer-inner">
           <div className="border-t border-slate-200 bg-white/98 backdrop-blur-lg px-4 pt-4 pb-6 space-y-2 shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
+
+            {/* User Profile / Portal Link in Drawer */}
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 mb-2">
+              {currentUser ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
+                      {currentUser.avatar || 'U'}
+                    </div>
+                    <div>
+                      <div className="text-xs font-black text-slate-900">{currentUser.name}</div>
+                      <div className="text-[10px] text-blue-600 font-bold uppercase">
+                        {currentUser.role === 'admin' ? 'ადმინისტრატორი' : currentUser.role === 'coach' ? 'მწვრთნელი' : 'მშობელი'}
+                      </div>
+                    </div>
+                  </div>
+                  <Link
+                    href={currentUser.role === 'admin' ? '/admin' : currentUser.role === 'coach' ? '/admin?view=coach' : '/portal'}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-bold"
+                  >
+                    პორტალი
+                  </Link>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (onOpenAuthModal) onOpenAuthModal();
+                  }}
+                  className="w-full py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center justify-center gap-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>პირადი კაბინეტი / ავტორიზაცია</span>
+                </button>
+              )}
+            </div>
 
             {/* The 6 Core Modules in Mobile Drawer */}
             <div className="space-y-1">
