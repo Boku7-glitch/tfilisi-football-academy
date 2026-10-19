@@ -137,7 +137,7 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
                     <div>
                       <div className="text-xs font-black text-slate-900">{currentUser.name}</div>
                       <div className="text-[10px] text-blue-600 font-bold uppercase">
-                        {currentUser.role === 'coach' ? 'მწვრთნელი / მენეჯერი' : 'მშობელი'}
+                        {currentUser.role === 'coach' ? 'მწვრთნელი / მენეჯერი' : 'აკადემიის წევრი'}
                       </div>
                     </div>
                   </div>

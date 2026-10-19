@@ -236,7 +236,7 @@ export default function AdminPage() {
               <div className="hidden sm:flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700 text-xs">
                 <Award className="w-4 h-4 text-sky-400" />
                 <span className="font-bold text-slate-200">
-                  {currentUser?.name || 'ლევან ჭელიძე'}
+                  {currentUser?.name || 'მწვრთნელი / მენეჯერი'}
                 </span>
                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-600 text-white font-mono uppercase">
                   მწვრთნელი / მენეჯერი

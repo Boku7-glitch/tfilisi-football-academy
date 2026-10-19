@@ -56,17 +56,23 @@ export default function UserPortalPage() {
 
     // 2. By email
     if (currentUser.email) {
-      const found = players.find(p => p.parentEmail && p.parentEmail.toLowerCase() === currentUser.email.toLowerCase());
+      const found = players.find(p => 
+        (p.parentEmail && p.parentEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
+        (`${p.firstName} ${p.lastName}`.toLowerCase() === currentUser.name?.toLowerCase())
+      );
       if (found) return found;
     }
 
     // 3. By name
     if (currentUser.name) {
-      const found = players.find(p => p.parentName && p.parentName.toLowerCase() === currentUser.name.toLowerCase());
+      const found = players.find(p => 
+        (p.parentName && p.parentName.toLowerCase() === currentUser.name.toLowerCase()) ||
+        (`${p.firstName} ${p.lastName}`.toLowerCase() === currentUser.name.toLowerCase())
+      );
       if (found) return found;
     }
 
-    // No fallback to random kids!
+    // No fallback to random accounts!
     return null;
   }, [players, currentUser]);
 
@@ -100,14 +106,17 @@ export default function UserPortalPage() {
   const [onboardGroupId, setOnboardGroupId] = useState(groups[0]?.id || 'grp-u12-saburtalo');
   const [onboardPosition, setOnboardPosition] = useState('ნახევარმცველი');
 
-  const handleRegisterChildOnboarding = (e: React.FormEvent) => {
+  const handleRegisterProfileOnboarding = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!onboardFirst) return;
+    const fullName = currentUser?.name || 'აკადემიის წევრი';
+    const nameParts = fullName.trim().split(' ');
+    const memberFirst = onboardFirst || nameParts[0] || 'წევრი';
+    const memberLast = onboardLast || nameParts.slice(1).join(' ') || '';
     const group = groups.find(g => g.id === onboardGroupId) || groups[0];
     const newId = `pl-${Date.now()}`;
     addPlayer({
-      firstName: onboardFirst,
-      lastName: onboardLast || (currentUser?.name?.split(' ')[1] || ''),
+      firstName: memberFirst,
+      lastName: memberLast,
       birthYear: Number(onboardBirthYear),
       age: 2026 - Number(onboardBirthYear),
       position: onboardPosition,
@@ -118,7 +127,7 @@ export default function UserPortalPage() {
       coachName: group.coachName,
       locationId: group.locationId,
       locationName: group.locationName,
-      parentName: currentUser?.name || 'მშობელი',
+      parentName: fullName,
       parentPhone: currentUser?.phone || '+995 5',
       parentEmail: currentUser?.email || '',
       isIndividualTraining: false,
@@ -188,7 +197,7 @@ export default function UserPortalPage() {
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400">
-                  მოთამაშისა და მშობლის დახურული სივრცე · ტფილისის აკადემია
+                  მოთამაშის დახურული სივრცე · ტფილისის აკადემია
                 </p>
               </div>
             </div>
@@ -198,7 +207,7 @@ export default function UserPortalPage() {
               <div className="hidden sm:flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700 text-xs">
                 <User className="w-4 h-4 text-sky-400" />
                 <span className="font-bold text-slate-200">
-                  {currentUser?.name || 'მშობელი'}
+                  {currentUser?.name || 'აკადემიის წევრი'}
                 </span>
               </div>
 
@@ -283,7 +292,8 @@ export default function UserPortalPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full space-y-6">
         
         {/* ========================================================
-            CASE A: ONBOARDING CARD IF NO CHILD LINKED YET
+            {/* ========================================================
+            CASE A: ONBOARDING CARD IF PROFILE NOT ACTIVATED YET
             ======================================================== */}
         {!activePlayer ? (
           <div className="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-10 space-y-6 max-w-2xl mx-auto">
@@ -292,61 +302,35 @@ export default function UserPortalPage() {
                 <Users className="w-8 h-8" />
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-                მოგესალმებით, {currentUser?.name || 'მშობელო'}!
+                მოგესალმებით, {currentUser?.name || 'აკადემიის წევრო'}!
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
-                თქვენი პირადი კაბინეტი გააქტიურებულია. აკადემიის სავარჯიშო განრიგის, მატჩებისა და საწევროს გასააქტიურებლად, გთხოვთ მიუთითოთ თქვენი შვილის (მოთამაშის) მონაცემები.
+                თქვენი პირადი კაბინეტი გააქტიურებულია. სავარჯიშო განრიგის, მატჩებისა და საწევროს სანახავად, გთხოვთ აირჩიოთ თქვენი ასაკობრივი ჯგუფი და პოზიცია:
               </p>
             </div>
 
-            <form onSubmit={handleRegisterChildOnboarding} className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+            <form onSubmit={handleRegisterProfileOnboarding} className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
               <div className="text-xs font-black uppercase tracking-wider text-blue-700 pb-1 border-b border-slate-200">
-                მოთამაშის მონაცემების შევსება:
+                პროფილის და ჯგუფის აქტივაცია:
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                    ბავშვის სახელი
+                    სახელი და გვარი
                   </label>
                   <input
                     type="text"
-                    value={onboardFirst}
-                    onChange={(e) => setOnboardFirst(e.target.value)}
+                    defaultValue={currentUser?.name || ''}
+                    onChange={(e) => {
+                      const parts = e.target.value.trim().split(' ');
+                      setOnboardFirst(parts[0] || '');
+                      setOnboardLast(parts.slice(1).join(' ') || '');
+                    }}
                     required
-                    placeholder="მაგ. ლუკა"
+                    placeholder="მაგ. საბა ბოკუჩავა"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-medium text-slate-900"
                   />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                    ბავშვის გვარი
-                  </label>
-                  <input
-                    type="text"
-                    value={onboardLast}
-                    onChange={(e) => setOnboardLast(e.target.value)}
-                    required
-                    placeholder="მაგ. ბოკუჩავა"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-medium text-slate-900"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                    დაბადების წელი
-                  </label>
-                  <select
-                    value={onboardBirthYear}
-                    onChange={(e) => setOnboardBirthYear(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-800"
-                  >
-                    {[2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019].map(y => (
-                      <option key={y} value={y}>{y} წწ ({2026 - y} წელი)</option>
-                    ))}
-                  </select>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
@@ -358,7 +342,9 @@ export default function UserPortalPage() {
                     className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-800 truncate"
                   >
                     {groups.map(g => (
-                      <option key={g.id} value={g.id}>{g.name}</option>
+                      <option key={g.id} value={g.id}>
+                        {g.name} ({g.birthYears})
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -368,20 +354,23 @@ export default function UserPortalPage() {
                 <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
                   პოზიცია მოედანზე
                 </label>
-                <input
-                  type="text"
+                <select
                   value={onboardPosition}
                   onChange={(e) => setOnboardPosition(e.target.value)}
-                  placeholder="მაგ. ნახევარმცველი, თავდამსხმელი, მცველი..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-medium text-slate-900"
-                />
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-bold text-slate-800"
+                >
+                  <option value="ნახევარმცველი">ნახევარმცველი (MID)</option>
+                  <option value="თავდამსხმელი">თავდამსხმელი (FWD)</option>
+                  <option value="მცველი">მცველი (DEF)</option>
+                  <option value="მეკარე">მეკარე (GK)</option>
+                </select>
               </div>
 
               <button
                 type="submit"
                 className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-98 text-white font-black text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 mt-2"
               >
-                <span>ბავშვის რეგისტრაცია და კაბინეტის გახსნა</span>
+                <span>კაბინეტის გააქტიურება</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </form>
