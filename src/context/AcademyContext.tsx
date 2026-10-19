@@ -556,7 +556,7 @@ export function AcademyProvider({ children }: { children: React.ReactNode }) {
       role: role,
       phone: customUser?.phone || '',
       avatar: (customUser?.name || defaultName).substring(0, 2).toUpperCase(),
-      assignedPlayerId: role === 'parent' ? (customUser?.assignedPlayerId || 'pl-01') : undefined,
+      assignedPlayerId: customUser?.assignedPlayerId || undefined,
       assignedGroupId: role === 'coach' ? (customUser?.assignedGroupId || 'grp-u12-saburtalo') : undefined,
       ...customUser
     };

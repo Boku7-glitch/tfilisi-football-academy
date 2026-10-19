@@ -15,7 +15,7 @@ import {
   CheckCircle2,
   AlertCircle
 } from 'lucide-react';
-import { useAcademy, UserRole } from '../context/AcademyContext';
+import { useAcademy } from '../context/AcademyContext';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -24,7 +24,7 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: AuthModalProps) {
-  const { loginAs } = useAcademy();
+  const { loginAs, addPlayer, groups } = useAcademy();
   const router = useRouter();
 
   // Mode: Sign In vs Sign Up
@@ -36,6 +36,11 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
+
+  // Child Info (for Parent registration)
+  const [childName, setChildName] = useState('');
+  const [childBirthYear, setChildBirthYear] = useState('2014');
+  const [childGroupId, setChildGroupId] = useState(groups[0]?.id || 'grp-u12-saburtalo');
 
   // Animation & UI states
   const [isRendered, setIsRendered] = useState(isOpen);
@@ -102,13 +107,48 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
 
     setIsLoading(true);
 
-    // Simulate smooth network handshake
+    // Simulate network handshake
     await new Promise(resolve => setTimeout(resolve, 400));
+
+    let createdChildId: string | undefined = undefined;
+
+    // If parent signs up and provides child info
+    if (authMode === 'signup' && selectedRole === 'parent' && childName.trim()) {
+      const selectedGroup = groups.find(g => g.id === childGroupId) || groups[0];
+      const nameParts = childName.trim().split(' ');
+      const childFirst = nameParts[0];
+      const childLast = nameParts.slice(1).join(' ') || (fullName.split(' ')[1] || '');
+      
+      createdChildId = `pl-${Date.now()}`;
+      addPlayer({
+        firstName: childFirst,
+        lastName: childLast,
+        birthYear: Number(childBirthYear),
+        age: 2026 - Number(childBirthYear),
+        position: 'ნახევარმცველი',
+        jerseyNumber: 10,
+        groupId: selectedGroup.id,
+        groupName: selectedGroup.name,
+        coachId: selectedGroup.coachId,
+        coachName: selectedGroup.coachName,
+        locationId: selectedGroup.locationId,
+        locationName: selectedGroup.locationName,
+        parentName: fullName,
+        parentPhone: phone,
+        parentEmail: email,
+        isIndividualTraining: false,
+        monthlyFee: selectedGroup.monthlyFee,
+        paymentStatus: 'pending',
+        attendanceRate: 100,
+        medicalClearance: true
+      });
+    }
 
     loginAs(selectedRole, {
       name: fullName || (selectedRole === 'coach' ? 'მწვრთნელი' : 'მშობელი'),
       email: email,
-      phone: phone
+      phone: phone,
+      assignedPlayerId: createdChildId
     });
 
     setIsLoading(false);
@@ -137,7 +177,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
       }}
     >
       <div 
-        className={`relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col ${
+        className={`relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col max-h-[92vh] ${
           isClosing ? 'modal-box-out' : 'modal-box-in'
         }`}
       >
@@ -172,7 +212,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
         </div>
 
         {/* Auth Mode Toggle Tabs (შესვლა vs რეგისტრაცია) */}
-        <div className="flex border-b border-slate-200 bg-slate-50 text-xs font-bold">
+        <div className="flex border-b border-slate-200 bg-slate-50 text-xs font-bold shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -206,7 +246,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
         </div>
 
         {/* Role Toggle Tabs (მშობელი vs მწვრთნელი) */}
-        <div className="p-3 sm:p-4 bg-slate-50/60 border-b border-slate-100">
+        <div className="p-3 sm:p-4 bg-slate-50/60 border-b border-slate-100 shrink-0">
           <div className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2">
             აირჩიეთ პროფილი:
           </div>
@@ -247,8 +287,8 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
           </div>
         </div>
 
-        {/* Clean Input Form - NO PREFILLED FAKE DATA */}
-        <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-3.5">
+        {/* Clean Input Form - Scrollable */}
+        <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-3.5 overflow-y-auto flex-1">
           {errorMsg && (
             <div className="p-2.5 rounded-xl bg-red-50 text-red-700 text-xs flex items-center gap-2 border border-red-200">
               <AlertCircle className="w-4 h-4 shrink-0" />
@@ -260,7 +300,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
           {authMode === 'signup' && (
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                სახელი და გვარი
+                {selectedRole === 'parent' ? 'მშობლის სახელი და გვარი' : 'თქვენი სახელი და გვარი'}
               </label>
               <div className="relative">
                 <input
@@ -268,10 +308,65 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all font-medium"
-                  placeholder="მაგ. გიორგი ბერიძე"
+                  placeholder="მაგ. საბა ბოკუჩავა"
                   required
                 />
                 <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              </div>
+            </div>
+          )}
+
+          {/* Child Details (Only in Parent Signup mode) */}
+          {authMode === 'signup' && selectedRole === 'parent' && (
+            <div className="p-3.5 rounded-xl bg-blue-50/70 border border-blue-200/80 space-y-2.5">
+              <div className="text-[11px] font-black uppercase text-blue-900 flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-blue-600" />
+                <span>მოთამაშის (შვილის) მონაცემები</span>
+              </div>
+              
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+                  ბავშვის სახელი და გვარი
+                </label>
+                <input
+                  type="text"
+                  value={childName}
+                  onChange={(e) => setChildName(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-xs font-medium text-slate-900"
+                  placeholder="მაგ. ლუკა ბოკუჩავა"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+                    დაბადების წელი
+                  </label>
+                  <select
+                    value={childBirthYear}
+                    onChange={(e) => setChildBirthYear(e.target.value)}
+                    className="w-full px-2.5 py-2 rounded-lg border border-slate-300 bg-white text-xs font-bold text-slate-800"
+                  >
+                    {[2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019].map(year => (
+                      <option key={year} value={year}>{year} წწ</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase mb-1">
+                    ჯგუფი
+                  </label>
+                  <select
+                    value={childGroupId}
+                    onChange={(e) => setChildGroupId(e.target.value)}
+                    className="w-full px-2.5 py-2 rounded-lg border border-slate-300 bg-white text-xs font-bold text-slate-800 truncate"
+                  >
+                    {groups.map(g => (
+                      <option key={g.id} value={g.id}>{g.category}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
           )}
