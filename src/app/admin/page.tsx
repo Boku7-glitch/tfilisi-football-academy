@@ -217,52 +217,31 @@ export default function AdminPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-black text-sm sm:text-base tracking-tight uppercase">
-                    ტფილისის ადმინ პანელი
+                    სამწვრთნელო და სამენეჯერო პანელი
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-mono font-bold border border-blue-500/30">
-                    BACK-END
+                    COACH & SQUAD
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400">
-                  სისტემის მართვა · Davit Dvali & სამწვრთნელო შტაბი
+                  სისტემის მართვა · სამწვრთნელო შტაბი & მენეჯმენტი
                 </p>
               </div>
             </div>
 
-            {/* Right: Quick Role Switcher & Back to Site */}
+            {/* Right: Profile Badge & Back to Site */}
             <div className="flex items-center gap-2 sm:gap-3">
               
-              {/* Profile Badge & Switcher */}
+              {/* Profile Badge */}
               <div className="hidden sm:flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700 text-xs">
-                <Shield className="w-4 h-4 text-sky-400" />
+                <Award className="w-4 h-4 text-sky-400" />
                 <span className="font-bold text-slate-200">
-                  {currentUser?.name || 'დავით დვალი (ადმინისტრატორი)'}
+                  {currentUser?.name || 'ლევან ჭელიძე'}
                 </span>
                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-600 text-white font-mono uppercase">
-                  {currentUser?.role === 'coach' ? 'მწვრთნელი' : 'ადმინი'}
+                  მწვრთნელი / მენეჯერი
                 </span>
               </div>
-
-              {/* Toggle to Coach Mode or Admin Mode */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (currentUser?.role === 'coach') {
-                    loginAs('admin');
-                    showToast('გადაერთეთ ადმინისტრატორის (Davit Dvali) რეჟიმში');
-                  } else {
-                    loginAs('coach');
-                    showToast('გადაერთეთ მწვრთნელის (ლევან ჭელიძე) რეჟიმში');
-                  }
-                }}
-                className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition-colors flex items-center gap-1.5"
-                title="როლის შეცვლა"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span className="hidden sm:inline">
-                  {currentUser?.role === 'coach' ? 'ადმინ რეჟიმი' : 'მწვრთნელის რეჟიმი'}
-                </span>
-              </button>
 
               {/* Back to Public Site */}
               <Link
@@ -359,8 +338,8 @@ export default function AdminPage() {
               <div className="flex items-center gap-2.5 min-w-0">
                 <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
                 <div className="text-xs sm:text-sm">
-                  <strong className="font-black">კონფიდენციალური ადმინისტრაციული სივრცე:</strong>{' '}
-                  ბავშვების პერსონალური სია და მშობლების კონტაქტები საჯაროდ არ ჩანს და ხელმისაწვდომია მხოლოდ Davit Dvali-სთვის და სამწვრთნელო შტაბისთვის.
+                  <strong className="font-black">კონფიდენციალური სამწვრთნელო სივრცე:</strong>{' '}
+                  ბავშვების პერსონალური სია და მშობლების კონტაქტები საჯაროდ არ ჩანს და ხელმისაწვდომია მხოლოდ სამწვრთნელო შტაბისა და მენეჯერებისთვის.
                 </div>
               </div>
               <button

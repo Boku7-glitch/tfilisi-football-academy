@@ -84,7 +84,7 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
                       {currentUser.avatar || 'U'}
                     </div>
                     <span className="hidden md:inline text-[11px] font-black tracking-wide truncate max-w-[110px]">
-                      {currentUser.role === 'admin' ? 'ადმინი' : currentUser.role === 'coach' ? 'მწვრთნელი' : 'კაბინეტი'}
+                      {currentUser.role === 'coach' ? 'მწვრთნელი' : 'კაბინეტი'}
                     </span>
                   </Link>
 
@@ -137,12 +137,12 @@ export default function Navbar({ onOpenAuthModal }: NavbarProps) {
                     <div>
                       <div className="text-xs font-black text-slate-900">{currentUser.name}</div>
                       <div className="text-[10px] text-blue-600 font-bold uppercase">
-                        {currentUser.role === 'admin' ? 'ადმინისტრატორი' : currentUser.role === 'coach' ? 'მწვრთნელი' : 'მშობელი'}
+                        {currentUser.role === 'coach' ? 'მწვრთნელი / მენეჯერი' : 'მშობელი'}
                       </div>
                     </div>
                   </div>
                   <Link
-                    href={currentUser.role === 'admin' ? '/admin' : currentUser.role === 'coach' ? '/admin?view=coach' : '/portal'}
+                    href={currentUser.role === 'coach' ? '/admin' : '/portal'}
                     onClick={() => setMobileMenuOpen(false)}
                     className="px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-bold"
                   >

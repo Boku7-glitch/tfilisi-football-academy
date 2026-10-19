@@ -7,7 +7,6 @@ import {
   User, 
   LogIn, 
   Lock, 
-  Shield, 
   Award, 
   Users, 
   ChevronRight,
@@ -22,16 +21,16 @@ import { useAcademy, UserRole } from '../context/AcademyContext';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  defaultRole?: UserRole;
+  defaultRole?: 'parent' | 'coach';
 }
 
 export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: AuthModalProps) {
   const { language } = useLanguage();
-  const { loginAs, currentUser } = useAcademy();
+  const { loginAs } = useAcademy();
   const router = useRouter();
 
   const [isClosing, setIsClosing] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<UserRole>(defaultRole);
+  const [selectedRole, setSelectedRole] = useState<'parent' | 'coach'>(defaultRole);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('••••••••');
   const [isLoading, setIsLoading] = useState(false);
@@ -40,9 +39,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
 
   // Sync default emails when role changes
   useEffect(() => {
-    if (selectedRole === 'admin') {
-      setEmail('davit.dvali@tfilisifa.ge');
-    } else if (selectedRole === 'coach') {
+    if (selectedRole === 'coach') {
       setEmail('levan.chelidze@tfilisifa.ge');
     } else {
       setEmail('parent@tbilisifa.ge');
@@ -59,7 +56,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
     }, 220);
   };
 
-  const handleRoleSelectAndLogin = async (role: UserRole) => {
+  const handleRoleSelectAndLogin = async (role: 'parent' | 'coach') => {
     setIsLoading(true);
     setErrorMsg('');
     loginAs(role);
@@ -71,10 +68,8 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
 
     setTimeout(() => {
       handleSmoothClose();
-      if (role === 'admin') {
+      if (role === 'coach') {
         router.push('/admin');
-      } else if (role === 'coach') {
-        router.push('/admin?view=coach');
       } else {
         router.push('/portal');
       }
@@ -99,10 +94,8 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
 
     setTimeout(() => {
       handleSmoothClose();
-      if (selectedRole === 'admin') {
+      if (selectedRole === 'coach') {
         router.push('/admin');
-      } else if (selectedRole === 'coach') {
-        router.push('/admin?view=coach');
       } else {
         router.push('/portal');
       }
@@ -122,7 +115,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
       }}
     >
       <div 
-        className={`relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col max-h-[92vh] ${
+        className={`relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col max-h-[92vh] ${
           isClosing ? 'modal-box-out' : 'modal-box-in'
         }`}
       >
@@ -141,7 +134,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
               </h3>
               <p className="text-[11px] text-slate-400">
                 {language === 'ka' 
-                  ? 'სისტემაში შესვლა: აირჩიეთ სასურველი როლი' 
+                  ? 'სისტემაში შესვლა: აირჩიეთ მომხმარებლის პროფილი' 
                   : 'Select your academy portal profile'}
               </p>
             </div>
@@ -156,65 +149,47 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
           </button>
         </div>
 
-        {/* Role Selector Tabs (Silky smooth selection) */}
+        {/* Role Selector Tabs (Only 2 Roles: Parent / Child vs Coach / Manager) */}
         <div className="bg-slate-50 p-2 sm:p-3 border-b border-slate-200">
           <div className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2 px-1">
-            {language === 'ka' ? 'აირჩიეთ როლი:' : 'Select Portal Role:'}
+            {language === 'ka' ? 'აირჩიეთ პროფილი:' : 'Select Portal Profile:'}
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2.5">
             
             {/* Parent / Player Role */}
             <button
               type="button"
               onClick={() => setSelectedRole('parent')}
-              className={`p-2.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
+              className={`p-3 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
                 selectedRole === 'parent'
                   ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-xs ring-1 ring-blue-600'
                   : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
               }`}
             >
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between mb-1.5">
                 <Users className={`w-4 h-4 ${selectedRole === 'parent' ? 'text-blue-600' : 'text-slate-400'}`} />
                 {selectedRole === 'parent' && <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />}
               </div>
               <div className="text-xs font-black truncate">მშობელი / ბავშვი</div>
-              <div className="text-[10px] text-slate-500 truncate">პირადი კაბინეტი</div>
+              <div className="text-[10px] text-slate-500 truncate">პირადი კაბინეტი & განრიგი</div>
             </button>
 
-            {/* Coach Role */}
+            {/* Coach / Manager Role */}
             <button
               type="button"
               onClick={() => setSelectedRole('coach')}
-              className={`p-2.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
+              className={`p-3 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
                 selectedRole === 'coach'
                   ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-xs ring-1 ring-blue-600'
                   : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
               }`}
             >
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between mb-1.5">
                 <Award className={`w-4 h-4 ${selectedRole === 'coach' ? 'text-blue-600' : 'text-slate-400'}`} />
                 {selectedRole === 'coach' && <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />}
               </div>
-              <div className="text-xs font-black truncate">მწვრთნელი</div>
-              <div className="text-[10px] text-slate-500 truncate">განრიგი & მატჩები</div>
-            </button>
-
-            {/* Admin Role */}
-            <button
-              type="button"
-              onClick={() => setSelectedRole('admin')}
-              className={`p-2.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
-                selectedRole === 'admin'
-                  ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-xs ring-1 ring-blue-600'
-                  : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-1">
-                <Shield className={`w-4 h-4 ${selectedRole === 'admin' ? 'text-blue-600' : 'text-slate-400'}`} />
-                {selectedRole === 'admin' && <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />}
-              </div>
-              <div className="text-xs font-black truncate">ადმინისტრატორი</div>
-              <div className="text-[10px] text-slate-500 truncate">Davit Dvali (სრული)</div>
+              <div className="text-xs font-black truncate">მწვრთნელი / მენეჯერი</div>
+              <div className="text-[10px] text-slate-500 truncate">ჯგუფები, განრიგი & მატჩები</div>
             </button>
 
           </div>
@@ -229,7 +204,6 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
               <Sparkles className="w-5 h-5 text-blue-600 shrink-0" />
               <div className="min-w-0">
                 <div className="text-xs font-extrabold text-blue-950 truncate">
-                  {selectedRole === 'admin' && 'ადმინისტრატორის პროფილი: Davit Dvali'}
                   {selectedRole === 'coach' && 'მწვრთნელის პროფილი: ლევან ჭელიძე'}
                   {selectedRole === 'parent' && 'მშობლის პროფილი: ზურაბ ბერიძე (ნიკოლოზ ბერიძე)'}
                 </div>
@@ -321,15 +295,14 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
 
           {/* Privacy Note */}
           <div className="text-center pt-2 text-[11px] text-slate-400">
-            {selectedRole === 'admin' && '🔒 ადმინისტრატორის ზონა: ბავშვთა სია და ფინანსები მკაცრად დაცულია.'}
-            {selectedRole === 'coach' && '⚽ მწვრთნელის კაბინეტი: მატჩების დანიშვნა და დასწრების აღრიცხვა.'}
+            {selectedRole === 'coach' && '⚽ მწვრთნელის სივრცე: ჯგუფები, განრიგი, მატჩების დანიშვნა და დასწრება.'}
             {selectedRole === 'parent' && '📱 პირადი კაბინეტი: განრიგი, თამაშები და ონლაინ გადახდები.'}
           </div>
         </div>
 
         {/* Modal Footer */}
         <div className="bg-slate-50 px-5 sm:px-6 py-2.5 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 shrink-0">
-          <span className="font-mono text-[10px]">TFILISI SECURITY PROTOCOL</span>
+          <span className="font-mono text-[10px]">TFILISI ACADEMY PORTAL</span>
           <button
             type="button"
             onClick={handleSmoothClose}
