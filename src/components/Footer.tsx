@@ -113,11 +113,8 @@ export default function Footer() {
         </div>
 
         {/* Footer Bottom Bar */}
-        <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
+        <div className="pt-6 sm:pt-8 flex items-center justify-center text-xs text-slate-500 text-center">
           <p>{t.footer.rights}</p>
-          <div className="flex items-center gap-4">
-            <span className="text-slate-400 font-mono text-[11px]">EST. 2024 • TBILISI, GEORGIA</span>
-          </div>
         </div>
       </div>
     </footer>
