@@ -16,6 +16,8 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useAcademy } from '../context/AcademyContext';
+import { firebaseService } from '../lib/firebase/service';
+import { isFirebaseConfigured } from '../lib/firebase/config';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -107,20 +109,50 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
 
     setIsLoading(true);
 
-    // Simulate network handshake
-    await new Promise(resolve => setTimeout(resolve, 400));
+    let activeRole = selectedRole;
+    let activeName = fullName;
+
+    // Firebase authentication if configured
+    if (isFirebaseConfigured()) {
+      if (authMode === 'signup') {
+        const res = await firebaseService.signUp(email, password, {
+          fullName,
+          role: selectedRole,
+          phone
+        });
+        if (!res.success && !res.fallback) {
+          setErrorMsg(res.error || 'რეგისტრაცია ვერ მოხერხდა. სცადეთ თავიდან.');
+          setIsLoading(false);
+          return;
+        }
+      } else {
+        const res = await firebaseService.signIn(email, password);
+        if (!res.success && !res.fallback) {
+          setErrorMsg(res.error || 'არასწორი ელ-ფოსტა ან პაროლი');
+          setIsLoading(false);
+          return;
+        }
+        if (res.profile) {
+          if (res.profile.role) activeRole = res.profile.role;
+          if (res.profile.fullName) activeName = res.profile.fullName;
+        }
+      }
+    } else {
+      // Smooth local handshake simulation
+      await new Promise(resolve => setTimeout(resolve, 350));
+    }
 
     let createdChildId: string | undefined = undefined;
 
     // If parent signs up and provides child info
-    if (authMode === 'signup' && selectedRole === 'parent' && childName.trim()) {
+    if (authMode === 'signup' && activeRole === 'parent' && childName.trim()) {
       const selectedGroup = groups.find(g => g.id === childGroupId) || groups[0];
       const nameParts = childName.trim().split(' ');
       const childFirst = nameParts[0];
-      const childLast = nameParts.slice(1).join(' ') || (fullName.split(' ')[1] || '');
+      const childLast = nameParts.slice(1).join(' ') || (activeName.split(' ')[1] || '');
       
       createdChildId = `pl-${Date.now()}`;
-      addPlayer({
+      const newPlayerData = {
         firstName: childFirst,
         lastName: childLast,
         birthYear: Number(childBirthYear),
@@ -133,19 +165,25 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
         coachName: selectedGroup.coachName,
         locationId: selectedGroup.locationId,
         locationName: selectedGroup.locationName,
-        parentName: fullName,
+        parentName: activeName,
         parentPhone: phone,
         parentEmail: email,
         isIndividualTraining: false,
         monthlyFee: selectedGroup.monthlyFee,
-        paymentStatus: 'pending',
+        paymentStatus: 'pending' as const,
         attendanceRate: 100,
         medicalClearance: true
-      });
+      };
+
+      addPlayer(newPlayerData);
+
+      if (isFirebaseConfigured()) {
+        firebaseService.savePlayer(newPlayerData).catch(console.error);
+      }
     }
 
-    loginAs(selectedRole, {
-      name: fullName || (selectedRole === 'coach' ? 'მწვრთნელი' : 'მშობელი'),
+    loginAs(activeRole, {
+      name: activeName || (activeRole === 'coach' ? 'მწვრთნელი' : 'მშობელი'),
       email: email,
       phone: phone,
       assignedPlayerId: createdChildId
@@ -156,7 +194,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
 
     setTimeout(() => {
       handleSmoothClose();
-      if (selectedRole === 'coach') {
+      if (activeRole === 'coach') {
         router.push('/admin');
       } else {
         router.push('/portal');
