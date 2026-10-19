@@ -59,7 +59,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <div className="text-[10px] font-mono uppercase text-slate-400 font-bold">{t.contact.hotline}</div>
-                  <div className="text-xs sm:text-sm font-black text-[#061325]">+995 599 00 00 00</div>
+                  <a href="tel:+995568939453" className="text-xs sm:text-sm font-black text-[#061325] hover:text-blue-600 transition-colors">+995 568 93 94 53</a>
                 </div>
               </div>
 
@@ -89,11 +89,11 @@ export default function ContactSection() {
             {/* Social Media Links */}
             <div className="pt-2">
               <div className="text-[10px] font-mono uppercase text-slate-400 font-bold mb-2">
-                სოციალური მედია
+                სოციალური მედია & მესენჯერი
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 <a
-                  href="https://www.instagram.com"
+                  href="https://www.instagram.com/s.c.tfilisi/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-pink-50/40 border border-slate-200 hover:border-pink-300 text-slate-800 hover:text-pink-600 transition-all group shadow-2xs"
@@ -105,14 +105,14 @@ export default function ContactSection() {
                       <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                     </svg>
                   </div>
-                  <div>
-                    <div className="text-[10px] text-slate-400 font-bold leading-tight">Instagram</div>
-                    <div className="text-xs font-black">@tfilisifa</div>
+                  <div className="min-w-0">
+                    <div className="text-[10px] text-slate-400 font-bold leading-tight truncate">Instagram</div>
+                    <div className="text-xs font-black truncate">@s.c.tfilisi</div>
                   </div>
                 </a>
 
                 <a
-                  href="https://www.facebook.com"
+                  href="https://www.facebook.com/tfilisifc/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-blue-50/40 border border-slate-200 hover:border-blue-300 text-slate-800 hover:text-blue-600 transition-all group shadow-2xs"
@@ -122,9 +122,26 @@ export default function ContactSection() {
                       <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                     </svg>
                   </div>
-                  <div>
-                    <div className="text-[10px] text-slate-400 font-bold leading-tight">Facebook</div>
-                    <div className="text-xs font-black">/tfilisifa</div>
+                  <div className="min-w-0">
+                    <div className="text-[10px] text-slate-400 font-bold leading-tight truncate">Facebook</div>
+                    <div className="text-xs font-black truncate">Tfilisi • ტფილისი</div>
+                  </div>
+                </a>
+
+                <a
+                  href="https://wa.me/995568939453"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-emerald-50/40 border border-slate-200 hover:border-emerald-300 text-slate-800 hover:text-emerald-600 transition-all group shadow-2xs"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2ZM12.05 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.07 16.3C4.24 14.98 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.05 20.15ZM16.57 14.33C16.32 14.21 15.1 13.61 14.88 13.52C14.65 13.44 14.49 13.4 14.32 13.65C14.16 13.9 13.69 14.45 13.55 14.61C13.41 14.78 13.26 14.8 13.02 14.68C12.77 14.55 11.98 14.3 11.04 13.46C10.31 12.81 9.81 12 9.67 11.75C9.52 11.51 9.65 11.37 9.78 11.25C9.89 11.14 10.02 10.96 10.15 10.82C10.27 10.67 10.31 10.57 10.39 10.4C10.47 10.24 10.43 10.1 10.37 9.98C10.31 9.85 9.82 8.65 9.61 8.16C9.41 7.68 9.21 7.74 9.06 7.73C8.92 7.73 8.76 7.72 8.59 7.72C8.43 7.72 8.16 7.78 7.94 8.02C7.71 8.27 7.08 8.86 7.08 10.06C7.08 11.27 7.96 12.43 8.08 12.6C8.21 12.76 9.81 15.24 12.28 16.3C12.87 16.55 13.32 16.7 13.68 16.82C14.27 17.01 14.81 16.98 15.24 16.92C15.71 16.85 16.69 16.33 16.9 15.74C17.1 15.15 17.1 14.65 17.04 14.55C16.98 14.44 16.82 14.45 16.57 14.33Z"/>
+                    </svg>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[10px] text-slate-400 font-bold leading-tight truncate">WhatsApp</div>
+                    <div className="text-xs font-black truncate">+995 568 93 94 53</div>
                   </div>
                 </a>
               </div>
