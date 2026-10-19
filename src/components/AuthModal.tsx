@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   X, 
@@ -10,12 +10,11 @@ import {
   Award, 
   Users, 
   ChevronRight,
-  ArrowRight,
+  UserPlus,
+  Phone,
   CheckCircle2,
-  Sparkles,
   AlertCircle
 } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
 import { useAcademy, UserRole } from '../context/AcademyContext';
 
 interface AuthModalProps {
@@ -25,70 +24,93 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: AuthModalProps) {
-  const { language } = useLanguage();
   const { loginAs } = useAcademy();
   const router = useRouter();
 
-  const [isClosing, setIsClosing] = useState(false);
+  // Mode: Sign In vs Sign Up
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const [selectedRole, setSelectedRole] = useState<'parent' | 'coach'>(defaultRole);
+
+  // Clean empty inputs - NO hardcoded fake accounts!
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('••••••••');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+
+  // Animation & UI states
+  const [isRendered, setIsRendered] = useState(isOpen);
+  const [isClosing, setIsClosing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Sync default emails when role changes
+  // Handle open / close synchronization with animation
   useEffect(() => {
-    if (selectedRole === 'coach') {
-      setEmail('levan.chelidze@tfilisifa.ge');
-    } else {
-      setEmail('parent@tbilisifa.ge');
+    if (isOpen) {
+      setIsRendered(true);
+      setIsClosing(false);
+      setErrorMsg('');
+    } else if (isRendered && !isClosing) {
+      setIsClosing(true);
+      const timer = setTimeout(() => {
+        setIsRendered(false);
+        setIsClosing(false);
+      }, 250);
+      return () => clearTimeout(timer);
     }
-    setErrorMsg('');
-  }, [selectedRole]);
+  }, [isOpen, isRendered, isClosing]);
 
-  // Smooth close with exit animation
-  const handleSmoothClose = () => {
+  // Smooth close handler with full 250ms exit animation
+  const handleSmoothClose = useCallback(() => {
+    if (isClosing) return;
     setIsClosing(true);
     setTimeout(() => {
       setIsClosing(false);
+      setIsRendered(false);
       onClose();
-    }, 220);
-  };
+    }, 250);
+  }, [isClosing, onClose]);
 
-  const handleRoleSelectAndLogin = async (role: 'parent' | 'coach') => {
-    setIsLoading(true);
-    setErrorMsg('');
-    loginAs(role);
-
-    // Smooth transition
-    await new Promise(resolve => setTimeout(resolve, 350));
-    setIsLoading(false);
-    setLoginSuccess(true);
-
-    setTimeout(() => {
-      handleSmoothClose();
-      if (role === 'coach') {
-        router.push('/admin');
-      } else {
-        router.push('/portal');
+  // Escape key listener for graceful closing
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isRendered && !isClosing) {
+        handleSmoothClose();
       }
-      setLoginSuccess(false);
-    }, 450);
-  };
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isRendered, isClosing, handleSmoothClose]);
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg('');
+
     if (!email) {
-      setErrorMsg(language === 'ka' ? 'გთხოვთ შეიყვანოთ ელ-ფოსტა' : 'Please enter an email address');
+      setErrorMsg('გთხოვთ შეიყვანოთ ელ-ფოსტა');
+      return;
+    }
+    if (!password) {
+      setErrorMsg('გთხოვთ შეიყვანოთ პაროლი');
+      return;
+    }
+    if (authMode === 'signup' && !fullName) {
+      setErrorMsg('გთხოვთ შეიყვანოთ სახელი და გვარი');
       return;
     }
 
     setIsLoading(true);
-    setErrorMsg('');
 
+    // Simulate smooth network handshake
     await new Promise(resolve => setTimeout(resolve, 400));
-    loginAs(selectedRole, { email });
+
+    loginAs(selectedRole, {
+      name: fullName || (selectedRole === 'coach' ? 'მწვრთნელი' : 'მშობელი'),
+      email: email,
+      phone: phone
+    });
+
     setIsLoading(false);
     setLoginSuccess(true);
 
@@ -100,10 +122,10 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
         router.push('/portal');
       }
       setLoginSuccess(false);
-    }, 450);
+    }, 400);
   };
 
-  if (!isOpen && !isClosing) return null;
+  if (!isRendered) return null;
 
   return (
     <div 
@@ -115,32 +137,32 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
       }}
     >
       <div 
-        className={`relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col max-h-[92vh] ${
+        className={`relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col ${
           isClosing ? 'modal-box-out' : 'modal-box-in'
         }`}
       >
-        {/* Modal Header */}
-        <div className="bg-[#061325] px-5 sm:px-7 py-4.5 text-white flex items-center justify-between shrink-0 border-b border-slate-800">
+        {/* Modal Top Header Bar */}
+        <div className="bg-[#061325] px-5 sm:px-6 py-4 text-white flex items-center justify-between shrink-0 border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
-              <LogIn className="w-5 h-5 text-sky-400" />
+            <div className="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sky-400">
+              {authMode === 'signin' ? <LogIn className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
             </div>
             <div>
-              <h3 className="font-black text-base sm:text-lg tracking-tight flex items-center gap-2">
-                {language === 'ka' ? 'ავტორიზაცია & პორტალი' : 'Academy Portal Login'}
+              <h3 className="font-black text-sm sm:text-base tracking-tight flex items-center gap-2">
+                {authMode === 'signin' ? 'სისტემაში შესვლა' : 'ახალი რეგისტრაცია'}
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-600/30 text-blue-300 border border-blue-500/30">
                   Tfilisi
                 </span>
               </h3>
-              <p className="text-[11px] text-slate-400">
-                {language === 'ka' 
-                  ? 'სისტემაში შესვლა: აირჩიეთ მომხმარებლის პროფილი' 
-                  : 'Select your academy portal profile'}
+              <p className="text-[10px] sm:text-[11px] text-slate-400">
+                {authMode === 'signin' ? 'შეიყვანეთ თქვენი მონაცემები' : 'შეავსეთ სარეგისტრაციო ფორმა'}
               </p>
             </div>
           </div>
 
+          {/* Smooth Close Button */}
           <button
+            type="button"
             onClick={handleSmoothClose}
             className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
             title="დახურვა"
@@ -149,168 +171,228 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
           </button>
         </div>
 
-        {/* Role Selector Tabs (Only 2 Roles: Parent / Child vs Coach / Manager) */}
-        <div className="bg-slate-50 p-2 sm:p-3 border-b border-slate-200">
-          <div className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2 px-1">
-            {language === 'ka' ? 'აირჩიეთ პროფილი:' : 'Select Portal Profile:'}
+        {/* Auth Mode Toggle Tabs (შესვლა vs რეგისტრაცია) */}
+        <div className="flex border-b border-slate-200 bg-slate-50 text-xs font-bold">
+          <button
+            type="button"
+            onClick={() => {
+              setAuthMode('signin');
+              setErrorMsg('');
+            }}
+            className={`flex-1 py-3 text-center transition-all border-b-2 flex items-center justify-center gap-1.5 ${
+              authMode === 'signin'
+                ? 'border-blue-600 text-blue-700 bg-white font-black'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <LogIn className="w-3.5 h-3.5" />
+            <span>ავტორიზაცია</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setAuthMode('signup');
+              setErrorMsg('');
+            }}
+            className={`flex-1 py-3 text-center transition-all border-b-2 flex items-center justify-center gap-1.5 ${
+              authMode === 'signup'
+                ? 'border-blue-600 text-blue-700 bg-white font-black'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <UserPlus className="w-3.5 h-3.5" />
+            <span>რეგისტრაცია</span>
+          </button>
+        </div>
+
+        {/* Role Toggle Tabs (მშობელი vs მწვრთნელი) */}
+        <div className="p-3 sm:p-4 bg-slate-50/60 border-b border-slate-100">
+          <div className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2">
+            აირჩიეთ პროფილი:
           </div>
-          <div className="grid grid-cols-2 gap-2.5">
-            
-            {/* Parent / Player Role */}
+          <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => setSelectedRole('parent')}
-              className={`p-3 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
+              className={`p-2.5 rounded-xl border text-left transition-all ${
                 selectedRole === 'parent'
-                  ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-xs ring-1 ring-blue-600'
+                  ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-2xs ring-1 ring-blue-600'
                   : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
               }`}
             >
-              <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center justify-between mb-1">
                 <Users className={`w-4 h-4 ${selectedRole === 'parent' ? 'text-blue-600' : 'text-slate-400'}`} />
                 {selectedRole === 'parent' && <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />}
               </div>
               <div className="text-xs font-black truncate">მშობელი / ბავშვი</div>
-              <div className="text-[10px] text-slate-500 truncate">პირადი კაბინეტი & განრიგი</div>
+              <div className="text-[10px] text-slate-500 truncate">პირადი კაბინეტი</div>
             </button>
 
-            {/* Coach / Manager Role */}
             <button
               type="button"
               onClick={() => setSelectedRole('coach')}
-              className={`p-3 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between ${
+              className={`p-2.5 rounded-xl border text-left transition-all ${
                 selectedRole === 'coach'
-                  ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-xs ring-1 ring-blue-600'
+                  ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-2xs ring-1 ring-blue-600'
                   : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
               }`}
             >
-              <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center justify-between mb-1">
                 <Award className={`w-4 h-4 ${selectedRole === 'coach' ? 'text-blue-600' : 'text-slate-400'}`} />
                 {selectedRole === 'coach' && <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />}
               </div>
               <div className="text-xs font-black truncate">მწვრთნელი / მენეჯერი</div>
-              <div className="text-[10px] text-slate-500 truncate">ჯგუფები, განრიგი & მატჩები</div>
+              <div className="text-[10px] text-slate-500 truncate">სამწვრთნელო პანელი</div>
             </button>
-
           </div>
         </div>
 
-        {/* Scrollable Form Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-4">
-          
-          {/* Quick Demo One-Click Access Notice */}
-          <div className="p-3.5 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/70 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <Sparkles className="w-5 h-5 text-blue-600 shrink-0" />
-              <div className="min-w-0">
-                <div className="text-xs font-extrabold text-blue-950 truncate">
-                  {selectedRole === 'coach' && 'მწვრთნელის პროფილი: ლევან ჭელიძე'}
-                  {selectedRole === 'parent' && 'მშობლის პროფილი: ზურაბ ბერიძე (ნიკოლოზ ბერიძე)'}
-                </div>
-                <div className="text-[11px] text-blue-700 truncate">
-                  სწრაფი 1-კლიკიანი შესვლა სატესტოდ
-                </div>
-              </div>
+        {/* Clean Input Form - NO PREFILLED FAKE DATA */}
+        <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-3.5">
+          {errorMsg && (
+            <div className="p-2.5 rounded-xl bg-red-50 text-red-700 text-xs flex items-center gap-2 border border-red-200">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{errorMsg}</span>
             </div>
+          )}
 
-            <button
-              type="button"
-              onClick={() => handleRoleSelectAndLogin(selectedRole)}
-              disabled={isLoading || loginSuccess}
-              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xs shadow-xs transition-all shrink-0 flex items-center gap-1.5"
-            >
-              <span>სწრაფი შესვლა</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleFormSubmit} className="space-y-3.5 pt-1">
-            {errorMsg && (
-              <div className="p-2.5 rounded-xl bg-red-50 text-red-700 text-xs flex items-center gap-2 border border-red-200">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{errorMsg}</span>
-              </div>
-            )}
-
+          {/* Full name input (Only in Signup mode) */}
+          {authMode === 'signup' && (
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                ელ-ფოსტა / მომხმარებლის სახელი
+                სახელი და გვარი
               </label>
               <div className="relative">
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                   className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all font-medium"
-                  placeholder="name@tfilisifa.ge"
+                  placeholder="მაგ. გიორგი ბერიძე"
                   required
                 />
                 <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
               </div>
             </div>
+          )}
 
+          {/* Phone input (Only in Signup mode) */}
+          {authMode === 'signup' && (
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                  პაროლი
-                </label>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                ტელეფონის ნომერი
+              </label>
+              <div className="relative">
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all font-medium"
+                  placeholder="+995 5__ __ __ __"
+                />
+                <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              </div>
+            </div>
+          )}
+
+          {/* Email input */}
+          <div>
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+              ელ-ფოსტა
+            </label>
+            <div className="relative">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all font-medium"
+                placeholder="name@example.com"
+                required
+              />
+              <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+            </div>
+          </div>
+
+          {/* Password input */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                პაროლი
+              </label>
+              {authMode === 'signin' && (
                 <a href="#" className="text-[11px] text-blue-600 hover:underline font-bold">
                   დაგავიწყდათ?
                 </a>
-              </div>
-              <div className="relative">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all"
-                  placeholder="••••••••"
-                  required
-                />
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading || loginSuccess}
-              className="w-full py-3 rounded-xl font-black text-white bg-blue-600 hover:bg-blue-700 active:scale-98 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm"
-            >
-              {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : loginSuccess ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                  <span>შესვლა წარმატებულია...</span>
-                </>
-              ) : (
-                <>
-                  <span>პორტალში შესვლა</span>
-                  <ChevronRight className="w-4 h-4" />
-                </>
               )}
-            </button>
-          </form>
-
-          {/* Privacy Note */}
-          <div className="text-center pt-2 text-[11px] text-slate-400">
-            {selectedRole === 'coach' && '⚽ მწვრთნელის სივრცე: ჯგუფები, განრიგი, მატჩების დანიშვნა და დასწრება.'}
-            {selectedRole === 'parent' && '📱 პირადი კაბინეტი: განრიგი, თამაშები და ონლაინ გადახდები.'}
+            </div>
+            <div className="relative">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 text-slate-900 transition-all font-medium"
+                placeholder="••••••••"
+                required
+              />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+            </div>
           </div>
-        </div>
 
-        {/* Modal Footer */}
-        <div className="bg-slate-50 px-5 sm:px-6 py-2.5 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 shrink-0">
-          <span className="font-mono text-[10px]">TFILISI ACADEMY PORTAL</span>
+          {/* Submit Button */}
           <button
-            type="button"
-            onClick={handleSmoothClose}
-            className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-200 transition-colors"
+            type="submit"
+            disabled={isLoading || loginSuccess}
+            className="w-full py-3 rounded-xl font-black text-white bg-blue-600 hover:bg-blue-700 active:scale-98 shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm mt-2"
           >
-            დახურვა
+            {isLoading ? (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : loginSuccess ? (
+              <>
+                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <span>{authMode === 'signin' ? 'შესვლა წარმატებულია...' : 'რეგისტრაცია წარმატებულია...'}</span>
+              </>
+            ) : (
+              <>
+                <span>{authMode === 'signin' ? 'სისტემაში შესვლა' : 'ანგარიშის შექმნა'}</span>
+                <ChevronRight className="w-4 h-4" />
+              </>
+            )}
           </button>
-        </div>
+
+          {/* Switch Mode Footer Link */}
+          <div className="text-center pt-2">
+            {authMode === 'signin' ? (
+              <p className="text-xs text-slate-500">
+                არ გაქვთ ანგარიში?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('signup');
+                    setErrorMsg('');
+                  }}
+                  className="font-bold text-blue-600 hover:underline"
+                >
+                  დარეგისტრირდით
+                </button>
+              </p>
+            ) : (
+              <p className="text-xs text-slate-500">
+                უკვე გაქვთ ანგარიში?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('signin');
+                    setErrorMsg('');
+                  }}
+                  className="font-bold text-blue-600 hover:underline"
+                >
+                  გაიარეთ ავტორიზაცია
+                </button>
+              </p>
+            )}
+          </div>
+        </form>
+
       </div>
     </div>
   );

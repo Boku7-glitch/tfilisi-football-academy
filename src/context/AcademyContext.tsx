@@ -548,38 +548,18 @@ export function AcademyProvider({ children }: { children: React.ReactNode }) {
 
   // Auth actions
   const loginAs = (role: UserRole, customUser?: Partial<AuthUser>) => {
-    let user: AuthUser;
-
-    if (role === 'admin') {
-      user = {
-        id: 'admin-davit-dvali',
-        name: 'დავით დვალი',
-        email: 'davit.dvali@tfilisifa.ge',
-        role: 'admin',
-        avatar: 'DD',
-        ...customUser
-      };
-    } else if (role === 'coach') {
-      user = {
-        id: 'coach-chelidze',
-        name: 'ლევან ჭელიძე',
-        email: 'levan.chelidze@tfilisifa.ge',
-        role: 'coach',
-        assignedGroupId: 'grp-u12-saburtalo',
-        avatar: 'LCH',
-        ...customUser
-      };
-    } else {
-      user = {
-        id: 'parent-beridze',
-        name: 'ზურაბ ბერიძე (ნიკოლოზის მშობელი)',
-        email: 'parent@tbilisifa.ge',
-        role: 'parent',
-        assignedPlayerId: 'pl-01',
-        avatar: 'ZB',
-        ...customUser
-      };
-    }
+    const defaultName = role === 'coach' ? 'მწვრთნელი' : 'მშობელი';
+    const user: AuthUser = {
+      id: customUser?.id || `user-${Date.now()}`,
+      name: customUser?.name || defaultName,
+      email: customUser?.email || '',
+      role: role,
+      phone: customUser?.phone || '',
+      avatar: (customUser?.name || defaultName).substring(0, 2).toUpperCase(),
+      assignedPlayerId: role === 'parent' ? (customUser?.assignedPlayerId || 'pl-01') : undefined,
+      assignedGroupId: role === 'coach' ? (customUser?.assignedGroupId || 'grp-u12-saburtalo') : undefined,
+      ...customUser
+    };
 
     setCurrentUser(user);
   };

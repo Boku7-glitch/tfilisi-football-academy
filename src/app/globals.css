@@ -321,11 +321,11 @@ body {
 }
 
 @keyframes modalBackdropFadeOut {
-  from {
+  0% {
     opacity: 1;
     backdrop-filter: blur(8px);
   }
-  to {
+  100% {
     opacity: 0;
     backdrop-filter: blur(0px);
   }
@@ -347,32 +347,34 @@ body {
 }
 
 @keyframes modalBoxPopOut {
-  from {
+  0% {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
-  to {
+  100% {
     opacity: 0;
-    transform: scale(0.94) translateY(12px);
+    transform: scale(0.93) translateY(14px);
   }
 }
 
 .modal-backdrop-in {
-  animation: modalBackdropFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: modalBackdropFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .modal-backdrop-out {
-  animation: modalBackdropFadeOut 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: modalBackdropFadeOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
 }
 
 .modal-box-in {
-  animation: modalBoxPopIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: modalBoxPopIn 0.34s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
 }
 
 .modal-box-out {
-  animation: modalBoxPopOut 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: modalBoxPopOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
+  pointer-events: none;
 }
 
 
