@@ -55,31 +55,34 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
   const [errorMsg, setErrorMsg] = useState('');
   const [resetSentMsg, setResetSentMsg] = useState('');
 
-  // Handle open / close synchronization with animation
+  // Handle open / close synchronization with animation (depends ONLY on isOpen to prevent re-open flash)
   useEffect(() => {
     if (isOpen) {
       setIsRendered(true);
       setIsClosing(false);
+      setLoginSuccess(false);
       setErrorMsg('');
-    } else if (isRendered && !isClosing) {
+    } else {
       setIsClosing(true);
       const timer = setTimeout(() => {
         setIsRendered(false);
         setIsClosing(false);
-      }, 250);
+        setLoginSuccess(false);
+      }, 220);
       return () => clearTimeout(timer);
     }
-  }, [isOpen, isRendered, isClosing]);
+  }, [isOpen]);
 
-  // Smooth close handler with full 250ms exit animation
+  // Smooth close handler with full exit animation
   const handleSmoothClose = useCallback(() => {
     if (isClosing) return;
     setIsClosing(true);
     setTimeout(() => {
-      setIsClosing(false);
       setIsRendered(false);
+      setIsClosing(false);
+      setLoginSuccess(false);
       onClose();
-    }, 250);
+    }, 220);
   }, [isClosing, onClose]);
 
   // Escape key listener for graceful closing
@@ -153,7 +156,6 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
           return;
         }
         if (res.profile) {
-          if (res.profile.role) activeRole = res.profile.role;
           if (res.profile.fullName) activeName = res.profile.fullName;
         }
       }
@@ -164,21 +166,23 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
 
     let createdChildId: string | undefined = undefined;
 
-    // If academy member signs up, create their player profile directly
-    if (authMode === 'signup' && activeRole === 'parent') {
+    // If academy member signs up, create their player profile directly with clean new-member state
+    if (authMode === 'signup') {
+      activeRole = 'parent';
       const selectedGroup = groups.find(g => g.id === selectedGroupId) || groups[0];
       const nameParts = activeName.trim().split(' ');
       const memberFirst = nameParts[0] || 'წევრი';
       const memberLast = nameParts.slice(1).join(' ') || '';
+      const parsedYear = parseInt(selectedGroup.birthYears.split('-')[0].trim(), 10) || 2014;
       
       createdChildId = `pl-${Date.now()}`;
       const newPlayerData = {
         firstName: memberFirst,
         lastName: memberLast,
-        birthYear: 2014,
-        age: 12,
-        position: 'ნახევარმცველი',
-        jerseyNumber: 10,
+        birthYear: parsedYear,
+        age: 2026 - parsedYear,
+        position: 'განსაზღვრის პროცესში',
+        jerseyNumber: 0,
         groupId: selectedGroup.id,
         groupName: selectedGroup.name,
         coachId: selectedGroup.coachId,
@@ -192,10 +196,15 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
         monthlyFee: selectedGroup.monthlyFee,
         paymentStatus: 'pending' as const,
         attendanceRate: 100,
-        medicalClearance: true
+        medicalClearance: false,
+        createdAt: Date.now()
       };
 
-      addPlayer(newPlayerData);
+      const createdPlayer = addPlayer({
+        id: createdChildId,
+        ...newPlayerData
+      });
+      createdChildId = createdPlayer.id;
 
       if (isFirebaseConfigured()) {
         firebaseService.savePlayer(newPlayerData).catch(console.error);
@@ -213,14 +222,18 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
     setLoginSuccess(true);
 
     setTimeout(() => {
-      handleSmoothClose();
+      setIsClosing(true);
       if (activeRole === 'coach') {
         router.push('/admin');
       } else {
         router.push('/portal');
       }
-      setLoginSuccess(false);
-    }, 400);
+      setTimeout(() => {
+        setIsRendered(false);
+        setIsClosing(false);
+        onClose();
+      }, 200);
+    }, 350);
   };
 
   if (!isRendered) return null;
@@ -306,6 +319,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
               type="button"
               onClick={() => {
                 setAuthMode('signup');
+                setSelectedRole('parent');
                 setErrorMsg('');
                 setResetSentMsg('');
               }}
@@ -321,8 +335,8 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
           </div>
         )}
 
-        {/* Role Toggle Tabs (აკადემიის წევრი vs მწვრთნელი / მენეჯერი) */}
-        {authMode !== 'forgot' && (
+        {/* Role Toggle Tabs (Only in Sign In mode: აკადემიის წევრი vs მწვრთნელი / მენეჯერი) */}
+        {authMode === 'signin' && (
           <div className="p-3 sm:p-4 bg-slate-50/60 border-b border-slate-100 shrink-0">
           <div className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2">
             აირჩიეთ პროფილი:
@@ -561,6 +575,7 @@ export default function AuthModal({ isOpen, onClose, defaultRole = 'parent' }: A
                   type="button"
                   onClick={() => {
                     setAuthMode('signup');
+                    setSelectedRole('parent');
                     setErrorMsg('');
                     setResetSentMsg('');
                   }}

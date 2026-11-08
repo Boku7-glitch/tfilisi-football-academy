@@ -1,19 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import AcademyDNA from '../../components/AcademyDNA';
+import TacticalPitchPathway from '../../components/TacticalPitchPathway';
+import AuthModal from '../../components/AuthModal';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function AcademyPage() {
   const { language } = useLanguage();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900">
-      <Navbar onOpenAuthModal={() => {}} />
+      <Navbar onOpenAuthModal={() => setAuthModalOpen(true)} />
 
       <main className="flex-1 bg-white animate-page-enter">
         {/* Editorial Hero Banner */}
@@ -46,9 +49,13 @@ export default function AcademyPage() {
 
         {/* The 4 Core Developmental Pillars */}
         <AcademyDNA />
+
+        {/* Interactive Tactical Pathway (U8 - U14) */}
+        <TacticalPitchPathway />
       </main>
 
       <Footer />
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
   );
 }

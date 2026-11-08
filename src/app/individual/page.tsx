@@ -16,11 +16,21 @@ export default function IndividualPage() {
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
   const [bookingDate, setBookingDate] = useState<string>('');
   const [bookingTimeSlot, setBookingTimeSlot] = useState<string>('');
+  const [bookingFee, setBookingFee] = useState<number>(240);
+  const [bookingLocation, setBookingLocation] = useState<string>('საბურთალო');
 
-  const handleBookCoach = (coach: Coach, date: string, timeSlot: string) => {
+  const handleBookCoach = (
+    coach: Coach,
+    date: string,
+    timeSlot: string,
+    fee: number,
+    locationName: string
+  ) => {
     setSelectedCoach(coach);
     setBookingDate(date);
     setBookingTimeSlot(timeSlot);
+    setBookingFee(fee);
+    setBookingLocation(locationName);
     setBookingModalOpen(true);
   };
 
@@ -51,6 +61,8 @@ export default function IndividualPage() {
         coach={selectedCoach}
         date={bookingDate}
         timeSlot={bookingTimeSlot}
+        customFee={bookingFee}
+        locationName={bookingLocation}
       />
     </div>
   );

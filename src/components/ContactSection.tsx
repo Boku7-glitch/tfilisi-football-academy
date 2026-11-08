@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Send, CheckCircle2, Shield } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAcademy } from '../context/AcademyContext';
 
 export default function ContactSection() {
   const { language, t } = useLanguage();
+  const { groups, addPlayer } = useAcademy();
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     childName: '',
@@ -18,6 +20,40 @@ export default function ContactSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const parts = formData.childName.trim().split(' ');
+    const firstName = parts[0] || 'ახალი';
+    const lastName = parts.slice(1).join(' ') || 'აღსაზრდელი';
+    const matchedGroup =
+      groups.find(g => g.locationId === formData.location && formData.category.includes(g.category)) ||
+      groups.find(g => g.locationId === formData.location) ||
+      groups[0];
+
+    if (matchedGroup) {
+      addPlayer({
+        firstName,
+        lastName,
+        birthYear: Number(formData.birthYear),
+        age: 2026 - Number(formData.birthYear),
+        position: 'ახალწვეული',
+        jerseyNumber: 99,
+        groupId: matchedGroup.id,
+        groupName: matchedGroup.name,
+        coachId: matchedGroup.coachId,
+        coachName: matchedGroup.coachName,
+        locationId: matchedGroup.locationId,
+        locationName: matchedGroup.locationName,
+        parentName: formData.parentName,
+        parentPhone: formData.parentPhone,
+        parentEmail: '',
+        isIndividualTraining: formData.category === 'individual',
+        monthlyFee: formData.category === 'individual' ? 240 : matchedGroup.monthlyFee,
+        paymentStatus: 'pending',
+        attendanceRate: 100,
+        medicalClearance: true,
+        notes: 'ონლაინ სააპლიკაციო ანკეტა (საცდელი ვარჯიში)',
+      });
+    }
+
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);

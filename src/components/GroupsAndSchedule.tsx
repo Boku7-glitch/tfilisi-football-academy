@@ -1,20 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
-import { locationsData, teamGroupsData, TeamGroup } from '../data/mockData';
-import { Calendar, Clock, MapPin, UserCheck, Shield, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, MapPin, UserCheck, ChevronRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAcademy, AcademyGroup } from '../context/AcademyContext';
 
 interface GroupsAndScheduleProps {
-  onSelectGroup: (group: TeamGroup) => void;
+  onSelectGroup: (group: AcademyGroup) => void;
 }
 
 export default function GroupsAndSchedule({ onSelectGroup }: GroupsAndScheduleProps) {
   const { language, t } = useLanguage();
+  const { groups, locations } = useAcademy();
   const [activeLocation, setActiveLocation] = useState<string>('all');
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
-  const filteredGroups = teamGroupsData.filter((group) => {
+  const filteredGroups = groups.filter((group) => {
     const matchesLocation = activeLocation === 'all' || group.locationId === activeLocation;
     const matchesCategory =
       activeCategory === 'all' ||
@@ -26,23 +27,23 @@ export default function GroupsAndSchedule({ onSelectGroup }: GroupsAndSchedulePr
   });
 
   const getLocationDisplayName = (locId: string) => {
+    const loc = locations.find((l) => l.id === locId);
     if (language === 'ka') {
-      const loc = locationsData.find((l) => l.id === locId);
       return loc?.name || 'თბილისი';
     } else {
       if (locId === 'saburtalo') return 'Saburtalo';
       if (locId === 'varketili') return 'Varketili';
       if (locId === 'dinamo') return 'Dinamo';
-      return 'Tbilisi';
+      return loc?.name || 'Tbilisi';
     }
   };
 
-  const getGroupName = (group: TeamGroup) => {
+  const getGroupName = (group: AcademyGroup) => {
     if (language === 'ka') return group.name;
     return `${group.birthYears} Squad (${group.category.split(' ')[0]})`;
   };
 
-  const getGroupDays = (group: TeamGroup) => {
+  const getGroupDays = (group: AcademyGroup) => {
     if (language === 'ka') return group.days;
     return group.days
       .replace('ორშაბათი, ოთხშაბათი, პარასკევი', 'Mon, Wed, Fri')
@@ -87,7 +88,7 @@ export default function GroupsAndSchedule({ onSelectGroup }: GroupsAndSchedulePr
               >
                 {t.groups.allLocations}
               </button>
-              {locationsData.map((loc) => (
+              {locations.map((loc) => (
                 <button
                   key={loc.id}
                   onClick={() => setActiveLocation(loc.id)}
@@ -186,7 +187,7 @@ export default function GroupsAndSchedule({ onSelectGroup }: GroupsAndSchedulePr
                   {getGroupName(group)}
                 </h3>
                 <div className="text-[10px] sm:text-[11px] text-blue-600 font-bold mb-3">
-                  {language === 'ka' ? group.intensity : 'Skill Mastery & Match Play'}
+                  {language === 'ka' ? (group.intensity || 'ტექნიკა & გუნდური თამაში') : 'Skill Mastery & Match Play'}
                 </div>
 
                 <div className="space-y-1.5 bg-slate-50 p-3 rounded-lg border border-slate-200 mb-3.5 text-xs text-slate-700">
@@ -207,7 +208,7 @@ export default function GroupsAndSchedule({ onSelectGroup }: GroupsAndSchedulePr
                   <div className="flex items-center gap-2">
                     <UserCheck className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                     <div>
-                      <span className="font-bold text-slate-900">{t.groups.coachLabel}</span> {group.coach}
+                      <span className="font-bold text-slate-900">{t.groups.coachLabel}</span> {group.coachName}
                     </div>
                   </div>
                 </div>

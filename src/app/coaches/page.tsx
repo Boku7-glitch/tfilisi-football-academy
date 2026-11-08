@@ -1,19 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import AuthModal from '../../components/AuthModal';
 import { useLanguage } from '../../context/LanguageContext';
-import { coachesData } from '../../data/mockData';
-import { Award, Calendar, CheckCircle2, ArrowRight, ArrowLeft, ShieldCheck, UserCheck } from 'lucide-react';
+import { useAcademy } from '../../context/AcademyContext';
+import { Award, Calendar, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CoachesPage() {
   const { language } = useLanguage();
+  const { coaches } = useAcademy();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900">
-      <Navbar onOpenAuthModal={() => {}} />
+      <Navbar onOpenAuthModal={() => setAuthModalOpen(true)} />
 
       <main className="flex-1 bg-white animate-page-enter">
         {/* Header Hero */}
@@ -48,7 +51,7 @@ export default function CoachesPage() {
         <section className="py-12 sm:py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              {coachesData.map((coach) => (
+              {coaches.map((coach) => (
                 <div
                   key={coach.id}
                   className="rounded-2xl border-2 border-slate-200 bg-white p-6 shadow-sm hover:border-blue-600 hover:shadow-xl transition-all flex flex-col justify-between"
@@ -108,6 +111,7 @@ export default function CoachesPage() {
       </main>
 
       <Footer />
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
   );
 }

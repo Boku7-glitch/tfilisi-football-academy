@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { 
   Users, 
   Calendar, 
@@ -29,23 +30,39 @@ import {
   Send,
   Download,
   Receipt,
-  LogOut
+  LogOut,
+  FileText,
+  Image as ImageIcon,
+  Lock
 } from 'lucide-react';
 import { useAcademy, Player, MatchEvent } from '../../context/AcademyContext';
+import AuthModal from '../../components/AuthModal';
 
 export default function AdminPage() {
+  const router = useRouter();
   const { 
+    isLoaded,
     currentUser, 
     loginAs, 
     players, 
     groups, 
     matchEvents, 
     billingRecords,
+    news,
+    coaches,
+    locations,
     addMatchEvent,
+    updateMatchEvent,
     deleteMatchEvent,
     addPlayer,
     updatePlayer,
     deletePlayer,
+    addNewsItem,
+    deleteNewsItem,
+    addCoach,
+    deleteCoach,
+    addLocation,
+    deleteLocation,
     sendPaymentReminder,
     markRecordPaidManually,
     logout
@@ -53,13 +70,16 @@ export default function AdminPage() {
 
   // Active top tab in admin panel
   const [activeTab, setActiveTab] = useState<'roster' | 'finance' | 'matches' | 'cms'>('roster');
+  const [cmsSubTab, setCmsSubTab] = useState<'news' | 'coaches' | 'locations'>('news');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const handleLogout = () => {
     setIsLoggingOut(true);
     setTimeout(() => {
       logout();
       setIsLoggingOut(false);
+      router.push('/');
     }, 450);
   };
 
@@ -80,8 +100,9 @@ export default function AdminPage() {
   const [newMatchVenue, setNewMatchVenue] = useState('საბურთალოს კომპლექსი (მოედანი A)');
   const [newMatchNotes, setNewMatchNotes] = useState('');
 
-  // New Player Modal state
+  // New / Edit Player Modal state
   const [playerModalOpen, setPlayerModalOpen] = useState(false);
+  const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   const [newFirstName, setNewFirstName] = useState('');
   const [newLastName, setNewLastName] = useState('');
   const [newBirthYear, setNewBirthYear] = useState(2014);
@@ -93,6 +114,28 @@ export default function AdminPage() {
   const [newParentEmail, setNewParentEmail] = useState('');
   const [newIsIndividual, setNewIsIndividual] = useState(false);
   const [newFee, setNewFee] = useState(150);
+
+  // CMS: News form state
+  const [newsTitle, setNewsTitle] = useState('');
+  const [newsCategory, setNewsCategory] = useState('ტურნირი');
+  const [newsDate, setNewsDate] = useState('25 ოქტომბერი, 2026');
+  const [newsImage, setNewsImage] = useState('https://images.unsplash.com/photo-1518604666860-9ed391f76460?q=80&w=1000&auto=format&fit=crop');
+  const [newsExcerpt, setNewsExcerpt] = useState('');
+  const [newsContent, setNewsContent] = useState('');
+
+  // CMS: Coach form state
+  const [coachNameInput, setCoachNameInput] = useState('');
+  const [coachRoleInput, setCoachRoleInput] = useState('ასაკობრივი ჯგუფის მწვრთნელი');
+  const [coachLicenseInput, setCoachLicenseInput] = useState('UEFA B License');
+  const [coachExpInput, setCoachExpInput] = useState('8+ წელი');
+  const [coachSpecInput, setCoachSpecInput] = useState('ტექნიკური მომზადება და ტაქტიკა');
+  const [coachDaysInput, setCoachDaysInput] = useState('ორშ, ოთხ, პარ');
+
+  // CMS: Location form state
+  const [locNameInput, setLocNameInput] = useState('');
+  const [locAddressInput, setLocAddressInput] = useState('');
+  const [locPitchesInput, setLocPitchesInput] = useState('2 მოედანი (საბავშვო და სტანდარტული)');
+  const [locDescInput, setLocDescInput] = useState('');
 
   // Notification Toast state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -162,11 +205,69 @@ export default function AdminPage() {
     showToast(`✅ მატჩი/ტურნირი წარმატებით ჩაინიშნა და აისახა ${group.name}-ის ყველა ბავშვის კალენდარში!`);
   };
 
-  // Handle Player Submit
+  const handleOpenAddPlayer = () => {
+    setEditingPlayerId(null);
+    setNewFirstName('');
+    setNewLastName('');
+    setNewBirthYear(2014);
+    setNewPosition('ნახევარმცველი');
+    setNewJersey(11);
+    setNewPlayerGroup(groups[0]?.id || '');
+    setNewParentName('');
+    setNewParentPhone('+995 5');
+    setNewParentEmail('');
+    setNewIsIndividual(false);
+    setNewFee(150);
+    setPlayerModalOpen(true);
+  };
+
+  const handleEditPlayerClick = (player: Player) => {
+    setEditingPlayerId(player.id);
+    setNewFirstName(player.firstName);
+    setNewLastName(player.lastName);
+    setNewBirthYear(player.birthYear);
+    setNewPosition(player.position);
+    setNewJersey(player.jerseyNumber);
+    setNewPlayerGroup(player.groupId);
+    setNewParentName(player.parentName);
+    setNewParentPhone(player.parentPhone);
+    setNewParentEmail(player.parentEmail || '');
+    setNewIsIndividual(player.isIndividualTraining);
+    setNewFee(player.monthlyFee);
+    setPlayerModalOpen(true);
+  };
+
+  // Handle Player Submit (Add or Update)
   const handleCreatePlayer = (e: React.FormEvent) => {
     e.preventDefault();
     const group = groups.find(g => g.id === newPlayerGroup);
     if (!group) return;
+
+    if (editingPlayerId) {
+      updatePlayer(editingPlayerId, {
+        firstName: newFirstName,
+        lastName: newLastName,
+        birthYear: Number(newBirthYear),
+        age: 2026 - Number(newBirthYear),
+        position: newPosition,
+        jerseyNumber: Number(newJersey),
+        groupId: group.id,
+        groupName: group.name,
+        coachId: group.coachId,
+        coachName: group.coachName,
+        locationId: group.locationId,
+        locationName: group.locationName,
+        parentName: newParentName,
+        parentPhone: newParentPhone,
+        parentEmail: newParentEmail,
+        isIndividualTraining: newIsIndividual,
+        monthlyFee: Number(newFee)
+      });
+      setPlayerModalOpen(false);
+      setEditingPlayerId(null);
+      showToast(`✅ მოთამაშის (${newFirstName} ${newLastName}) მონაცემები განახლდა!`);
+      return;
+    }
 
     addPlayer({
       firstName: newFirstName,
@@ -195,8 +296,117 @@ export default function AdminPage() {
     setNewFirstName('');
     setNewLastName('');
     setNewParentName('');
+    setNewParentEmail('');
     showToast(`✅ მოთამაშე ${newFirstName} ${newLastName} წარმატებით დაემატა ჯგუფში ${group.name}!`);
   };
+
+  // CMS Handlers
+  const handleAddNews = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsTitle.trim()) return;
+    addNewsItem({
+      title: newsTitle.trim(),
+      category: newsCategory,
+      date: newsDate,
+      image: newsImage || 'https://images.unsplash.com/photo-1518604666860-9ed391f76460?q=80&w=1000&auto=format&fit=crop',
+      excerpt: newsExcerpt.trim() || newsTitle.trim(),
+      content: newsContent.trim() || newsExcerpt.trim(),
+      readTime: '3 წთ წასაკითხი'
+    });
+    setNewsTitle('');
+    setNewsExcerpt('');
+    setNewsContent('');
+    showToast('📰 სიახლე წარმატებით გამოქვეყნდა საიტზე!');
+  };
+
+  const handleAddCoach = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!coachNameInput.trim()) return;
+    addCoach({
+      name: coachNameInput.trim(),
+      role: coachRoleInput.trim(),
+      license: coachLicenseInput.trim(),
+      experience: coachExpInput.trim(),
+      specialty: coachSpecInput.trim(),
+      availableDays: coachDaysInput.trim() || 'ორშ, ოთხ, პარ'
+    });
+    setCoachNameInput('');
+    showToast('👨‍🏫 მწვრთნელის პროფილი წარმატებით დაემატა საიტზე!');
+  };
+
+  const handleAddLocation = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!locNameInput.trim()) return;
+    addLocation({
+      name: locNameInput.trim(),
+      address: locAddressInput.trim(),
+      pitches: locPitchesInput.trim() || '1 სტანდარტული მოედანი',
+      description: locDescInput.trim() || 'თანამედროვე სავარჯიშო ინფრასტრუქტურა და უსაფრთხო გარემო.'
+    });
+    setLocNameInput('');
+    setLocAddressInput('');
+    setLocDescInput('');
+    showToast('📍 ახალი სავარჯიშო ცენტრი წარმატებით დაემატა საიტზე!');
+  };
+
+  // Role-based Auth Guard for Admin / Coach Panel
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-[#061325] flex items-center justify-center">
+        <div className="w-8 h-8 border-3 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!currentUser || (currentUser.role !== 'coach' && currentUser.role !== 'admin')) {
+    return (
+      <div className="min-h-screen bg-[#061325] flex flex-col items-center justify-center p-4 text-white">
+        <div className="max-w-md w-full bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center space-y-5 shadow-2xl">
+          <div className="w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center mx-auto text-blue-400">
+            <Lock className="w-8 h-8" />
+          </div>
+          <div>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-sky-400 font-bold">
+              PROTECTED BACK-END
+            </span>
+            <h1 className="text-xl font-black mt-1">სამწვრთნელო და სამენეჯერო პანელი</h1>
+            <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+              ადმინისტრაციულ პანელზე წვდომა აქვთ მხოლოდ აკადემია „ტფილისის“ ავტორიზებულ მწვრთნელებსა და მენეჯერებს.
+            </p>
+          </div>
+
+          <div className="space-y-2.5 pt-2">
+            <button
+              type="button"
+              onClick={() => setAuthModalOpen(true)}
+              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs uppercase tracking-wider transition-all shadow-lg"
+            >
+              მწვრთნელის / ადმინის ავტორიზაცია
+            </button>
+            <button
+              type="button"
+              onClick={() => loginAs('coach')}
+              className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold text-xs border border-slate-700 transition-all"
+            >
+              ⚡ სწრაფი დემო შესვლა (დავით დვალი - მწვრთნელი)
+            </button>
+            <Link
+              href="/"
+              className="block w-full py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-bold transition-colors"
+            >
+              ← მთავარ გვერდზე დაბრუნება
+            </Link>
+          </div>
+        </div>
+
+        <AuthModal
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          defaultRole="coach"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col selection:bg-blue-600 selection:text-white">
@@ -375,7 +585,7 @@ export default function AdminPage() {
               </div>
               <button
                 type="button"
-                onClick={() => setPlayerModalOpen(true)}
+                onClick={handleOpenAddPlayer}
                 className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shrink-0 flex items-center gap-1.5 shadow-sm transition-all"
               >
                 <Plus className="w-4 h-4" />
@@ -534,7 +744,7 @@ export default function AdminPage() {
                           <td className="py-3.5 px-4">
                             <div className="flex items-center gap-2.5">
                               <div className="w-8 h-8 rounded-lg bg-blue-700 text-white font-black text-xs flex items-center justify-center shrink-0">
-                                {player.jerseyNumber}
+                                {player.jerseyNumber > 0 ? player.jerseyNumber : '—'}
                               </div>
                               <div>
                                 <div className="font-extrabold text-slate-900">
@@ -628,6 +838,14 @@ export default function AdminPage() {
                                   <Send className="w-3.5 h-3.5" />
                                 </button>
                               )}
+                              <button
+                                type="button"
+                                onClick={() => handleEditPlayerClick(player)}
+                                className="p-1.5 rounded-lg hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"
+                                title="რედაქტირება"
+                              >
+                                <Edit className="w-3.5 h-3.5" />
+                              </button>
                               <button
                                 type="button"
                                 onClick={() => {
@@ -970,10 +1188,21 @@ export default function AdminPage() {
                     )}
                   </div>
 
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                    <span className="text-[10px] text-slate-400 font-mono">
-                      SYNCED TO USER PORTAL
-                    </span>
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const entered = prompt('შეიყვანეთ მატჩის საბოლოო ანგარიში (მაგ. 3 : 1 მოგება):', event.score || '2 : 0 (მოგება)');
+                        if (entered !== null && entered.trim() !== '') {
+                          updateMatchEvent(event.id, { status: 'completed', score: entered.trim() });
+                          showToast(`⚽ ანგარიში (${entered.trim()}) აისახა კალენდარში!`);
+                        }
+                      }}
+                      className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 font-bold text-[11px] transition-colors flex items-center gap-1"
+                    >
+                      <Edit className="w-3 h-3" />
+                      <span>{event.score ? 'ანგარიშის შეცვლა' : 'ანგარიშის შეყვანა'}</span>
+                    </button>
                     <button
                       type="button"
                       onClick={() => {
@@ -1000,42 +1229,390 @@ export default function AdminPage() {
             ======================================================== */}
         {activeTab === 'cms' && (
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-4">
-              <h3 className="font-black text-base text-slate-900">
-                აკადემიის საჯარო მონაცემების მართვა
-              </h3>
-              <p className="text-xs text-slate-500">
-                ბოსის მოთხოვნის შესაბამისად: მწვრთნელები, ჯგუფები, ლოკაციები და სავარჯიშო საათები საჯაროდ ჩანს მთავარ ვებგვერდზე, ხოლო ბავშვების სია დაცულია.
-              </p>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                <div>
+                  <h3 className="font-black text-base text-slate-900">
+                    კონტენტის მართვის სისტემა (CMS)
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    სიახლეების, ფოტოების, მწვრთნელებისა და საფეხბურთო ცენტრების პირდაპირი მართვა საჯარო ვებგვერდისთვის.
+                  </p>
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                <Link 
-                  href="/coaches" 
-                  className="p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/30 transition-all group"
-                >
-                  <Award className="w-6 h-6 text-blue-600 mb-2 group-hover:scale-110 transition-transform" />
-                  <div className="font-bold text-sm text-slate-900">მწვრთნელების პროფილები</div>
-                  <div className="text-xs text-slate-500 mt-1">ლიცენზიები, გამოცდილება და მიღწევები</div>
-                </Link>
-
-                <Link 
-                  href="/locations" 
-                  className="p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/30 transition-all group"
-                >
-                  <MapPin className="w-6 h-6 text-blue-600 mb-2 group-hover:scale-110 transition-transform" />
-                  <div className="font-bold text-sm text-slate-900">საფეხბურთო ცენტრები</div>
-                  <div className="text-xs text-slate-500 mt-1">საბურთალო, დინამო, ვარკეთილი</div>
-                </Link>
-
-                <Link 
-                  href="/news" 
-                  className="p-4 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/30 transition-all group"
-                >
-                  <Calendar className="w-6 h-6 text-blue-600 mb-2 group-hover:scale-110 transition-transform" />
-                  <div className="font-bold text-sm text-slate-900">სიახლეები & რეპორტაჟები</div>
-                  <div className="text-xs text-slate-500 mt-1">ტურნირების შედეგები და განცხადებები</div>
-                </Link>
+                {/* CMS Sub-tabs */}
+                <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl self-start">
+                  <button
+                    type="button"
+                    onClick={() => setCmsSubTab('news')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                      cmsSubTab === 'news' ? 'bg-white text-blue-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>სიახლეები ({news.length})</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCmsSubTab('coaches')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                      cmsSubTab === 'coaches' ? 'bg-white text-blue-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <Award className="w-3.5 h-3.5" />
+                    <span>მწვრთნელები ({coaches.length})</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCmsSubTab('locations')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                      cmsSubTab === 'locations' ? 'bg-white text-blue-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>ლოკაციები ({locations.length})</span>
+                  </button>
+                </div>
               </div>
+
+              {/* SUB-TAB 1: NEWS CMS */}
+              {cmsSubTab === 'news' && (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  <form onSubmit={handleAddNews} className="lg:col-span-5 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3.5 h-fit">
+                    <div className="font-black text-sm text-slate-900 flex items-center gap-2">
+                      <Plus className="w-4 h-4 text-blue-600" />
+                      <span>ახალი სიახლის / რეპორტაჟის დამატება</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">სათაური *</label>
+                      <input
+                        type="text"
+                        value={newsTitle}
+                        onChange={(e) => setNewsTitle(e.target.value)}
+                        required
+                        placeholder="მაგ. ტფილისი U-11-მა თბილისის თასი მოიგო"
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">კატეგორია</label>
+                        <select
+                          value={newsCategory}
+                          onChange={(e) => setNewsCategory(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-800"
+                        >
+                          <option value="ტურნირი">ტურნირი</option>
+                          <option value="აკადემია">აკადემია</option>
+                          <option value="ინფრასტრუქტურა">ინფრასტრუქტურა</option>
+                          <option value="სელექცია">სელექცია</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">თარიღი</label>
+                        <input
+                          type="text"
+                          value={newsDate}
+                          onChange={(e) => setNewsDate(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">ფოტოს URL</label>
+                      <input
+                        type="url"
+                        value={newsImage}
+                        onChange={(e) => setNewsImage(e.target.value)}
+                        placeholder="https://..."
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900 font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">მოკლე აღწერა (Excerpt) *</label>
+                      <textarea
+                        value={newsExcerpt}
+                        onChange={(e) => setNewsExcerpt(e.target.value)}
+                        required
+                        rows={2}
+                        placeholder="მოკლე ანონსი მთავარი გვერდისთვის..."
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">სრული სტატიის ტექსტი</label>
+                      <textarea
+                        value={newsContent}
+                        onChange={(e) => setNewsContent(e.target.value)}
+                        rows={4}
+                        placeholder="სტატიის სრული ტექსტი..."
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs shadow-sm transition-all"
+                    >
+                      სიახლის გამოქვეყნება
+                    </button>
+                  </form>
+
+                  <div className="lg:col-span-7 space-y-3">
+                    <div className="text-xs font-black uppercase text-slate-500">გამოქვეყნებული სიახლეები ({news.length})</div>
+                    {news.map((item) => (
+                      <div key={item.id} className="p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between gap-3 hover:border-blue-300 transition-all">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <img src={item.image} alt={item.title} className="w-14 h-14 rounded-xl object-cover shrink-0 bg-slate-100" />
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700">{item.category}</span>
+                              <span className="text-[10px] text-slate-400">{item.date}</span>
+                            </div>
+                            <h4 className="font-bold text-xs sm:text-sm text-slate-900 truncate mt-0.5">{item.title}</h4>
+                            <p className="text-[11px] text-slate-500 truncate">{item.excerpt}</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (confirm('წაიშალოს ეს სიახლე?')) {
+                              deleteNewsItem(item.id);
+                              showToast('სიახლე წაიშალა.');
+                            }
+                          }}
+                          className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors shrink-0"
+                          title="წაშლა"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* SUB-TAB 2: COACHES CMS */}
+              {cmsSubTab === 'coaches' && (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  <form onSubmit={handleAddCoach} className="lg:col-span-5 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3.5 h-fit">
+                    <div className="font-black text-sm text-slate-900 flex items-center gap-2">
+                      <Plus className="w-4 h-4 text-blue-600" />
+                      <span>ახალი მწვრთნელის დამატება</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">სახელი, გვარი *</label>
+                      <input
+                        type="text"
+                        value={coachNameInput}
+                        onChange={(e) => setCoachNameInput(e.target.value)}
+                        required
+                        placeholder="მაგ. ლევან კობიაშვილი"
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">პოზიცია / როლი</label>
+                        <input
+                          type="text"
+                          value={coachRoleInput}
+                          onChange={(e) => setCoachRoleInput(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">ლიცენზია</label>
+                        <input
+                          type="text"
+                          value={coachLicenseInput}
+                          onChange={(e) => setCoachLicenseInput(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">გამოცდილება</label>
+                        <input
+                          type="text"
+                          value={coachExpInput}
+                          onChange={(e) => setCoachExpInput(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">სპეციალიზაცია</label>
+                        <input
+                          type="text"
+                          value={coachSpecInput}
+                          onChange={(e) => setCoachSpecInput(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">სავარჯიშო დღეები (ინდივიდუალური)</label>
+                      <input
+                        type="text"
+                        value={coachDaysInput}
+                        onChange={(e) => setCoachDaysInput(e.target.value)}
+                        placeholder="მაგ. ორშ, ოთხ, პარ"
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs shadow-sm transition-all"
+                    >
+                      მწვრთნელის დამატება
+                    </button>
+                  </form>
+
+                  <div className="lg:col-span-7 space-y-3">
+                    <div className="text-xs font-black uppercase text-slate-500">სამწვრთნელო შტაბი ({coaches.length})</div>
+                    {coaches.map((c) => (
+                      <div key={c.id} className="p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between gap-3 hover:border-blue-300 transition-all">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-11 h-11 rounded-xl bg-blue-700 text-white font-black text-xs flex items-center justify-center shrink-0">
+                            {c.name.split(' ').map(n => n[0]).join('')}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-bold text-xs sm:text-sm text-slate-900">{c.name}</h4>
+                              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700">{c.license}</span>
+                            </div>
+                            <div className="text-[11px] text-slate-600 font-medium">{c.role} · {c.experience}</div>
+                            <div className="text-[10px] text-slate-400 truncate">{c.specialty} · {c.availableDays}</div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (confirm(`წაიშალოს მწვრთნელი ${c.name}?`)) {
+                              deleteCoach(c.id);
+                              showToast('მწვრთნელი წაიშალა.');
+                            }
+                          }}
+                          className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors shrink-0"
+                          title="წაშლა"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* SUB-TAB 3: LOCATIONS CMS */}
+              {cmsSubTab === 'locations' && (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  <form onSubmit={handleAddLocation} className="lg:col-span-5 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3.5 h-fit">
+                    <div className="font-black text-sm text-slate-900 flex items-center gap-2">
+                      <Plus className="w-4 h-4 text-blue-600" />
+                      <span>ახალი ფილიალის / ლოკაციის დამატება</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">ცენტრის დასახელება *</label>
+                      <input
+                        type="text"
+                        value={locNameInput}
+                        onChange={(e) => setLocNameInput(e.target.value)}
+                        required
+                        placeholder="მაგ. დიღმის საწვრთნელი ბაზა"
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">ზუსტი მისამართი *</label>
+                      <input
+                        type="text"
+                        value={locAddressInput}
+                        onChange={(e) => setLocAddressInput(e.target.value)}
+                        required
+                        placeholder="მაგ. აღმაშენებლის ხეივანი #12"
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">მოედნების რაოდენობა / ტიპი</label>
+                      <input
+                        type="text"
+                        value={locPitchesInput}
+                        onChange={(e) => setLocPitchesInput(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">ინფრასტრუქტურის აღწერა</label>
+                      <textarea
+                        value={locDescInput}
+                        onChange={(e) => setLocDescInput(e.target.value)}
+                        rows={3}
+                        placeholder="სტანდარტული ხელოვნურსაფარიანი მოედანი, გასახდელები..."
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-900"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs shadow-sm transition-all"
+                    >
+                      ფილიალის დამატება
+                    </button>
+                  </form>
+
+                  <div className="lg:col-span-7 space-y-3">
+                    <div className="text-xs font-black uppercase text-slate-500">აქტიური საფეხბურთო ცენტრები ({locations.length})</div>
+                    {locations.map((loc) => (
+                      <div key={loc.id} className="p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between gap-3 hover:border-blue-300 transition-all">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center shrink-0">
+                            <MapPin className="w-5 h-5" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-bold text-xs sm:text-sm text-slate-900 truncate">{loc.name}</h4>
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700">{loc.pitches}</span>
+                            </div>
+                            <div className="text-[11px] text-slate-600 truncate">{loc.address}</div>
+                            <div className="text-[10px] text-slate-400 truncate">{loc.description}</div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (confirm(`წაიშალოს ლოკაცია ${loc.name}?`)) {
+                              deleteLocation(loc.id);
+                              showToast('ლოკაცია წაიშალა.');
+                            }
+                          }}
+                          className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors shrink-0"
+                          title="წაშლა"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
         )}
@@ -1197,7 +1774,7 @@ export default function AdminPage() {
       )}
 
       {/* ========================================================
-          MODAL: ADD PLAYER (Admin Module)
+          MODAL: ADD / EDIT PLAYER (Admin Module)
           ======================================================== */}
       {playerModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md modal-backdrop-in">
@@ -1205,11 +1782,16 @@ export default function AdminPage() {
             <div className="bg-[#061325] px-6 py-4 text-white flex items-center justify-between border-b border-slate-800 shrink-0">
               <div className="flex items-center gap-2.5">
                 <Users className="w-5 h-5 text-sky-400" />
-                <h3 className="font-black text-base">ახალი მოთამაშის რეგისტრაცია</h3>
+                <h3 className="font-black text-base">
+                  {editingPlayerId ? 'მოთამაშის მონაცემების რედაქტირება' : 'ახალი მოთამაშის რეგისტრაცია'}
+                </h3>
               </div>
               <button
                 type="button"
-                onClick={() => setPlayerModalOpen(false)}
+                onClick={() => {
+                  setPlayerModalOpen(false);
+                  setEditingPlayerId(null);
+                }}
                 className="text-slate-400 hover:text-white transition-colors"
               >
                 ✕
@@ -1329,6 +1911,19 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+                  მშობლის ელ-ფოსტა (ქვითრებისა და შეხსენებებისთვის)
+                </label>
+                <input
+                  type="email"
+                  value={newParentEmail}
+                  onChange={(e) => setNewParentEmail(e.target.value)}
+                  placeholder="parent@example.com"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium text-slate-900"
+                />
+              </div>
+
               <div className="grid grid-cols-2 gap-3 items-center">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
@@ -1359,7 +1954,10 @@ export default function AdminPage() {
               <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-2 shrink-0">
                 <button
                   type="button"
-                  onClick={() => setPlayerModalOpen(false)}
+                  onClick={() => {
+                    setPlayerModalOpen(false);
+                    setEditingPlayerId(null);
+                  }}
                   className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors"
                 >
                   გაუქმება
@@ -1368,7 +1966,7 @@ export default function AdminPage() {
                   type="submit"
                   className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-sm transition-all"
                 >
-                  მოთამაშის შენახვა
+                  {editingPlayerId ? 'ცვლილებების შენახვა' : 'მოთამაშის შენახვა'}
                 </button>
               </div>
             </form>

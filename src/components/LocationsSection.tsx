@@ -1,21 +1,22 @@
 'use client';
 
 import React from 'react';
-import { locationsData } from '../data/mockData';
 import { MapPin, Navigation, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAcademy } from '../context/AcademyContext';
 
 export default function LocationsSection() {
   const { language, t } = useLanguage();
+  const { locations } = useAcademy();
 
   const getLocationInfo = (id: string) => {
+    const loc = locations.find((l) => l.id === id);
     if (language === 'ka') {
-      const loc = locationsData.find((l) => l.id === id);
       return {
         name: loc?.name || '',
         address: loc?.address || '',
         description: loc?.description || '',
-        pitches: loc?.pitches || ''
+        pitches: loc?.pitches || '',
       };
     } else {
       if (id === 'saburtalo') {
@@ -23,23 +24,29 @@ export default function LocationsSection() {
           name: 'Saburtalo Complex',
           address: '6 University Street, Tbilisi',
           description: 'Full-sized synthetic turf pitch with advanced LED floodlights and comfortable modern locker rooms.',
-          pitches: '2 Pitches (Youth & Standard)'
+          pitches: '2 Pitches (Youth & Standard)',
         };
       } else if (id === 'varketili') {
         return {
           name: 'Varketili Centre',
           address: 'Varketili Upper Plateau, 2nd Microdistrict',
           description: 'Specialized youth football centre with dedicated athletic preparation and coordination zones.',
-          pitches: '1 Standard Pitch'
+          pitches: '1 Standard Pitch',
         };
-      } else {
+      } else if (id === 'dinamo') {
         return {
           name: 'Dinamo Training Base',
           address: 'Dighomi Training Centre',
           description: 'Top-tier hybrid natural & synthetic pitches with on-site medical and athletic recovery staff.',
-          pitches: '3 Training Pitches'
+          pitches: '3 Training Pitches',
         };
       }
+      return {
+        name: loc?.name || '',
+        address: loc?.address || '',
+        description: loc?.description || '',
+        pitches: loc?.pitches || '',
+      };
     }
   };
 
@@ -60,7 +67,7 @@ export default function LocationsSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-          {locationsData.map((loc) => {
+          {locations.map((loc) => {
             const info = getLocationInfo(loc.id);
             return (
               <div

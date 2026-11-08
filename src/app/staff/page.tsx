@@ -1,19 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import AuthModal from '../../components/AuthModal';
 import { useLanguage } from '../../context/LanguageContext';
 import { staffData } from '../../data/mockData';
-import { ShieldCheck, Phone, Mail, Award, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Phone, Mail, ArrowRight, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function StaffPage() {
   const { language } = useLanguage();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900">
-      <Navbar onOpenAuthModal={() => {}} />
+      <Navbar onOpenAuthModal={() => setAuthModalOpen(true)} />
 
       <main className="flex-1 bg-white animate-page-enter">
         {/* Header Hero */}
@@ -107,6 +109,7 @@ export default function StaffPage() {
       </main>
 
       <Footer />
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { 
   User, 
   Calendar, 
@@ -24,12 +25,15 @@ import {
   ChevronRight,
   Printer,
   Users,
-  Plus
+  Plus,
+  Bell
 } from 'lucide-react';
 import { useAcademy, Player, BillingRecord, MatchEvent } from '../../context/AcademyContext';
+import AuthModal from '../../components/AuthModal';
 
 export default function UserPortalPage() {
   const { 
+    isLoaded,
     currentUser, 
     players, 
     groups, 
@@ -40,16 +44,19 @@ export default function UserPortalPage() {
     loginAs,
     addPlayer
   } = useAcademy();
+  const router = useRouter();
 
   // Active portal tab
   const [activeTab, setActiveTab] = useState<'schedule' | 'billing' | 'profile'>('schedule');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const handleLogout = () => {
     setIsLoggingOut(true);
     setTimeout(() => {
       logout();
       setIsLoggingOut(false);
+      router.push('/');
     }, 450);
   };
 
@@ -91,10 +98,19 @@ export default function UserPortalPage() {
     return groups.find(g => g.id === activePlayer.groupId) || null;
   }, [groups, activePlayer]);
 
-  // Player's scheduled matches (filtered by their group)
+  // Player's scheduled matches (filtered by their group; for newly registered members, only show matches scheduled after they joined)
   const playerMatches = useMemo(() => {
     if (!activePlayer) return [];
-    return matchEvents.filter(m => m.groupId === activePlayer.groupId);
+    const isSeedPlayer = activePlayer.id.startsWith('pl-0');
+    return matchEvents.filter(m => {
+      if (m.groupId !== activePlayer.groupId) return false;
+      // Never show pre-seeded demo matches (match-01, match-02, match-03) to real registered users
+      if (!isSeedPlayer && m.id.startsWith('match-0')) return false;
+      if (activePlayer.createdAt) {
+        return (m.createdAt || 0) >= activePlayer.createdAt;
+      }
+      return true;
+    });
   }, [matchEvents, activePlayer]);
 
   // Player's billing records
@@ -123,13 +139,14 @@ export default function UserPortalPage() {
     const memberLast = onboardLast || nameParts.slice(1).join(' ') || '';
     const group = groups.find(g => g.id === onboardGroupId) || groups[0];
     const newId = `pl-${Date.now()}`;
-    addPlayer({
+    const createdPlayer = addPlayer({
+      id: newId,
       firstName: memberFirst,
       lastName: memberLast,
       birthYear: Number(onboardBirthYear),
       age: 2026 - Number(onboardBirthYear),
       position: onboardPosition,
-      jerseyNumber: 10,
+      jerseyNumber: 0,
       groupId: group.id,
       groupName: group.name,
       coachId: group.coachId,
@@ -143,11 +160,12 @@ export default function UserPortalPage() {
       monthlyFee: group.monthlyFee,
       paymentStatus: 'pending',
       attendanceRate: 100,
-      medicalClearance: true
+      medicalClearance: false,
+      createdAt: Date.now()
     });
     loginAs('parent', {
       ...currentUser,
-      assignedPlayerId: newId
+      assignedPlayerId: createdPlayer.id
     });
   };
 
@@ -311,10 +329,40 @@ export default function UserPortalPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full space-y-6 animate-page-enter">
         
         {/* ========================================================
-            {/* ========================================================
-            CASE A: ONBOARDING CARD IF PROFILE NOT ACTIVATED YET
+            CASE 0: NOT LOGGED IN -> AUTH GUARD
             ======================================================== */}
-        {!activePlayer ? (
+        {!isLoaded ? (
+          <div className="py-20 flex items-center justify-center">
+            <div className="w-8 h-8 border-3 border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
+          </div>
+        ) : !currentUser ? (
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-10 space-y-5 max-w-xl mx-auto text-center">
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto border border-blue-200 shadow-xs">
+              <ShieldCheck className="w-8 h-8" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+              პირადი კაბინეტი დაცულია
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+              მოთამაშის განრიგის, დანიშნული მატჩებისა და ონლაინ ბილინგის სანახავად გთხოვთ გაიაროთ ავტორიზაცია ან რეგისტრაცია.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setAuthModalOpen(true)}
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs sm:text-sm shadow-md transition-all"
+              >
+                ავტორიზაცია / რეგისტრაცია
+              </button>
+              <Link
+                href="/"
+                className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm transition-all"
+              >
+                მთავარ გვერდზე დაბრუნება
+              </Link>
+            </div>
+          </div>
+        ) : !activePlayer ? (
           <div className="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-10 space-y-6 max-w-2xl mx-auto">
             <div className="text-center space-y-2">
               <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto border border-blue-200 shadow-xs">
@@ -405,7 +453,7 @@ export default function UserPortalPage() {
               <div className="flex items-center gap-4">
                 {/* Jersey Number Emblem */}
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white text-[#0052ff] flex items-center justify-center font-black text-2xl sm:text-3xl shadow-lg shrink-0 border-2 border-blue-200">
-                  {activePlayer.jerseyNumber}
+                  {activePlayer.jerseyNumber > 0 ? activePlayer.jerseyNumber : '—'}
                 </div>
 
                 <div>
@@ -431,10 +479,17 @@ export default function UserPortalPage() {
                       <MapPin className="w-3.5 h-3.5 text-sky-300" />
                       <span>{activePlayer.locationName}</span>
                     </span>
-                    <span className="flex items-center gap-1 text-emerald-300">
-                      <ShieldCheck className="w-3.5 h-3.5" />
-                      <span>სამედიცინო ფორმა: დამოწმებული</span>
-                    </span>
+                    {activePlayer.medicalClearance ? (
+                      <span className="flex items-center gap-1 text-emerald-300">
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>სამედიცინო ფორმა: დამოწმებული</span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1 text-amber-200">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>სამედიცინო ფორმა: წარსადგენია</span>
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -462,6 +517,34 @@ export default function UserPortalPage() {
               </div>
 
             </div>
+
+            {/* Automatic Payment Due / Reminder Alert Banner (Only shown when overdue or explicitly sent by Admin) */}
+            {currentPendingBill && (currentPendingBill.status === 'overdue' || Boolean(currentPendingBill.reminderSentAt)) && (
+              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-amber-950">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <Bell className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-black uppercase tracking-wider text-amber-800">
+                      {currentPendingBill.reminderSentAt
+                        ? `შეხსენება ადმინისტრაციისგან (${currentPendingBill.reminderSentAt})`
+                        : 'ავტომატური შეხსენება: საწევრო გადასახადი'}
+                    </div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900 mt-0.5">
+                      {currentPendingBill.month} {currentPendingBill.year} — გადასახდელია ₾{currentPendingBill.amount}.00 (ვადა: {currentPendingBill.dueDate})
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPaymentModalOpen(true)}
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs shrink-0 transition-all shadow-xs"
+                >
+                  ონლაინ გადახდა (Visa / Apple Pay)
+                </button>
+              </div>
+            )}
 
             {/* TAB 1: DYNAMIC SCHEDULE */}
             {activeTab === 'schedule' && (
@@ -774,7 +857,9 @@ export default function UserPortalPage() {
                       </div>
                       <div className="flex justify-between p-2.5 rounded-xl bg-slate-50">
                         <span className="text-slate-500">მაისურის ნომერი:</span>
-                        <span className="font-black text-blue-700">#{activePlayer.jerseyNumber}</span>
+                        <span className="font-black text-blue-700">
+                          {activePlayer.jerseyNumber > 0 ? `#${activePlayer.jerseyNumber}` : 'მწვრთნელის მიერ მინიჭების მოლოდინში'}
+                        </span>
                       </div>
                       <div className="flex justify-between p-2.5 rounded-xl bg-slate-50">
                         <span className="text-slate-500">მიმაგრებული ჯგუფი:</span>
@@ -809,9 +894,15 @@ export default function UserPortalPage() {
                       </div>
                       <div className="flex justify-between p-2.5 rounded-xl bg-slate-50">
                         <span className="text-slate-500">სამედიცინო შემოწმება:</span>
-                        <span className="font-bold text-emerald-700 flex items-center gap-1">
-                          <CheckCircle2 className="w-3.5 h-3.5" /> გავლილია
-                        </span>
+                        {activePlayer.medicalClearance ? (
+                          <span className="font-bold text-emerald-700 flex items-center gap-1">
+                            <CheckCircle2 className="w-3.5 h-3.5" /> გავლილია
+                          </span>
+                        ) : (
+                          <span className="font-bold text-amber-700 flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5" /> წარსადგენია აკადემიაში
+                          </span>
+                        )}
                       </div>
                       <div className="flex justify-between p-2.5 rounded-xl bg-slate-50">
                         <span className="text-slate-500">სავარჯიშო ცენტრი:</span>
@@ -1047,6 +1138,12 @@ export default function UserPortalPage() {
           <span className="text-xs font-bold">სისტემიდან გამოსვლა...</span>
         </div>
       )}
+
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        defaultRole="parent"
+      />
 
     </div>
   );
