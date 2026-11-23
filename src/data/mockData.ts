@@ -47,151 +47,427 @@ export interface Coach {
 
 export const locationsData: LocationItem[] = [
   {
-    id: 'saburtalo',
-    name: 'საბურთალო',
-    slug: 'saburtalo',
-    address: 'უნივერსიტეტის ქ. #6, თბილისი',
-    description: 'სრული ზომის სტანდარტული ხელოვნურსაფარიანი მოედანი, უსაფრთხო გარემო და კომფორტული გასახდელები.',
-    pitches: '2 მოედანი (საბავშვო და სტანდარტული)'
+    id: 'vazissubani',
+    name: 'ვაზისუბანი',
+    slug: 'vazissubani',
+    address: 'მე-4 მიკრორაიონი, 1-ლი კვარტალი',
+    description: '172-ე საჯარო სკოლის მიმდებარე ტერიტორია',
+    pitches: '2 მინი სტადიონი (7x7 / 9x9)'
   },
   {
-    id: 'varketili',
+    id: 'varketili-105',
     name: 'ვარკეთილი',
-    slug: 'varketili',
-    address: 'ვარკეთილის ზემო პლატო, მე-2 მ/რ',
-    description: 'სავარჯიშო ცენტრი ბავშვთა ასაკობრივი ჯგუფებისთვის, სათამაშო და ფიზიკური განვითარების სივრცე.',
-    pitches: '1 სტანდარტული მოედანი'
+    slug: 'varketili-105',
+    address: 'სუხიშვილის ქუჩა',
+    description: '105-ე საჯარო სკოლის მიმდებარე ტერიტორია',
+    pitches: '2 მინი სტადიონი (7x7 / 9x9)'
   },
   {
-    id: 'dinamo',
-    name: 'დინამოს ბაზა',
-    slug: 'dinamo',
-    address: 'დიღმის მასივი, საწვრთნელი ცენტრი',
-    description: 'უმაღლესი ხარისხის ბუნებრივი და ხელოვნური საფარი, ექიმის მუდმივი მეთვალყურეობა.',
-    pitches: '3 სავარჯიშო მოედანი'
+    id: 'varketili-seselia',
+    name: 'ვარკეთილი',
+    slug: 'varketili-seselia',
+    address: 'სესილია თაყაიშვილის ქუჩა 26',
+    description: 'მრავალფუნქციური საზოგადოებრივი ცენტრი (სარენდარო)',
+    pitches: '1 სტადიონი (9x9)'
+  },
+  {
+    id: 'isani',
+    name: 'ისანი',
+    slug: 'isani',
+    address: '5 დეკემბერი, მანავის ქუჩა',
+    description: 'საცურაო კომპლექს „ოლიმპიკის“ მიმდებარე ტერიტორია',
+    pitches: '1 სტადიონი (9x9)'
   }
 ];
 
 export const teamGroupsData: TeamGroup[] = [
+  // ===== ვაზისუბანი =====
   {
-    id: '1',
-    locationId: 'saburtalo',
-    name: '2012-2013 წლიანების გუნდი (U-14)',
-    category: 'U-14 (2012-2013)',
-    ageRange: '12 - 14 წელი',
-    birthYears: '2012 - 2013',
-    coach: 'გიორგი დემეტრაძე',
-    coachRole: 'მთავარი მწვრთნელი (UEFA A Youth)',
+    id: 'vaz-u5',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-5',
+    category: 'U-5',
+    ageRange: '4 - 5 წელი',
+    birthYears: '2021',
+    coach: 'ნიკა ფანცულაია / ტაზო ვახანია',
+    coachRole: 'მწვრთნელები',
     days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
-    hours: '16:00 - 17:30',
-    monthlyFee: 160,
-    pitch: 'მოედანი A (სრული ზომა)',
-    intensity: 'საბავშვო ჩემპიონატი & ტაქტიკა'
-  },
-  {
-    id: '2',
-    locationId: 'saburtalo',
-    name: '2014-2015 წლიანების გუნდი (U-12)',
-    category: 'U-12 (2014-2015)',
-    ageRange: '10 - 12 წელი',
-    birthYears: '2014 - 2015',
-    coach: 'ლევან ჭელიძე',
-    coachRole: 'მწვრთნელი (UEFA B Youth)',
-    days: 'სამშაბათი, ხუთშაბათი, შაბათი',
-    hours: '15:30 - 17:00',
+    hours: '—',
     monthlyFee: 150,
-    pitch: 'მოედანი B (8x8)',
-    intensity: 'ტექნიკური ოსტატობა & გუნდური თამაში'
+    pitch: 'მინი სტადიონი',
+    intensity: 'საფეხბურთო საწყისი ეტაპი'
   },
   {
-    id: '3',
-    locationId: 'saburtalo',
-    name: '2016-2017 წლიანების გუნდი (U-10)',
-    category: 'U-10 (2016-2017)',
-    ageRange: '8 - 10 წელი',
-    birthYears: '2016 - 2017',
-    coach: 'დავით კვირკველია',
-    coachRole: 'საბავშვო მწვრთნელი',
+    id: 'vaz-u6',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-6',
+    category: 'U-6',
+    ageRange: '5 - 6 წელი',
+    birthYears: '2020',
+    coach: 'ნიკა ფანცულაია / ტაზო ვახანია',
+    coachRole: 'მწვრთნელები',
     days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
-    hours: '17:30 - 18:45',
-    monthlyFee: 140,
-    pitch: 'მოედანი C (საბავშვო)',
-    intensity: 'საბაზისო მოტორიკა & თამაშები'
+    hours: '—',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'საბაზისო მოტორიკა & სათამაშო'
   },
   {
-    id: '4',
-    locationId: 'saburtalo',
-    name: '2018-2019 წლიანების ჯგუფი (U-8)',
-    category: 'U-8 (2018-2019)',
+    id: 'vaz-u7',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-7',
+    category: 'U-7',
+    ageRange: '6 - 7 წელი',
+    birthYears: '2019',
+    coach: 'თაზო იაშვილი / ირაკლი ყაველაშვილი',
+    coachRole: 'მწვრთნელები',
+    days: 'სამშაბათი, ხუთშაბათი, შაბათი',
+    hours: '17:00',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'ბურთის ფლობა & კოორდინაცია'
+  },
+  {
+    id: 'vaz-u8',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-8',
+    category: 'U-8',
+    ageRange: '7 - 8 წელი',
+    birthYears: '2018',
+    coach: 'თაზო იაშვილი / ირაკლი ყაველაშვილი',
+    coachRole: 'მწვრთნელები',
+    days: 'სამშაბათი, ხუთშაბათი, შაბათი',
+    hours: '18:00',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'ბურთის ფლობა & თამაშის სიხარული'
+  },
+  {
+    id: 'vaz-u9',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-9',
+    category: 'U-9',
+    ageRange: '8 - 9 წელი',
+    birthYears: '2017',
+    coach: 'ლადო კაკაურიძე / ლაშა ღოთვაძე',
+    coachRole: 'მწვრთნელები',
+    days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
+    hours: '—',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'ტაქტიკური განვითარება'
+  },
+  {
+    id: 'vaz-u10-1',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-10 (1-ლი გუნდი)',
+    category: 'U-10 (1-ლი გუნდი)',
+    ageRange: '9 - 10 წელი',
+    birthYears: '2016',
+    coach: 'ვაჩე ალქაიძე / ილია გორდაძე',
+    coachRole: 'მწვრთნელები',
+    days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
+    hours: '—',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'ტექნიკა & პოზიციური თამაში'
+  },
+  {
+    id: 'vaz-u10-2',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-10 (მე-2 გუნდი)',
+    category: 'U-10 (მე-2 გუნდი)',
+    ageRange: '9 - 10 წელი',
+    birthYears: '2016',
+    coach: 'ვაჩე ალქაიძე / ილია გორდაძე',
+    coachRole: 'მწვრთნელები',
+    days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
+    hours: '—',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'ტექნიკა & კოლექტიური თამაში'
+  },
+  {
+    id: 'vaz-u11-1',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-11 (1-ლი გუნდი)',
+    category: 'U-11 (1-ლი გუნდი)',
+    ageRange: '10 - 11 წელი',
+    birthYears: '2015',
+    coach: 'კატო ჯობლიძე / ლაშა ხომასურიძე',
+    coachRole: 'მწვრთნელები',
+    days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
+    hours: '—',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'ტაქტიკური ფუძემდებლები'
+  },
+  {
+    id: 'vaz-u11-2',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-11 (მე-2 გუნდი)',
+    category: 'U-11 (მე-2 გუნდი)',
+    ageRange: '10 - 11 წელი',
+    birthYears: '2015',
+    coach: 'კატო ჯობლიძე / ლაშა ხომასურიძე',
+    coachRole: 'მწვრთნელები',
+    days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
+    hours: '—',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'ტაქტიკა & გუნდური განვითარება'
+  },
+  {
+    id: 'vaz-u12',
+    locationId: 'vazissubani',
+    name: 'ვაზისუბანი U-12',
+    category: 'U-12',
+    ageRange: '11 - 12 წელი',
+    birthYears: '2014',
+    coach: 'ნიკოლოზ ფანცულაია / ილია გორდაძე',
+    coachRole: 'მწვრთნელები',
+    days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
+    hours: '—',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'სრული ტაქტიკური სისტემა'
+  },
+  // ===== ვარკეთილი =====
+  {
+    id: 'vark105-u7',
+    locationId: 'varketili-105',
+    name: 'ვარკეთილი U-7',
+    category: 'U-7',
+    ageRange: '6 - 7 წელი',
+    birthYears: '2019',
+    coach: 'შემოგვეწევა',
+    coachRole: 'მწვრთნელი',
+    days: 'სამშაბათი, ხუთშაბათი, შაბათი',
+    hours: '17:00',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'ბურთის ფლობა & კოორდინაცია'
+  },
+  {
+    id: 'vark105-u8',
+    locationId: 'varketili-105',
+    name: 'ვარკეთილი U-8',
+    category: 'U-8',
+    ageRange: '7 - 8 წელი',
+    birthYears: '2019 - 2020',
+    coach: 'შემოგვეწევა',
+    coachRole: 'მწვრთნელი',
+    days: 'სამშაბათი, ხუთშაბათი, შაბათი',
+    hours: '18:00',
+    monthlyFee: 150,
+    pitch: 'მინი სტადიონი',
+    intensity: 'ბურთის ფლობა & თამაშის სიხარული'
+  },
+  // ===== ისანი =====
+  {
+    id: 'isani-u5',
+    locationId: 'isani',
+    name: 'ისანი U-5 / U-6',
+    category: 'U-5 / U-6',
+    ageRange: '4 - 6 წელი',
+    birthYears: '2020 - 2021',
+    coach: 'გიორგი მელქაძე',
+    coachRole: 'მწვრთნელი',
+    days: 'სამშაბათი, ხუთშაბათი',
+    hours: '17:00',
+    monthlyFee: 150,
+    pitch: 'სტადიონი (9x9)',
+    intensity: 'საფეხბურთო საწყისი ეტაპი'
+  },
+  {
+    id: 'isani-u7u8',
+    locationId: 'isani',
+    name: 'ისანი U-7 / U-8',
+    category: 'U-7 / U-8',
     ageRange: '6 - 8 წელი',
     birthYears: '2018 - 2019',
-    coach: 'მიხეილ მესხი',
-    coachRole: 'საწყისი ეტაპის სპეციალისტი',
-    days: 'სამშაბათი, ხუთშაბათი, შაბათი',
-    hours: '14:30 - 15:30',
-    monthlyFee: 130,
-    pitch: 'საბავშვო დარბაზი / მოედანი B',
-    intensity: 'პირველი ნაბიჯები ფეხბურთში'
+    coach: 'გიორგი მელქაძე',
+    coachRole: 'მწვრთნელი',
+    days: 'სამშაბათი, ხუთშაბათი',
+    hours: '18:00',
+    monthlyFee: 150,
+    pitch: 'სტადიონი (9x9)',
+    intensity: 'ბურთის ფლობა & კოორდინაცია'
   },
   {
-    id: '5',
-    locationId: 'varketili',
-    name: 'ვარკეთილის U-12 გუნდი (2014-2015)',
-    category: 'U-12 (2014-2015)',
-    ageRange: '10 - 12 წელი',
-    birthYears: '2014 - 2015',
-    coach: 'ზურაბ ხიზანიშვილი',
-    coachRole: 'მთავარი მწვრთნელი (UEFA A)',
+    id: 'isani-u9u10u11',
+    locationId: 'isani',
+    name: 'ისანი U-9 / U-10 / U-11 (1-ლი ნაკადი)',
+    category: 'U-9 / U-10 / U-11',
+    ageRange: '8 - 11 წელი',
+    birthYears: '2015 - 2017',
+    coach: 'გიორგი მელქაძე',
+    coachRole: 'მწვრთნელი',
     days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
-    hours: '16:30 - 18:00',
-    monthlyFee: 140,
-    pitch: 'მთავარი მოედანი',
-    intensity: 'ტექნიკა & ამხანაგური მატჩები'
+    hours: '09:00',
+    monthlyFee: 150,
+    pitch: 'სტადიონი (9x9)',
+    intensity: 'ტექნიკა & ტაქტიკური განვითარება'
   },
   {
-    id: '6',
-    locationId: 'dinamo',
-    name: 'დინამოს ბაზის U-14 რაზმი (2012-2013)',
-    category: 'U-14 (2012-2013)',
-    ageRange: '12 - 14 წელი',
-    birthYears: '2012 - 2013',
-    coach: 'კახა ცხადაძე',
-    coachRole: 'უფროსი სპეციალისტი',
-    days: 'სამშაბათი, ხუთშაბათი, შაბათი',
-    hours: '16:00 - 17:30',
-    monthlyFee: 170,
-    pitch: 'დინამოს ბუნებრივი მოედანი',
-    intensity: 'პროფესიონალური აკადემიური პროგრამა'
+    id: 'isani-u9u10u11-b',
+    locationId: 'isani',
+    name: 'ისანი U-9 / U-10 / U-11 (მე-2 ნაკადი)',
+    category: 'U-9 / U-10 / U-11',
+    ageRange: '8 - 11 წელი',
+    birthYears: '2015 - 2017',
+    coach: 'გიორგი მელქაძე',
+    coachRole: 'მწვრთნელი',
+    days: 'ორშაბათი, ოთხშაბათი, პარასკევი',
+    hours: '10:00',
+    monthlyFee: 150,
+    pitch: 'სტადიონი (9x9)',
+    intensity: 'ტაქტიკა & გუნდური თამაში'
+  },
+  // ===== ვარკეთილი (მრავალფუნქციური) =====
+  {
+    id: 'seselia-all',
+    locationId: 'varketili-seselia',
+    name: 'ვარკეთილი U-გუნდი',
+    category: 'U-გუნდი',
+    ageRange: '4 - 14 წელი',
+    birthYears: '2012 - 2021',
+    coach: 'გიორგი პირველი',
+    coachRole: 'ორივე ასაკობრივ ჯგუფში',
+    days: 'ორშაბათი - შაბათი',
+    hours: '—',
+    monthlyFee: 150,
+    pitch: 'სტადიონი (9x9)',
+    intensity: 'ყველა ასაკობრივი ჯგუფი'
   }
 ];
 
 export const coachesData: Coach[] = [
   {
-    id: 'c1',
-    name: 'გიორგი დემეტრაძე',
-    role: 'საბავშვო-საყმაწვილო მიმართულების ხელმძღვანელი',
-    license: 'UEFA A Youth Licence',
-    experience: '12 წელი ბავშვთა ფეხბურთში',
-    specialty: 'ტექნიკური ოსტატობა, ბავშვის ფსიქოლოგია, სათამაშო ინტელექტი',
+    id: 'c-giorgi-pirv',
+    name: 'გიორგი პირველი',
+    role: 'ვარკეთილის მრავალფუნქციური ცენტრის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-5 — U-14',
+    availableDays: 'ორშაბათი - შაბათი'
+  },
+  {
+    id: 'c-giorgi-melq',
+    name: 'გიორგი მელქაძე',
+    role: 'ისნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-5, U-6, U-7, U-8, U-9, U-10, U-11',
     availableDays: 'ორშაბათი - პარასკევი'
   },
   {
-    id: 'c2',
-    name: 'ლევან ჭელიძე',
-    role: 'კოორდინაციისა და მოტორიკის სპეციალისტი',
-    license: 'UEFA B / Youth Physical Coach',
-    experience: '8 წლიანი გამოცდილება',
-    specialty: 'მოზარდის სწორი სირბილის ტექნიკა, სისწრაფე და მოქნილობა',
+    id: 'c-nika-pant',
+    name: 'ნიკა ფანცულაია',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-5, U-6',
+    availableDays: 'ორშაბათი, ოთხშაბათი, პარასკევი'
+  },
+  {
+    id: 'c-tazo-vakha',
+    name: 'ტაზო ვახანია',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-5, U-6',
+    availableDays: 'ორშაბათი, ოთხშაბათი, პარასკევი'
+  },
+  {
+    id: 'c-tazo-iash',
+    name: 'თაზო იაშვილი',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-7, U-8',
     availableDays: 'სამშაბათი, ხუთშაბათი, შაბათი'
   },
   {
-    id: 'c3',
-    name: 'დავით კვირკველია',
-    role: 'საბავშვო მეკარეების მწვრთნელი',
-    license: 'UEFA Goalkeeping B',
-    experience: '10 წელი აკადემიურ წრეში',
-    specialty: 'რეაქცია, ბურთის დაჭერის ტექნიკა, პოზიციის შერჩევა',
-    availableDays: 'ორშაბათი, ოთხშაბათი, შაბათი'
+    id: 'c-irakli-yavel',
+    name: 'ირაკლი ყაველაშვილი',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-7, U-8',
+    availableDays: 'სამშაბათი, ხუთშაბათი, შაბათი'
+  },
+  {
+    id: 'c-lado-kak',
+    name: 'ლადო კაკაურიძე',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-9',
+    availableDays: 'ორშაბათი, ოთხშაბათი, პარასკევი'
+  },
+  {
+    id: 'c-lasha-ghot',
+    name: 'ლაშა ღოთვაძე',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-9',
+    availableDays: 'ორშაბათი, ოთხშაბათი, პარასკევი'
+  },
+  {
+    id: 'c-vache-alk',
+    name: 'ვაჩე ალქაიძე',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-10 (1-ლი და მე-2 გუნდები)',
+    availableDays: 'ორშაბათი, ოთხშაბათი, პარასკევი'
+  },
+  {
+    id: 'c-ilia-gord',
+    name: 'ილია გორდაძე',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-10 (1-ლი და მე-2 გუნდები), U-12',
+    availableDays: 'ორშაბათი, ოთხშაბათი, პარასკევი'
+  },
+  {
+    id: 'c-kato-job',
+    name: 'კატო ჯობლიძე',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-11 (1-ლი და მე-2 გუნდები)',
+    availableDays: 'ორშაბათი, ოთხშაბათი, პარასკევი'
+  },
+  {
+    id: 'c-lasha-khom',
+    name: 'ლაშა ხომასურიძე',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-11 (1-ლი და მე-2 გუნდები)',
+    availableDays: 'ორშაბათი, ოთხშაბათი, პარასკევი'
+  },
+  {
+    id: 'c-niko-pant',
+    name: 'ნიკოლოზ ფანცულაია',
+    role: 'ვაზისუბნის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-12',
+    availableDays: 'ორშაბათი, ოთხშაბათი, პარასკევი'
+  },
+  {
+    id: 'c-vark-tbc',
+    name: 'შემოგვეწევა',
+    role: 'ვარკეთილის ფილიალის მწვრთნელი',
+    license: '',
+    experience: '',
+    specialty: 'U-7, U-8',
+    availableDays: 'სამშაბათი, ხუთშაბათი, შაბათი'
   }
 ];
 
@@ -200,47 +476,32 @@ export interface StaffMember {
   name: string;
   role: string;
   department: string;
-  phone: string;
-  email: string;
+  phone?: string;
+  email?: string;
   bio: string;
 }
 
 export const staffData: StaffMember[] = [
   {
     id: 's1',
-    name: 'თორნიკე მაისურაძე',
-    role: 'აკადემიის გენერალური დირექტორი',
+    name: 'დავით ჯიშკარიანი',
+    role: 'დირექტორი',
     department: 'მენეჯმენტი',
-    phone: '+995 599 12 34 50',
-    email: 'director@tfilisiacademy.ge',
-    bio: 'სპორტული მენეჯმენტის 15-წლიანი გამოცდილება, UEFA-ს კლუბების განვითარების პროგრამის კურსდამთავრებული.'
+    bio: 'ტფილისის საფეხბურთო აკადემიის დირექტორი.'
   },
   {
     id: 's2',
-    name: 'ირაკლი ვაშაკიძე',
-    role: 'სპორტული დირექტორი & მეთოდოლოგი',
+    name: 'კახა ტოგონიძე',
+    role: 'სპორტული დირექტორი',
     department: 'სპორტული დეპარტამენტი',
-    phone: '+995 599 12 34 51',
-    email: 'sport@tfilisiacademy.ge',
-    bio: 'UEFA PRO ლიცენზიის მფლობელი, ბავშვთა განვითარების ევროპული სტანდარტების კურატორი.'
+    bio: 'ტფილისის საფეხბურთო აკადემიის სპორტული დირექტორი.'
   },
   {
     id: 's3',
-    name: 'დოქტორ ნიკოლოზ ჯავახიშვილი',
-    role: 'მთავარი ექიმი & რეაბილიტოლოგი',
-    department: 'სამედიცინო სამსახური',
-    phone: '+995 599 12 34 52',
-    email: 'medical@tfilisiacademy.ge',
-    bio: 'სპორტული მედიცინის სპეციალისტი, მოზარდთა ტრავმატოლოგია და ფიზიკური დატვირთვების მონიტორინგი.'
-  },
-  {
-    id: 's4',
-    name: 'სალომე გელოვანი',
-    role: 'მშობლებთან ურთიერთობის & რეგისტრაციის მენეჯერი',
+    name: 'დავით დვალი',
+    role: 'ადმინისტრატორი',
     department: 'ადმინისტრაცია',
-    phone: '+995 599 12 34 53',
-    email: 'admissions@tfilisiacademy.ge',
-    bio: 'საცდელი ვარჯიშების ორგანიზება, სასწავლო პროცესის კოორდინაცია და კომუნიკაცია მშობლებთან.'
+    bio: 'ტფილისის საფეხბურთო აკადემიის ადმინისტრატორი.'
   }
 ];
 

@@ -77,7 +77,7 @@ export default function ContactSection() {
           <div className="lg:col-span-5 space-y-4">
             <div>
               <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
-                // ADMISSIONS & REGISTRATION
+                {'// ADMISSIONS & REGISTRATION'}
               </div>
               <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
                 {t.contact.title}

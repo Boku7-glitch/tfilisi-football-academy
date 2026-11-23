@@ -130,7 +130,7 @@ export default function TacticalPitchPathway() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4 pb-4 border-b border-slate-200">
           <div>
             <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
-              // TFA DEVELOPMENT ROADMAP
+              {'// TFA DEVELOPMENT ROADMAP'}
             </div>
             <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
               {language === 'ka' ? 'ასაკობრივი განვითარების ტაქტიკური მოედანი' : 'Tactical Pathway: From Grassroots to 11v11'}
@@ -263,7 +263,7 @@ export default function TacticalPitchPathway() {
           <div className="lg:col-span-5 space-y-4">
             <div>
               <div className="inline-block px-2.5 py-0.5 rounded bg-blue-100 text-blue-900 text-[10px] font-mono font-black uppercase mb-1.5">
-                {stage.years} // {stage.format}
+                {stage.years} • {stage.format}
               </div>
               <h3 className="text-lg sm:text-2xl font-black text-[#061325] tracking-tight">
                 {language === 'ka' ? stage.titleKa : stage.titleEn}
@@ -276,7 +276,7 @@ export default function TacticalPitchPathway() {
             {/* Tactical Curriculum Bullet List */}
             <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
               <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-1">
-                // {language === 'ka' ? 'საწვრთნელი ფოკუსი' : 'CORE CURRICULUM'}
+                {'// '} {language === 'ka' ? 'საწვრთნელი ფოკუსი' : 'CORE CURRICULUM'}
               </div>
               {(language === 'ka' ? stage.tacticsKa : stage.tacticsEn).map((tItem, idx) => (
                 <div key={idx} className="flex items-start gap-2 text-xs text-slate-800">

@@ -19,10 +19,10 @@ export default function GroupsAndSchedule({ onSelectGroup }: GroupsAndSchedulePr
     const matchesLocation = activeLocation === 'all' || group.locationId === activeLocation;
     const matchesCategory =
       activeCategory === 'all' ||
-      (activeCategory === 'u14' && group.category.includes('U-14')) ||
-      (activeCategory === 'u12' && group.category.includes('U-12')) ||
-      (activeCategory === 'u10' && group.category.includes('U-10')) ||
-      (activeCategory === 'u8' && group.category.includes('U-8'));
+      (activeCategory === 'u11u12' && (group.category.includes('U-11') || group.category.includes('U-12') || group.birthYears.includes('2014') || group.birthYears.includes('2015'))) ||
+      (activeCategory === 'u9u10' && (group.category.includes('U-9') || group.category.includes('U-10') || group.birthYears.includes('2016') || group.birthYears.includes('2017'))) ||
+      (activeCategory === 'u7u8' && (group.category.includes('U-7') || group.category.includes('U-8') || group.birthYears.includes('2018') || group.birthYears.includes('2019'))) ||
+      (activeCategory === 'u5u6' && (group.category.includes('U-5') || group.category.includes('U-6') || group.birthYears.includes('2020') || group.birthYears.includes('2021')));
     return matchesLocation && matchesCategory;
   });
 
@@ -58,7 +58,7 @@ export default function GroupsAndSchedule({ onSelectGroup }: GroupsAndSchedulePr
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
-            // ACADEMY ROSTER & SCHEDULE
+            {'// ACADEMY ROSTER & SCHEDULE'}
           </div>
           <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
             {t.groups.title}
@@ -122,44 +122,44 @@ export default function GroupsAndSchedule({ onSelectGroup }: GroupsAndSchedulePr
                 {t.groups.allAges}
               </button>
               <button
-                onClick={() => setActiveCategory('u14')}
+                onClick={() => setActiveCategory('u11u12')}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all border shrink-0 ${
-                  activeCategory === 'u14'
+                  activeCategory === 'u11u12'
                     ? 'bg-blue-600 text-white border-blue-600'
                     : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
                 }`}
               >
-                2012 - 2013 (U-14)
+                2014 - 2015 (U-11/U-12)
               </button>
               <button
-                onClick={() => setActiveCategory('u12')}
+                onClick={() => setActiveCategory('u9u10')}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all border shrink-0 ${
-                  activeCategory === 'u12'
+                  activeCategory === 'u9u10'
                     ? 'bg-blue-600 text-white border-blue-600'
                     : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
                 }`}
               >
-                2014 - 2015 (U-12)
+                2016 - 2017 (U-9/U-10)
               </button>
               <button
-                onClick={() => setActiveCategory('u10')}
+                onClick={() => setActiveCategory('u7u8')}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all border shrink-0 ${
-                  activeCategory === 'u10'
+                  activeCategory === 'u7u8'
                     ? 'bg-blue-600 text-white border-blue-600'
                     : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
                 }`}
               >
-                2016 - 2017 (U-10)
+                2018 - 2019 (U-7/U-8)
               </button>
               <button
-                onClick={() => setActiveCategory('u8')}
+                onClick={() => setActiveCategory('u5u6')}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all border shrink-0 ${
-                  activeCategory === 'u8'
+                  activeCategory === 'u5u6'
                     ? 'bg-blue-600 text-white border-blue-600'
                     : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
                 }`}
               >
-                2018 - 2019 (U-8)
+                2020 - 2021 (U-5/U-6)
               </button>
             </div>
           </div>

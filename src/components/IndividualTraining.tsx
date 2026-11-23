@@ -64,7 +64,7 @@ export default function IndividualTraining({ onBookCoach }: IndividualTrainingPr
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
-            // 1-ON-1 COACHING MASTERCLASS
+            {'// 1-ON-1 COACHING MASTERCLASS'}
           </div>
           <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
             {t.individual.title}

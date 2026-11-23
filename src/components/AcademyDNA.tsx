@@ -65,7 +65,7 @@ export default function AcademyDNA() {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
           <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
-            // PHILOSOPHY & PILLARS
+            {'// PHILOSOPHY & PILLARS'}
           </div>
           <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
             {language === 'ka' ? '„ტფილისის“ საფეხბურთო DNA' : 'The Tfilisi Academy Football DNA'}

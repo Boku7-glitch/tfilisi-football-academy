@@ -82,7 +82,7 @@ export default function NewsSection({ onReadArticle }: NewsSectionProps) {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 pb-4 border-b border-slate-200">
           <div>
             <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
-              // CLUB DISPATCHES & PRESS
+              {'// CLUB DISPATCHES & PRESS'}
             </div>
             <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
               {t.news.title}

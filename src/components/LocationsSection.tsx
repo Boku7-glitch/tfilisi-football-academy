@@ -56,7 +56,7 @@ export default function LocationsSection() {
         
         <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <div className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-blue-600 uppercase mb-1">
-            // ACADEMY BASES & INFRASTRUCTURE
+            {'// ACADEMY BASES & INFRASTRUCTURE'}
           </div>
           <h2 className="text-xl sm:text-3xl font-black text-[#061325] tracking-tight">
             {t.locations.title}
@@ -66,7 +66,7 @@ export default function LocationsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {locations.map((loc) => {
             const info = getLocationInfo(loc.id);
             return (
@@ -91,18 +91,10 @@ export default function LocationsSection() {
                     {info.description}
                   </p>
 
-                  <div className="space-y-1.5 pt-3 border-t border-slate-100 text-xs text-slate-700">
+                  <div className="pt-3 border-t border-slate-100 text-xs text-slate-700">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
                       <span className="font-semibold">{info.pitches}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
-                      <span>{t.locations.changingRooms}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
-                      <span>{t.locations.ledLighting}</span>
                     </div>
                   </div>
                 </div>

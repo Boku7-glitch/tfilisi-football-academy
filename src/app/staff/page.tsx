@@ -6,8 +6,6 @@ import Footer from '../../components/Footer';
 import AuthModal from '../../components/AuthModal';
 import { useLanguage } from '../../context/LanguageContext';
 import { staffData } from '../../data/mockData';
-import { Phone, Mail, ArrowRight, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 
 export default function StaffPage() {
   const { language } = useLanguage();
@@ -22,26 +20,12 @@ export default function StaffPage() {
         <section className="py-12 sm:py-16 bg-[#061325] text-white border-b border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
-              <div className="mb-4">
-                <Link
-                  href="/"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition-all group hover:-translate-x-0.5 active:scale-95"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-                  <span>მთავარ გვერდზე დაბრუნება</span>
-                </Link>
-              </div>
               <span className="inline-block px-3 py-1 rounded bg-blue-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest mb-3">
                 {language === 'ka' ? 'აკადემიის ადმინისტრაცია' : 'MANAGEMENT & STAFF'}
               </span>
               <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
                 {language === 'ka' ? 'აკადემიის სტაფი და მენეჯმენტი' : 'Academy Staff & Administration'}
               </h1>
-              <p className="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
-                {language === 'ka'
-                  ? 'პროფესიონალი მენეჯმენტი, სპორტული მედიცინის სპეციალისტები და ადმინისტრაციული გუნდი, რომლებიც უზრუნველყოფენ ბავშვის უსაფრთხოებასა და განვითარებას.'
-                  : 'Our dedicated leadership, sports physicians, physiotherapists, and admissions team supporting player welfare and operational excellence.'}
-              </p>
             </div>
           </div>
         </section>
@@ -79,27 +63,6 @@ export default function StaffPage() {
                     <p className="mt-3 text-xs text-slate-600 leading-relaxed">
                       {member.bio}
                     </p>
-
-                    <div className="mt-4 pt-3 border-t border-slate-100 space-y-2 text-xs text-slate-600">
-                      <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-blue-600 shrink-0" />
-                        <span className="font-mono">{member.phone}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4 text-blue-600 shrink-0" />
-                        <span className="font-mono">{member.email}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 pt-4 border-t border-slate-100">
-                    <Link
-                      href="/contact"
-                      className="w-full py-2.5 px-4 rounded-lg bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-800 font-black text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
-                    >
-                      <span>{language === 'ka' ? 'დაკავშირება' : 'Contact Staff'}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
                   </div>
                 </div>
               ))}

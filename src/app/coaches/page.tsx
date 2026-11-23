@@ -6,7 +6,7 @@ import Footer from '../../components/Footer';
 import AuthModal from '../../components/AuthModal';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAcademy } from '../../context/AcademyContext';
-import { Award, Calendar, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Calendar, CheckCircle2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CoachesPage() {
@@ -23,26 +23,12 @@ export default function CoachesPage() {
         <section className="py-12 sm:py-16 bg-[#061325] text-white border-b border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl">
-              <div className="mb-4">
-                <Link
-                  href="/"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition-all group hover:-translate-x-0.5 active:scale-95"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-                  <span>მთავარ გვერდზე დაბრუნება</span>
-                </Link>
-              </div>
               <span className="inline-block px-3 py-1 rounded bg-blue-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest mb-3">
                 {language === 'ka' ? 'სამწვრთნელო შტაბი' : 'COACHING STAFF'}
               </span>
               <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
                 {language === 'ka' ? 'აკადემიის მწვრთნელები' : 'UEFA Certified Youth Coaches'}
               </h1>
-              <p className="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
-                {language === 'ka'
-                  ? 'ჩვენი ყველა მწვრთნელი ფლობს UEFA-ს ოფიციალურ სალიცენზიო კატეგორიას (UEFA A & B Youth) და სპეციალიზებულია მოზარდთა ასაკობრივ განვითარებაზე.'
-                  : 'Every academy coach holds an accredited UEFA license with verified expertise in child psychology, motor coordination, and modern tactical development.'}
-              </p>
             </div>
           </div>
         </section>
@@ -66,9 +52,11 @@ export default function CoachesPage() {
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-mono text-[11px] font-black uppercase tracking-wider border border-blue-200">
-                        {coach.license}
-                      </span>
+                      {coach.license && coach.license !== '—' && (
+                        <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-mono text-[11px] font-black uppercase tracking-wider border border-blue-200">
+                          {coach.license}
+                        </span>
+                      )}
                     </div>
 
                     <h3 className="text-lg font-black text-[#061325] mt-4 tracking-tight">
@@ -80,12 +68,8 @@ export default function CoachesPage() {
 
                     <div className="mt-4 space-y-2 text-xs text-slate-600">
                       <div className="flex items-start gap-2">
-                        <Award className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                        <span><strong>გამოცდილება:</strong> {coach.experience}</span>
-                      </div>
-                      <div className="flex items-start gap-2">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>სპეციალიზაცია:</strong> {coach.specialty}</span>
+                        <span><strong>ასაკობრივი ჯგუფი:</strong> {coach.specialty}</span>
                       </div>
                       <div className="flex items-start gap-2">
                         <Calendar className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
